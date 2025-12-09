@@ -12,7 +12,6 @@
     "prepare": "husky",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
