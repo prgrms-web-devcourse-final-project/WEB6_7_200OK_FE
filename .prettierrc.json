@@ -9,5 +9,6 @@
   "arrowParens": "always",
   "quoteProps": "as-needed",
   "endOfLine": "auto",
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["cva", "twMerge"]
 }
