@@ -2,12 +2,14 @@
   "name": "windfall",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "prepare": "husky",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"
@@ -51,3 +53,4 @@
     "typescript-eslint": "^8.49.0"
   }
 }
+
