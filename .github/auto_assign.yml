@@ -1,0 +1,10 @@
+addAssignees: author
+addReviewers: true
+
+reviewers:
+  - sageherb
+  - elecharu
+  - peachPetal
+  - sehyun0518
+
+numberOfReviewers: 0
