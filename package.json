@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "dependencies": {
     "next": "16.0.8",
@@ -14,14 +15,28 @@
     "react-dom": "19.2.1"
   },
   "devDependencies": {
+    "@eslint/compat": "^2.0.0",
+    "@eslint/js": "^9.39.1",
+    "@next/eslint-plugin-next": "^16.0.8",
+    "@stylistic/eslint-plugin": "^3.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
+    "eslint-config-airbnb-extended": "^2.3.3",
     "eslint-config-next": "16.0.8",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.7.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.49.0"
   }
 }
