@@ -39,7 +39,7 @@ const emptyIconVariants = cva("text-brand", {
 interface EmptyProps extends VariantProps<typeof emptyIconContainerVariants> {
   title?: string;
   description?: string;
-  icon?: React.ReactNode | LucideIcon;
+  icon?: LucideIcon;
   className?: string;
 }
 
@@ -52,11 +52,7 @@ export function Empty({
 }: EmptyProps) {
   const renderIcon = () => {
     if (IconProp) {
-      if (React.isValidElement(IconProp)) {
-        return IconProp;
-      }
-
-      const Icon = IconProp as LucideIcon;
+      const Icon = IconProp;
       return <Icon className={cn(emptyIconVariants({ size }))} />;
     }
 
