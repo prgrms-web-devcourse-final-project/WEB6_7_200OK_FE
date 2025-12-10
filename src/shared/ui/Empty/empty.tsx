@@ -6,7 +6,7 @@ import { TrendingDown, type LucideIcon } from "lucide-react";
 import { cn } from "@/shared/lib/utils/utils";
 
 const emptyIconContainerVariants = cva(
-  "mb-4 flex items-center justify-center rounded-full bg-zinc-100",
+  "bg-accent mb-4 flex items-center justify-center rounded-full",
   {
     variants: {
       size: {
@@ -44,7 +44,7 @@ interface EmptyProps extends VariantProps<typeof emptyIconContainerVariants> {
 }
 
 export function Empty({
-  title = "아직 가격 하락 기록이 없어요",
+  title = "아직 가격 하락 기록이 없습니다",
   description = "가격이 하락하면 여기에 표시됩니다",
   icon: IconProp,
   className,
@@ -62,13 +62,14 @@ export function Empty({
   return (
     <div
       className={cn(
-        "bg-card flex flex-col items-center justify-center rounded-md border border-zinc-200 p-10 text-center shadow-sm",
+        "bg-card border-border flex flex-col items-center justify-center rounded-md border text-center",
+        "p-8 sm:p-8 md:p-10 lg:p-12 xl:p-14",
         className
       )}
     >
       <div className={cn(emptyIconContainerVariants({ size }))}>{renderIcon()}</div>
-      <h3 className="mb-1 text-lg font-semibold text-zinc-800">{title}</h3>
-      <p className="text-sm text-zinc-500">{description}</p>
+      <h3 className="text-foreground mb-1 text-lg font-semibold">{title}</h3>
+      <p className="text-muted-foreground text-sm">{description}</p>
     </div>
   );
 }
