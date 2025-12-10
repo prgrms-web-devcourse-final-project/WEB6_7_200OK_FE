@@ -35,7 +35,7 @@ function SearchInput({ className, placeholder, value, onDelete, ...props }: Sear
         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
       )}
     >
-      <Search className="text-muted-foreground" />
+      <Search className="text-muted-foreground size-6" />
       <Input
         type="text"
         className={cn(
