@@ -41,7 +41,7 @@ interface EmptyProps extends VariantProps<typeof emptyIconContainerVariants> {
   className?: string;
 }
 
-export function Empty({
+export default function Empty({
   title = "아직 가격 하락 기록이 없습니다",
   description = "가격이 하락하면 여기에 표시됩니다",
   icon: IconProp,
@@ -64,7 +64,7 @@ export function Empty({
       <div className={cn(emptyIconContainerVariants({ size }))} aria-hidden="true">
         {renderIcon()}
       </div>
-      <h3 className="text-foreground mb-1 text-lg font-semibold">{title}</h3>
+      <p className="text-foreground mb-1 text-lg font-semibold">{title}</p>
       <p className="text-muted-foreground text-sm">{description}</p>
     </div>
   );
