@@ -1,5 +1,3 @@
-import React from "react";
-
 import { cva, type VariantProps } from "class-variance-authority";
 import { TrendingDown, type LucideIcon } from "lucide-react";
 
@@ -51,12 +49,8 @@ export function Empty({
   size,
 }: EmptyProps) {
   const renderIcon = () => {
-    if (IconProp) {
-      const Icon = IconProp;
-      return <Icon className={cn(emptyIconVariants({ size }))} />;
-    }
-
-    return <TrendingDown className={cn(emptyIconVariants({ size }))} />;
+    const Icon = IconProp ?? TrendingDown;
+    return <Icon className={cn(emptyIconVariants({ size }))} />;
   };
 
   return (
