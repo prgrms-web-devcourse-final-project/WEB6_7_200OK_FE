@@ -11,7 +11,8 @@
     "lint:fix": "eslint --fix",
     "prepare": "husky",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "vitest"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",
