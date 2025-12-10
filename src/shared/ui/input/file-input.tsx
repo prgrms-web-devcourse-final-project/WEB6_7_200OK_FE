@@ -1,4 +1,4 @@
-import { LucideIcon, ImagePlus } from "lucide-react";
+import { type LucideIcon, ImagePlus } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
 import Input from "@/shared/ui/input/input";
