@@ -10,5 +10,5 @@
   "quoteProps": "as-needed",
   "endOfLine": "auto",
   "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindFunctions": ["cva", "twMerge", "clsx", "cn"]
+  "tailwindFunctions": ["cva", "twMerge", "clsx"]
 }
