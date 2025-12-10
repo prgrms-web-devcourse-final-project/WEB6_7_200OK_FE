@@ -9,7 +9,7 @@ const toastVariants = cva("", {
       success: "!text-emerald-600 dark:!text-emerald-400",
       error: "!text-red-600 dark:!text-red-400",
       warning: "!text-amber-600 dark:!text-amber-400",
-      info: "!text-[var(--color-brand)] dark:!text-[var(--color-brand)]",
+      info: "!text-brand, dark:!text-brand",
     },
   },
   defaultVariants: {
