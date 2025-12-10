@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { toast, Toaster } from "sonner";
 
 const TOAST_COLORS = {
-  info: "!text-[var(--color-brand)] dark:!text-[var(--color-brand)]",
+  info: "!text-[var(--color-brand)] dark:!text-[var(--color-brand-dark)]",
   success: "!text-emerald-600 dark:!text-emerald-400",
   warning: "!text-amber-600 dark:!text-amber-400",
   error: "!text-red-600 dark:!text-red-400",
@@ -20,7 +20,7 @@ export const ToastRegistry = () => {
       duration={3000}
       toastOptions={{
         classNames: {
-          toast: "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg",
+          toast: "bg-card dark:bg-card border border-border shadow-lg",
         },
       }}
     />
