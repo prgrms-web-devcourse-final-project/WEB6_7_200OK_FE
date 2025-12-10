@@ -26,7 +26,7 @@ export default function FileInput({
     >
       <label
         htmlFor={id ?? "file-input"}
-        className="flex h-full w-full flex-col items-center justify-center gap-2"
+        className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2"
       >
         <Icon className="text-muted-foreground size-8" />
         <span className="text-muted-foreground text-xs">{value}</span>
