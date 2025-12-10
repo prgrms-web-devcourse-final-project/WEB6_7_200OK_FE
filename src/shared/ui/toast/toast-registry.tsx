@@ -8,7 +8,7 @@ export default function ToastRegistry() {
       position="top-center"
       toastOptions={{
         classNames: {
-          toast: "bg-card dark:bg-card border border-border shadow-lg",
+          toast: "!bg-card border-border shadow-lg",
         },
       }}
     />
