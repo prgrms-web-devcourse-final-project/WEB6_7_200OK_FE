@@ -27,11 +27,7 @@ export default function SearchInput({
       <Search className="text-muted-foreground size-5" />
       <Input
         type="text"
-        className={cn(
-          "flex-1",
-          "border-none bg-transparent focus-visible:ring-0 dark:bg-transparent",
-          className
-        )}
+        className={cn("flex-1", "border-none bg-transparent focus-visible:ring-0", className)}
         value={value}
         placeholder={placeholder ?? "검색어를 입력해주세요"}
         {...props}
