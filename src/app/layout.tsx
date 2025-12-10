@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
 import "@/shared/styles/globals.css";
+import { ToastProvider } from "@/shared/ui/Toast/ToastProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +31,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ToastProvider>{children}</ToastProvider>
         </ThemeProvider>
       </body>
     </html>
