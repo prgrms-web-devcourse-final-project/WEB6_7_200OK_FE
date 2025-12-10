@@ -5,7 +5,7 @@
 
 @theme {
   /* Color System */
-  --color-primary: oklch(0.4758 0.2241 288.5);
+  --color-brand: oklch(0.4758 0.2241 288.5);
 
   /* Typography System */
   --text-xs--letter-spacing: -0.015rem; /* x-small */
