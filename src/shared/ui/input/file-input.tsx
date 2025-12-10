@@ -38,8 +38,7 @@ export default function FileInput({
         {...props}
         className={cn(
           "h-0 w-0 p-0 shadow-none",
-          "border-none bg-transparent focus-visible:ring-0 dark:bg-transparent",
-          className
+          "border-none bg-transparent focus-visible:ring-0 dark:bg-transparent"
         )}
       />
     </div>
