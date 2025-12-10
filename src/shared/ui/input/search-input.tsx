@@ -41,6 +41,7 @@ export default function SearchInput({
           type="button"
           className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-600"
           onClick={onDelete}
+          aria-label="검색어 삭제"
         >
           <X className="text-muted-foreground size-4" />
         </button>
