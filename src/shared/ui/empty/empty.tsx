@@ -52,6 +52,10 @@ export function Empty({
 }: EmptyProps) {
   const renderIcon = () => {
     if (IconProp) {
+      if (React.isValidElement(IconProp)) {
+        return IconProp;
+      }
+
       const Icon = IconProp as LucideIcon;
       return <Icon className={cn(emptyIconVariants({ size }))} />;
     }
@@ -63,11 +67,13 @@ export function Empty({
     <div
       className={cn(
         "bg-card border-border flex flex-col items-center justify-center rounded-md border text-center",
-        "p-8 sm:p-8 md:p-10 lg:p-12 xl:p-14",
+        "p-8 md:p-10 lg:p-12 xl:p-14",
         className
       )}
     >
-      <div className={cn(emptyIconContainerVariants({ size }))}>{renderIcon()}</div>
+      <div className={cn(emptyIconContainerVariants({ size }))} aria-hidden="true">
+        {renderIcon()}
+      </div>
       <h3 className="text-foreground mb-1 text-lg font-semibold">{title}</h3>
       <p className="text-muted-foreground text-sm">{description}</p>
     </div>
