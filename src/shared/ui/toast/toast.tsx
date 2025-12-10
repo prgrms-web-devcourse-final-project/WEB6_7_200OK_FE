@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import { useTheme } from "next-themes";
 import { toast, Toaster } from "sonner";
 
-// toast 색상 매핑
 const TOAST_COLORS = {
   info: "!text-[var(--color-brand)] dark:!text-[var(--color-brand)]",
   success: "!text-emerald-600 dark:!text-emerald-400",
@@ -13,30 +11,12 @@ const TOAST_COLORS = {
 } as const;
 
 export const ToastRegistry = () => {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-
-  useEffect(() => {
-    const updateTheme = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      setTheme(isDark ? "dark" : "light");
-    };
-
-    updateTheme();
-
-    // 테마 변경 감지 (MutationObserver)
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const { theme = "system" } = useTheme();
 
   return (
     <Toaster
       position="top-center"
-      theme={theme}
+      theme={theme as "light" | "dark" | "system"}
       duration={3000}
       toastOptions={{
         classNames: {
