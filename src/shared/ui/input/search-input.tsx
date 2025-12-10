@@ -5,7 +5,7 @@ import { cn } from "@/shared/lib/utils/utils";
 import Input from "@/shared/ui/input/input";
 
 interface SearchInputProps extends Omit<React.ComponentProps<"input">, "type"> {
-  onDelete?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  onDelete?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export default function SearchInput({
