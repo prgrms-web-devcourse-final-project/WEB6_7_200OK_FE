@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { PackageOpen, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
+import { Label } from "@/shared/ui/label";
 
 const emptyStyles = {
   container: cva(
@@ -54,8 +55,8 @@ export default function Empty({
       <div className={cn(emptyStyles.iconContainer({ size }))} aria-hidden="true">
         <Icon className={cn(emptyStyles.icon({ size }))} />
       </div>
-      <p className="text-foreground mb-1 text-lg font-semibold">{title}</p>
-      <p className="text-muted-foreground text-sm">{description}</p>
+      <Label className="text-foreground mb-1 text-lg font-semibold">{title}</Label>
+      <Label className="text-muted-foreground text-sm font-normal">{description}</Label>
     </div>
   );
 }
