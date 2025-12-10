@@ -21,30 +21,19 @@ interface ToastOptions {
   duration?: number;
 }
 
+type ToastType = "success" | "error" | "warning" | "info";
+
+const createToast = (type: ToastType) => (message: string, options?: ToastOptions) =>
+  toast[type](message, {
+    className: toastVariants({ type }),
+    duration: options?.duration,
+  });
+
 const showToast = {
-  success: (message: string, options?: ToastOptions) =>
-    toast.success(message, {
-      className: toastVariants({ type: "success" }),
-      duration: options?.duration,
-    }),
-
-  error: (message: string, options?: ToastOptions) =>
-    toast.error(message, {
-      className: toastVariants({ type: "error" }),
-      duration: options?.duration,
-    }),
-
-  warning: (message: string, options?: ToastOptions) =>
-    toast.warning(message, {
-      className: toastVariants({ type: "warning" }),
-      duration: options?.duration,
-    }),
-
-  info: (message: string, options?: ToastOptions) =>
-    toast.info(message, {
-      className: toastVariants({ type: "info" }),
-      duration: options?.duration,
-    }),
+  success: createToast("success"),
+  error: createToast("error"),
+  warning: createToast("warning"),
+  info: createToast("info"),
 };
 
 export default showToast;
