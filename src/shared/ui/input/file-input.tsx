@@ -1,13 +1,19 @@
 import { LucideIcon, ImagePlus } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
-import { Input } from "@/shared/ui/input/input";
+import Input from "@/shared/ui/input/input";
 
 interface FileInputProps extends Omit<React.ComponentProps<"input">, "type"> {
   Icon?: LucideIcon;
 }
 
-function FileInput({ className, id, value, Icon = ImagePlus, ...props }: FileInputProps) {
+export default function FileInput({
+  className,
+  id,
+  value,
+  Icon = ImagePlus,
+  ...props
+}: FileInputProps) {
   return (
     <div
       className={cn(
@@ -39,5 +45,3 @@ function FileInput({ className, id, value, Icon = ImagePlus, ...props }: FileInp
     </div>
   );
 }
-
-export { FileInput };

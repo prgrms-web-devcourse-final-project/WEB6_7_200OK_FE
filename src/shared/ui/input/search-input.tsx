@@ -2,13 +2,19 @@ import { Search, X } from "lucide-react";
 
 import { isValue } from "@/shared/lib/utils/input";
 import { cn } from "@/shared/lib/utils/utils";
-import { Input } from "@/shared/ui/input/input";
+import Input from "@/shared/ui/input/input";
 
 interface SearchInputProps extends Omit<React.ComponentProps<"input">, "type"> {
   onDelete?: React.MouseEventHandler<HTMLButtonElement> | undefined;
 }
 
-function SearchInput({ className, placeholder, value, onDelete, ...props }: SearchInputProps) {
+export default function SearchInput({
+  className,
+  placeholder,
+  value,
+  onDelete,
+  ...props
+}: SearchInputProps) {
   return (
     <div
       className={cn(
@@ -42,5 +48,3 @@ function SearchInput({ className, placeholder, value, onDelete, ...props }: Sear
     </div>
   );
 }
-
-export { SearchInput };
