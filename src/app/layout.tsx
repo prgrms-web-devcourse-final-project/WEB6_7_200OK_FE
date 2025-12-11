@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
 import "@/shared/styles/globals.css";
-import { ToastRegistry } from "@/shared/ui/toast/toast";
+import { ToastRegistry } from "@/shared/ui/toast/toast-registry";
 
 const inter = Inter({
   subsets: ["latin"],
