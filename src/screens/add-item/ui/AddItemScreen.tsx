@@ -301,9 +301,9 @@ export function AddItemScreen() {
           </div>
           {stopLossError && <p className="text-destructive mt-1 text-xs">{stopLossError}</p>}
           {/* 경고 메시지 */}
-          <div className="border-chart-4/50 bg-chart-4/10 mt-2 flex items-center gap-2 rounded-md border p-3">
-            <AlertCircle className="text-chart-4 size-4 shrink-0" />
-            <p className="text-chart-4 text-xs">
+          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-md border p-3">
+            <AlertCircle className="text-info-text size-4 shrink-0" />
+            <p className="text-info-text text-xs">
               최저가는 판매자만 볼 수 있으며, 이 가격까지 판매되지 않으면 경매가 자동으로
               종료됩니다.
             </p>
@@ -326,9 +326,9 @@ export function AddItemScreen() {
           </div>
           {dropPriceError && <p className="text-destructive mt-1 text-xs">{dropPriceError}</p>}
           {/* 경고 메시지 */}
-          <div className="border-chart-4/30 bg-chart-4/10 mt-2 flex items-center gap-2 rounded-md border p-3">
-            <AlertCircle className="text-chart-4 size-4 shrink-0" />
-            <p className="text-chart-4 text-xs">
+          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-md border p-3">
+            <AlertCircle className="text-info-text size-4 shrink-0" />
+            <p className="text-info-text text-xs">
               5분마다 설정된 가격이 자동으로 하락합니다. 최소 가격은 시작 가격의 0.5%입니다.
             </p>
           </div>
