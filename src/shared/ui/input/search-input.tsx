@@ -1,6 +1,6 @@
 import { Search, X } from "lucide-react";
 
-import { isValue } from "@/shared/lib/utils/input";
+import { hasValue } from "@/shared/lib/utils/input";
 import { cn } from "@/shared/lib/utils/utils";
 import Input from "@/shared/ui/input/input";
 
@@ -36,7 +36,7 @@ export default function SearchInput({
         placeholder={placeholder ?? "검색어를 입력해주세요"}
         {...props}
       />
-      {isValue(value) && (
+      {hasValue(value) && (
         <button
           type="button"
           className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-600"
