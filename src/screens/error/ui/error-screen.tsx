@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
 import errorImage from "@/shared/assets/images/error-images/error.svg";
 import { useNavigation } from "@/shared/lib/utils/navigation/navigation";
 import { ErrorTemplate } from "@/shared/ui/error/error-template";
@@ -10,12 +8,9 @@ interface ErrorScreenProps {
   error: Error;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function ErrorScreen({ error }: ErrorScreenProps) {
   const { navigateToPrev, navigateToHome } = useNavigation();
-
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
 
   return (
     <ErrorTemplate
