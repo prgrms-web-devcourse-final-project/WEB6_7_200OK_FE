@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { X, Calendar } from "lucide-react";
 
+import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 
 interface DateTimeModalProps {
@@ -19,7 +20,16 @@ export function DateTimeModal({
   onClose,
   onConfirm,
 }: DateTimeModalProps) {
-  const [currentDate, setCurrentDate] = useState(selectedDate || new Date());
+  // 기본값 (다음 날 설정 추후 로직 분리 필요)
+  const getDefaultDate = () => {
+    if (selectedDate) return selectedDate;
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  };
+
+  const [currentDate, setCurrentDate] = useState(getDefaultDate());
   const [viewDate] = useState(new Date());
   const [time, setTime] = useState(selectedTime);
 
@@ -86,25 +96,22 @@ export function DateTimeModal({
       const disabled = isDateDisabled(date);
       const selected = isSameDay(date, currentDate);
 
-      let buttonClass = "aspect-square rounded-md text-sm transition-colors ";
-      if (disabled) {
-        buttonClass += "text-muted-foreground/30 cursor-not-allowed";
-      } else if (selected) {
-        buttonClass += "bg-brand text-brand-foreground font-semibold";
-      } else {
-        buttonClass += "hover:bg-accent";
-      }
-
       dateButtons.push(
-        <button
+        <Button
           key={day}
           type="button"
           onClick={() => handleDateClick(day)}
           disabled={disabled}
-          className={buttonClass}
+          variant={selected ? "default" : "ghost"}
+          size="icon-sm"
+          className={cn(
+            "aspect-square text-sm",
+            disabled && "text-muted-foreground/30 cursor-not-allowed",
+            selected && "font-semibold"
+          )}
         >
           {day}
-        </button>
+        </Button>
       );
     }
 
@@ -120,9 +127,10 @@ export function DateTimeModal({
   return (
     <>
       {/* 백드롭 */}
-      <button
+      <Button
         type="button"
-        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+        variant="ghost"
+        className="fixed inset-0 z-50 h-full w-full rounded-none bg-black/50 backdrop-blur-sm hover:bg-black/50"
         onClick={onClose}
         aria-label="모달 닫기"
       />
@@ -131,13 +139,15 @@ export function DateTimeModal({
       <div className="fixed top-1/2 left-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-xl dark:bg-gray-900">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">경매 시작 일정 선택</h2>
-          <button
+          <Button
             type="button"
             onClick={onClose}
+            variant="ghost"
+            size="icon-sm"
             className="text-muted-foreground hover:text-foreground"
           >
             <X className="size-5" />
-          </button>
+          </Button>
         </div>
 
         {/* 달력 선택 */}
@@ -181,18 +191,15 @@ export function DateTimeModal({
               <div className="text-muted-foreground mb-2 text-xs">오전/오후</div>
               <div className="space-y-1">
                 {["오전", "오후"].map((period) => (
-                  <button
+                  <Button
                     key={period}
                     type="button"
                     onClick={() => setTime({ ...time, period })}
-                    className={`w-full rounded py-1.5 transition-colors ${
-                      time.period === period
-                        ? "bg-brand text-brand-foreground font-semibold"
-                        : "bg-accent hover:bg-accent/80"
-                    }`}
+                    variant={time.period === period ? "default" : "secondary"}
+                    className={`w-full ${time.period === period ? "font-semibold" : ""}`}
                   >
                     {period}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -201,18 +208,15 @@ export function DateTimeModal({
               <div className="text-muted-foreground mb-2 text-xs">시</div>
               <div className="max-h-32 space-y-1 overflow-y-auto">
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((hour) => (
-                  <button
+                  <Button
                     key={hour}
                     type="button"
                     onClick={() => setTime({ ...time, hour })}
-                    className={`w-full rounded py-1.5 transition-colors ${
-                      time.hour === hour
-                        ? "bg-brand text-brand-foreground font-semibold"
-                        : "bg-accent hover:bg-accent/80"
-                    }`}
+                    variant={time.hour === hour ? "default" : "secondary"}
+                    className={`w-full ${time.hour === hour ? "font-semibold" : ""}`}
                   >
                     {hour}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -220,19 +224,16 @@ export function DateTimeModal({
             <div>
               <div className="text-muted-foreground mb-2 text-xs">분</div>
               <div className="max-h-32 space-y-1 overflow-y-auto">
-                {[0, 15, 30, 45].map((minute) => (
-                  <button
+                {[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].map((minute) => (
+                  <Button
                     key={minute}
                     type="button"
                     onClick={() => setTime({ ...time, minute })}
-                    className={`w-full rounded py-1.5 transition-colors ${
-                      time.minute === minute
-                        ? "bg-brand text-brand-foreground font-semibold"
-                        : "bg-accent hover:bg-accent/80"
-                    }`}
+                    variant={time.minute === minute ? "default" : "secondary"}
+                    className={`w-full ${time.minute === minute ? "font-semibold" : ""}`}
                   >
                     {String(minute).padStart(2, "0")}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
