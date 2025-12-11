@@ -1,3 +1,5 @@
+import { NotFoundScreen } from "@/screens/error";
+
 export default function NotFound() {
-  return <h1>Not-found</h1>;
+  return <NotFoundScreen />;
 }
