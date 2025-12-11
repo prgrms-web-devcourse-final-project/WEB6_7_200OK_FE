@@ -7,7 +7,7 @@ import { cva } from "class-variance-authority";
 import { SOCIAL_MAPS, type SocialProvider } from "../model/social-maps";
 
 const socialButtonVariants = cva(
-  "flex h-[3.25rem] w-full items-center justify-center gap-2 rounded-lg text-base font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+  "flex h-13 w-full items-center justify-center gap-2 rounded-lg text-base font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       provider: {
