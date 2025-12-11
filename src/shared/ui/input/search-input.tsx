@@ -1,6 +1,5 @@
 import { Search, X } from "lucide-react";
 
-import { hasValue } from "@/shared/lib/utils/input";
 import { cn } from "@/shared/lib/utils/utils";
 import Input from "@/shared/ui/input/input";
 
@@ -15,6 +14,12 @@ export default function SearchInput({
   onDelete,
   ...props
 }: SearchInputProps) {
+  const hasValue = (v: number | string | readonly string[] | undefined) => {
+    if (v === undefined) return false;
+    if (typeof v === "number") return true;
+    if (typeof v === "string" || Array.isArray(value)) return v.length > 0;
+    return false;
+  };
   return (
     <div
       className={cn(
