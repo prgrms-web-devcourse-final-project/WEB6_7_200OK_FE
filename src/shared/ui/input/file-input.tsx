@@ -35,11 +35,11 @@ export default function FileInput({
       <Input
         type="file"
         id={id ?? "file-input"}
-        {...props}
         className={cn(
           "h-0 w-0 p-0 shadow-none",
           "border-none bg-transparent focus-visible:ring-0 dark:bg-transparent"
         )}
+        {...props}
       />
     </div>
   );
