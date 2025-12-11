@@ -1,7 +1,14 @@
 "use client";
 
 import { cva } from "class-variance-authority";
-import { toast } from "sonner";
+import { useTheme } from "next-themes";
+import { Toaster, toast } from "sonner";
+
+export function ToastRegistry() {
+  const { theme = "system" } = useTheme();
+
+  return <Toaster position="top-center" theme={theme as "light" | "dark" | "system"} />;
+}
 
 const toastVariants = cva("", {
   variants: {
@@ -29,11 +36,9 @@ const createToast = (type: ToastType) => (message: string, options?: ToastOption
     duration: options?.duration,
   });
 
-const showToast = {
+export const showToast = {
   success: createToast("success"),
   error: createToast("error"),
   warning: createToast("warning"),
   info: createToast("info"),
 };
-
-export default showToast;
