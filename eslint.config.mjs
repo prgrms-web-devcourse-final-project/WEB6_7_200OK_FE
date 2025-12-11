@@ -87,12 +87,13 @@ const pagesRouterConfig = {
 // Config files - default export allowed
 const configFilesConfig = {
   files: [
-    "**/*.config.{js,ts,mjs,cjs}",
+    "**/*.config.{js,ts,mjs,cjs,mts}",
     "**/middleware.ts",
     "**/instrumentation.ts",
   ],
   rules: {
     "import-x/no-default-export": "off",
+    "import-x/no-extraneous-dependencies": "off",
   },
 };
 
