@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { SocialLoginButtons } from "@/features/auth/ui/social-login-buttons";
 import windfallIcon from "@/shared/assets/icons/windfall.svg";
+import { Separator } from "@/shared/ui/separator";
 
 export function LoginScreen() {
   return (
@@ -13,10 +14,10 @@ export function LoginScreen() {
             <div className="relative flex items-center justify-center">
               <Image src={windfallIcon} alt="Windfall Logo" width={40} height={40} priority />
             </div>
-            <h1 className="text-foreground font-sans text-xl leading-6 font-semibold">Windfall</h1>
+            <h1 className="text-foreground text-xl leading-6 font-semibold">Windfall</h1>
           </div>
 
-          <p className="text-muted-foreground font-sans text-sm leading-6 font-normal">
+          <p className="text-muted-foreground text-sm leading-6 font-normal">
             윈드폴에 가입하고 하락 경매에 참여하세요!
           </p>
         </div>
@@ -24,10 +25,8 @@ export function LoginScreen() {
         {/* 로그인 버튼 영역 */}
         <div className="flex w-full flex-col gap-4">
           <div className="relative flex items-center justify-center py-2">
-            <div className="absolute inset-0 flex items-center">
-              <span className="border-sidebar-ring w-full border-t" />
-            </div>
-            <span className="bg-background text-muted-foreground relative px-4 font-sans text-xs font-normal">
+            <Separator className="absolute w-full" />
+            <span className="bg-background text-muted-foreground relative px-4 text-xs font-normal">
               간편 로그인
             </span>
           </div>
