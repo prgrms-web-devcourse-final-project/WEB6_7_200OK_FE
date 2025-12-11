@@ -1,16 +1,10 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import { Toaster } from "sonner";
 
 export default function ToastRegistry() {
-  return (
-    <Toaster
-      position="top-center"
-      toastOptions={{
-        classNames: {
-          toast: "!bg-card",
-        },
-      }}
-    />
-  );
+  const { theme = "system" } = useTheme();
+
+  return <Toaster position="top-center" theme={theme as "light" | "dark" | "system"} />;
 }
