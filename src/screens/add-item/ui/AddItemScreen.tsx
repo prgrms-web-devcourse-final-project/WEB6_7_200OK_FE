@@ -8,14 +8,38 @@ import Button from "@/shared/ui/button/button";
 import FileInput from "@/shared/ui/input/file-input";
 import Input from "@/shared/ui/input/input";
 import { DateTimeModal } from "@/shared/ui/modal/date-time-modal";
+import { Textarea } from "@/shared/ui/textarea/textarea";
 
 export function AddItemScreen() {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState({ hour: 10, minute: 30, period: "오전" });
+  const [selectedTime, setSelectedTime] = useState({ hour: 10, minute: 30, period: "오전" }); // 디폴트 값, 추후 변경 필요
   const [displayText, setDisplayText] = useState("날짜 및 시간을 선택해주세요");
+
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
+
+  const handleAddTag = (value: string) => {
+    const trimmedValue = value.trim();
+    if (trimmedValue && !tags.includes(trimmedValue)) {
+      setTags([...tags, trimmedValue]);
+      setTagInput("");
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
+
+  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleAddTag(tagInput);
+    }
+  };
+
   return (
-    <div className="mx-auto min-h-screen max-w-2xl gap-2 p-4 py-8">
+    <div className="mx-auto min-h-screen max-w-full gap-2 p-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">판매 물품 등록</h1>
 
       <div className="space-y-6">
@@ -40,10 +64,10 @@ export function AddItemScreen() {
           <div className="relative">
             <select
               id="category"
-              className="border-input focus-visible:border-ring focus-visible:ring-ring/50 dark:bg-input/30 h-10 w-full appearance-none rounded-md border bg-transparent px-3 pr-10 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
+              className="border-input focus-visible:border-ring focus-visible:ring-ring/50 bg-background text-foreground [&>option]:bg-background [&>option]:text-foreground dark:bg-card dark:[&>option]:bg-card h-10 w-full appearance-none rounded-md border px-3 pr-10 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
               defaultValue=""
             >
-              <option value="" disabled>
+              <option value="" disabled className="text-muted-foreground">
                 카테고리를 선택해주세요
               </option>
               <option value="all">전체</option>
@@ -79,43 +103,47 @@ export function AddItemScreen() {
           <label htmlFor="tags" className="mb-2 block text-sm font-medium">
             태그
           </label>
-          <Input id="tags" placeholder="태그를 입력해주세요" />
-          <div
+          <Input
             id="tags"
-            className="flex min-h-10 w-full flex-wrap items-center gap-2 rounded-md bg-transparent px-3 py-2"
-          >
-            {/* 예시 태그들 */}
-            <span className="bg-accent text-accent-foreground flex items-center gap-1 rounded-md px-2 py-1 text-sm">
-              #아이패드
-              <button type="button" className="hover:opacity-70">
-                <X className="size-3" />
-              </button>
-            </span>
-            <span className="bg-accent text-accent-foreground flex items-center gap-1 rounded-md px-2 py-1 text-sm">
-              #아이폰
-              <button type="button" className="hover:opacity-70">
-                <X className="size-3" />
-              </button>
-            </span>
-            <span className="bg-accent text-accent-foreground flex items-center gap-1 rounded-md px-2 py-1 text-sm">
-              #애플
-              <button type="button" className="hover:opacity-70">
-                <X className="size-3" />
-              </button>
-            </span>
-          </div>
+            placeholder="태그를 입력해주세요."
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={handleTagInputKeyDown}
+          />
+          {tags.length > 0 && (
+            <div className="mt-2 flex min-h-10 w-full flex-wrap items-center gap-2 rounded-md bg-transparent py-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="bg-accent text-accent-foreground flex items-center gap-1 rounded-md px-2 py-1 text-sm"
+                >
+                  # {tag}
+                  <Button
+                    type="button"
+                    onClick={() => handleRemoveTag(tag)}
+                    variant="ghost"
+                    size="icon-sm"
+                    className="h-auto w-auto p-0 hover:bg-transparent hover:opacity-70"
+                    aria-label={`${tag} 태그 삭제`}
+                  >
+                    <X className="size-3" />
+                  </Button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* 상세 설명 */}
+        {/* 상세 정보 */}
         <div>
-          <label htmlFor="description" className="mb-2 h-[140px] text-sm font-medium">
-            상세 설명
+          <label htmlFor="description" className="mb-2 block text-sm font-medium">
+            상세 정보
           </label>
-          {/* <Textarea
+          <Textarea
             id="description"
             placeholder="상품에 대한 상세한 설명을 입력해주세요."
-            className="min-h-32"
-          /> */}
+            className="min-h-32 resize-none"
+          />
         </div>
 
         {/* 판매 시작가 */}
@@ -123,11 +151,14 @@ export function AddItemScreen() {
           <label htmlFor="start-price" className="mb-2 block text-sm font-medium">
             판매 시작가
           </label>
-          <div className="relative">
-            <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
-              ₩
-            </span>
-            <Input id="start-price" type="number" placeholder="0" className="pl-7" />
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+            <span className="text-muted-foreground shrink-0">₩</span>
+            <Input
+              id="start-price"
+              type="number"
+              placeholder="0"
+              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+            />
           </div>
         </div>
 
@@ -136,21 +167,19 @@ export function AddItemScreen() {
           <label htmlFor="stop-loss-price" className="mb-2 block text-sm font-medium">
             판매 최저가 (Shop Loss)
           </label>
-          <div className="relative">
-            <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
-              ₩
-            </span>
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+            <span className="text-muted-foreground shrink-0">₩</span>
             <Input
               id="stop-loss-price"
               type="number"
               placeholder="시작가의 90% 이하 가격을 설정해주세요."
-              className="pl-7"
+              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
           {/* 경고 메시지 */}
-          <div className="mt-2 flex gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950/20">
-            <AlertCircle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-500" />
-            <p className="text-xs text-amber-800 dark:text-amber-300">
+          <div className="border-chart-4/50 bg-chart-4/10 mt-2 flex items-center gap-2 rounded-md border p-3">
+            <AlertCircle className="text-chart-4 size-4 shrink-0" />
+            <p className="text-chart-4 text-xs">
               최저가는 판매자만 볼 수 있으며, 이 가격까지 판매되지 않으면 경매가 자동으로
               종료됩니다.
             </p>
@@ -162,16 +191,19 @@ export function AddItemScreen() {
           <label htmlFor="drop-price" className="mb-2 block text-sm font-medium">
             가격 하락 단위
           </label>
-          <div className="relative">
-            <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
-              ₩
-            </span>
-            <Input id="drop-price" type="number" placeholder="1%" className="pl-7" />
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+            <span className="text-muted-foreground shrink-0">₩</span>
+            <Input
+              id="drop-price"
+              type="number"
+              placeholder="1%"
+              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+            />
           </div>
           {/* 경고 메시지 */}
-          <div className="mt-2 flex gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950/20">
-            <AlertCircle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-500" />
-            <p className="text-xs text-amber-800 dark:text-amber-300">
+          <div className="border-chart-4/30 bg-chart-4/10 mt-2 flex items-center gap-2 rounded-md border p-3">
+            <AlertCircle className="text-chart-4 size-4 shrink-0" />
+            <p className="text-chart-4 text-xs">
               5분마다 설정된 가격이 자동으로 하락합니다. 최소 가격은 시작 가격의 0.5%입니다.
             </p>
           </div>
@@ -182,16 +214,17 @@ export function AddItemScreen() {
           <label htmlFor="reserve-date" className="mb-2 block text-sm font-medium">
             경매 예약 일정
           </label>
-          <button
+          <Button
             type="button"
             onClick={() => setIsDateModalOpen(true)}
-            className="border-input focus-visible:border-ring focus-visible:ring-ring/50 dark:bg-input/30 flex h-10 w-full items-center justify-between rounded-md border bg-transparent px-3 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] md:text-base"
+            variant="outline"
+            className="h-10 w-full justify-between font-normal"
           >
             <span className={selectedDate ? "text-foreground" : "text-muted-foreground"}>
               {displayText}
             </span>
             <Calendar className="text-muted-foreground size-4" />
-          </button>
+          </Button>
         </div>
 
         {/* 네덜란드 경매란? */}
