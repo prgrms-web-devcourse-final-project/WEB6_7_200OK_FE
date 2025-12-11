@@ -25,7 +25,7 @@ export function LoginScreen() {
         <div className="flex w-full flex-col gap-4">
           <div className="relative flex items-center justify-center py-2">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-[rgba(209,213,220,0.5)]" />
+              <span className="border-sidebar-ring w-full border-t" />
             </div>
             <span className="bg-background text-muted-foreground relative px-4 font-sans text-xs font-normal">
               간편 로그인
