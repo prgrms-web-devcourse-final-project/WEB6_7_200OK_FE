@@ -16,7 +16,7 @@ export function LoginScreen() {
             <h1 className="text-foreground font-sans text-xl leading-6 font-semibold">Windfall</h1>
           </div>
 
-          <p className="font-sans text-sm leading-6 font-normal text-[#6A7282]">
+          <p className="text-muted-foreground font-sans text-sm leading-6 font-normal">
             윈드폴에 가입하고 하락 경매에 참여하세요!
           </p>
         </div>
@@ -27,7 +27,7 @@ export function LoginScreen() {
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-[rgba(209,213,220,0.5)]" />
             </div>
-            <span className="bg-background relative px-4 font-sans text-xs font-normal text-[#6A7282]">
+            <span className="bg-background text-muted-foreground relative px-4 font-sans text-xs font-normal">
               간편 로그인
             </span>
           </div>
