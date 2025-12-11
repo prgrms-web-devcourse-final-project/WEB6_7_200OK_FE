@@ -273,16 +273,11 @@ export function AddItemScreen() {
           <label htmlFor="start-price" className="mb-2 block text-sm font-medium">
             판매 시작가
           </label>
-          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
-            <span className="text-muted-foreground shrink-0">₩</span>
-            <Input
-              id="start-price"
-              type="number"
-              placeholder="0"
-              value={startPrice}
-              onChange={handleStartPriceChange}
-              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
-            />
+          <div className="relative">
+            <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
+              ₩
+            </span>
+            <Input id="start-price" type="number" placeholder="0" className="pl-7" />
           </div>
           {startPriceError && <p className="text-destructive mt-1 text-xs">{startPriceError}</p>}
         </div>
@@ -298,16 +293,14 @@ export function AddItemScreen() {
               id="stop-loss-price"
               type="number"
               placeholder="시작가의 90% 이하 가격을 설정해주세요."
-              value={stopLossPrice}
-              onChange={handleStopLossPriceChange}
-              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+              className="pl-7"
             />
           </div>
           {stopLossError && <p className="text-destructive mt-1 text-xs">{stopLossError}</p>}
           {/* 경고 메시지 */}
-          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-md border p-3">
-            <AlertCircle className="text-info-text size-4 shrink-0" />
-            <p className="text-info-text text-xs">
+          <div className="mt-2 flex gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950/20">
+            <AlertCircle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-500" />
+            <p className="text-xs text-amber-800 dark:text-amber-300">
               최저가는 판매자만 볼 수 있으며, 이 가격까지 판매되지 않으면 경매가 자동으로
               종료됩니다.
             </p>
@@ -319,22 +312,17 @@ export function AddItemScreen() {
           <label htmlFor="drop-price" className="mb-2 block text-sm font-medium">
             가격 하락 단위
           </label>
-          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
-            <span className="text-muted-foreground shrink-0">₩</span>
-            <Input
-              id="drop-price"
-              type="number"
-              placeholder="시작가의 0.5% 이상 가격을 설정해주세요."
-              value={dropPrice}
-              onChange={handleDropPriceChange}
-              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
-            />
+          <div className="relative">
+            <span className="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2">
+              ₩
+            </span>
+            <Input id="drop-price" type="number" placeholder="1%" className="pl-7" />
           </div>
           {dropPriceError && <p className="text-destructive mt-1 text-xs">{dropPriceError}</p>}
           {/* 경고 메시지 */}
-          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-md border p-3">
-            <AlertCircle className="text-info-text size-4 shrink-0" />
-            <p className="text-info-text text-xs">
+          <div className="mt-2 flex gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950/20">
+            <AlertCircle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-500" />
+            <p className="text-xs text-amber-800 dark:text-amber-300">
               5분마다 설정된 가격이 자동으로 하락합니다. 최소 가격은 시작 가격의 0.5%입니다.
             </p>
           </div>
