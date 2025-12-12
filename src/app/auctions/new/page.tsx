@@ -1,5 +1,5 @@
-import { AddItemScreen } from "@/screens/add-item";
+import { NewItemScreen } from "@/screens/new-item";
 
 export default function Page() {
-  return <AddItemScreen />;
+  return <NewItemScreen />;
 }
