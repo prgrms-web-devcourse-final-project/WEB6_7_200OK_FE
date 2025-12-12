@@ -279,6 +279,8 @@ export function AddItemScreen() {
               id="start-price"
               type="number"
               placeholder="0"
+              value={startPrice}
+              onChange={handleStartPriceChange}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
@@ -296,6 +298,8 @@ export function AddItemScreen() {
               id="stop-loss-price"
               type="number"
               placeholder="시작가의 90% 이하 가격을 설정해주세요."
+              value={stopLossPrice}
+              onChange={handleStopLossPriceChange}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
@@ -320,7 +324,9 @@ export function AddItemScreen() {
             <Input
               id="drop-price"
               type="number"
-              placeholder="1%"
+              placeholder="시작가의 0.5% 이상 가격을 설정해주세요."
+              value={dropPrice}
+              onChange={handleDropPriceChange}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
