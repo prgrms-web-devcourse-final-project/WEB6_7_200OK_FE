@@ -89,7 +89,7 @@ export function ItemCardTemplate({
                       {originalPrice.toLocaleString()}원
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="text-destructive text-xs">{discountRate}%</span>
+                      <span className="text-destructive text-xs">-{discountRate}%</span>
                       <span
                         className={cn(
                           "text-sm",
