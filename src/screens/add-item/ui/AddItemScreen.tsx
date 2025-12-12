@@ -88,7 +88,9 @@ export function AddItemScreen() {
         !Number.isNaN(stopLossValue) &&
         dropValue > startValue - stopLossValue
       ) {
-        setDropPriceError("가격 하락 단위가 너무 큽니다.");
+        setDropPriceError(
+          "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
+        );
       } else if (dropValue < startValue * 0.005) {
         setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만 일 수 없습니다.");
       } else {
@@ -321,10 +323,10 @@ export function AddItemScreen() {
           {startPriceError && <p className="text-destructive mt-1 text-xs">{startPriceError}</p>}
         </div>
 
-        {/* 판매 최저가 (Shop Loss) */}
+        {/* 판매 최저가 (Stop Loss) */}
         <div>
           <label htmlFor="stop-loss-price" className="mb-2 block text-sm font-medium">
-            판매 최저가 (Shop Loss)
+            판매 최저가 (Stop Loss)
           </label>
           <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
             <span className="text-muted-foreground shrink-0">₩</span>
