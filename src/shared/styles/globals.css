@@ -6,7 +6,9 @@
 @theme {
   /* Color System */
   --color-brand: oklch(0.4758 0.2241 288.5);
-  --color-brand-foreground: oklch(0.985 0 0);
+  --color-brand-contrast: var(--color-zinc-50);
+  --color-brand-surface: #0000ff0e;
+  --color-brand-text: #3000bebb;
 
   /* Typography System */
   --text-xs--letter-spacing: -0.015rem; /* x-small */
@@ -98,6 +100,9 @@
 }
 
 .dark {
+  --color-brand-surface: #6541fd40;
+  --color-brand-text: #b4a6ff;
+
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
