@@ -8,6 +8,7 @@ import Button from "@/shared/ui/button/button";
 import FileInput from "@/shared/ui/input/file-input";
 import Input from "@/shared/ui/input/input";
 import { DateTimeModal } from "@/shared/ui/modal/date-time-modal";
+import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 import { Textarea } from "@/shared/ui/textarea/textarea";
 
 export function AddItemScreen() {
@@ -190,7 +191,7 @@ export function AddItemScreen() {
   };
 
   return (
-    <div className="mx-auto min-h-screen max-w-full gap-2 p-4 py-8">
+    <ScrollArea className="mx-auto min-h-screen max-w-full gap-2 p-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">판매 물품 등록</h1>
 
       <div className="space-y-6">
@@ -428,6 +429,6 @@ export function AddItemScreen() {
           onConfirm={handleDateTimeConfirm}
         />
       )}
-    </div>
+    </ScrollArea>
   );
 }
