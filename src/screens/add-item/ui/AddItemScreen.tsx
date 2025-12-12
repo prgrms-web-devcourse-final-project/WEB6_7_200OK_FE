@@ -16,6 +16,11 @@ export function AddItemScreen() {
   const [selectedTime, setSelectedTime] = useState({ hour: 10, minute: 30, period: "오전" }); // 디폴트 값, 추후 변경 필요
   const [displayText, setDisplayText] = useState("날짜 및 시간을 선택해주세요");
 
+  // 기본 정보
+  const [productName, setProductName] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+
   // 태그
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
@@ -32,6 +37,13 @@ export function AddItemScreen() {
 
   // 스탑로스 가격 검증 (최소 90%)
   const validateStopLossPrice = (start: string, stop: string) => {
+    // 시작가가 있는데 최저가가 없는 경우
+    if (start && !stop) {
+      setStopLossError("최저가를 입력 해주세요.");
+      return;
+    }
+
+    // 둘 다 없거나 시작가만 없는 경우
     if (!start || !stop) {
       setStopLossError("");
       return;
@@ -51,6 +63,13 @@ export function AddItemScreen() {
 
   // 가격 하락 단위 검증 (최소 0.5%)
   const validateDropPrice = (start: string, drop: string, stopLoss: string) => {
+    // 시작가가 있는데 하락 단위가 없는 경우
+    if (start && !drop) {
+      setDropPriceError("하락 단위를 입력 해주세요.");
+      return;
+    }
+
+    // 둘 다 없거나 시작가만 없는 경우
     if (!start || !drop) {
       setDropPriceError("");
       return;
@@ -117,9 +136,7 @@ export function AddItemScreen() {
     setStopLossPrice(value);
     validateStopLossPrice(startPrice, value);
     // 최저가 변경 시 가격 하락 단위도 재검증
-    if (dropPrice) {
-      validateDropPrice(startPrice, dropPrice, value);
-    }
+    validateDropPrice(startPrice, dropPrice, value);
   };
 
   const handleDropPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,6 +177,16 @@ export function AddItemScreen() {
     setIsDateModalOpen(false);
   };
 
+  // 모든 필수 필드가 채워졌는지 확인
+  const isFormValid = () => {
+    const hasBasicInfo = productName.trim() !== "" && category !== "" && description.trim() !== "";
+    const hasPriceInfo = startPrice !== "" && stopLossPrice !== "" && dropPrice !== "";
+    const hasSchedule = selectedDate !== null;
+    const hasNoErrors = startPriceError === "" && stopLossError === "" && dropPriceError === "";
+
+    return hasBasicInfo && hasPriceInfo && hasSchedule && hasNoErrors;
+  };
+
   return (
     <div className="mx-auto min-h-screen max-w-full gap-2 p-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">판매 물품 등록</h1>
@@ -175,7 +202,12 @@ export function AddItemScreen() {
           <label htmlFor="product-name" className="mb-2 block text-sm font-medium">
             상품명
           </label>
-          <Input id="product-name" placeholder="상품명을 입력해주세요" />
+          <Input
+            id="product-name"
+            placeholder="상품명을 입력해주세요"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+          />
         </div>
 
         {/* 카테고리 */}
@@ -187,12 +219,12 @@ export function AddItemScreen() {
             <select
               id="category"
               className="border-input focus-visible:border-ring focus-visible:ring-ring/50 bg-background text-foreground [&>option]:bg-background [&>option]:text-foreground dark:bg-card dark:[&>option]:bg-card h-10 w-full appearance-none rounded-md border px-3 pr-10 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
-              defaultValue=""
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
             >
               <option value="" disabled className="text-muted-foreground">
                 카테고리를 선택해주세요
               </option>
-              <option value="all">전체</option>
               <option value="clothing">의류</option>
               <option value="accessories">잡화</option>
               <option value="furniture">가구/인테리어</option>
@@ -265,6 +297,8 @@ export function AddItemScreen() {
             id="description"
             placeholder="상품에 대한 상세한 설명을 입력해주세요."
             className="min-h-32 resize-none"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 
@@ -377,7 +411,7 @@ export function AddItemScreen() {
           <Button id="cancel-button" variant="outline" className="flex-1">
             취소
           </Button>
-          <Button id="reserve-button" className="flex-1">
+          <Button id="reserve-button" className="flex-1" disabled={!isFormValid()}>
             경매 예약하기
           </Button>
         </div>
