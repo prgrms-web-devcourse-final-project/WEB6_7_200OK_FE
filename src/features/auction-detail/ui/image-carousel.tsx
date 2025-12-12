@@ -1,4 +1,3 @@
-import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 
 import {
@@ -10,7 +9,7 @@ import {
 } from "@/shared/ui/carousel/carousel";
 
 interface ImageType {
-  src: string | StaticImport;
+  src: string;
   id: string;
 }
 
@@ -23,13 +22,13 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
     <div className="flex max-w-full">
       <Carousel className="h-162 w-full shrink">
         <CarouselContent className="h-162">
-          {images.map((v, _) => (
+          {images.map((v) => (
             <CarouselItem key={v.id}>
               <Image
                 src={v.src}
                 alt="image-carousel"
-                width="648"
-                height="648"
+                width={648}
+                height={648}
                 className="h-full w-full rounded-2xl object-cover dark:brightness-[0.2] dark:grayscale"
               />
             </CarouselItem>
