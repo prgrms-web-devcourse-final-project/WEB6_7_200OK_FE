@@ -22,11 +22,11 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
     <div className="flex max-w-full">
       <Carousel className="h-162 w-full shrink">
         <CarouselContent className="h-162">
-          {images.map((v) => (
-            <CarouselItem key={v.id}>
+          {images.map((image) => (
+            <CarouselItem key={image.id}>
               <Image
-                src={v.src}
-                alt="image-carousel"
+                src={image.src}
+                alt="auction image-carousel"
                 width={648}
                 height={648}
                 className="h-full w-full rounded-2xl object-cover dark:brightness-[0.2] dark:grayscale"
