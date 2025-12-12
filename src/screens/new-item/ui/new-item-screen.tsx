@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { ImagePlus, X, AlertCircle, Info, Calendar } from "lucide-react";
-import { z } from "zod";
 
 import Button from "@/shared/ui/button/button";
 import FileInput from "@/shared/ui/input/file-input";
@@ -18,23 +17,15 @@ import {
 } from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
 
+import { DEFAULT_DROP_PERCENTAGE, MAX_TAGS, STOP_LOSS_PERCENTAGE } from "../config/constants";
 import {
-  DEFAULT_DROP_PERCENTAGE,
-  MAX_TAGS,
-  MIN_DROP_PERCENTAGE,
-  MIN_START_PRICE,
-  STOP_LOSS_PERCENTAGE,
-} from "../lib/constants";
+  isFormValid,
+  startPriceSchema,
+  validateDropPrice,
+  validateStopLossPrice,
+} from "../lib/validators";
 
-// 필드 검증용
-const startPriceSchema = z
-  .number()
-  .min(MIN_START_PRICE, `판매 시작가는 ${MIN_START_PRICE.toLocaleString()}원 이상 설정해주세요.`);
-
-const stopLossPriceSchema = z.number().positive("최저가를 입력 해주세요.");
-const dropPriceSchema = z.number().positive("하락단위를 입력 해주세요.");
-
-export function AddItemScreen() {
+export function NewItemScreen() {
   const [selectedDate] = useState<Date | null>(null);
   const [displayText] = useState<string>("날짜 및 시간을 선택해주세요");
 
@@ -56,66 +47,6 @@ export function AddItemScreen() {
   const [startPriceError, setStartPriceError] = useState<string>("");
   const [stopLossError, setStopLossError] = useState<string>("");
   const [dropPriceError, setDropPriceError] = useState<string>("");
-
-  // 스탑로스 가격 검증 (최소 90%)
-  const validateStopLossPrice = (start: number | null, stop: number | null) => {
-    if (start && !stop) {
-      setStopLossError("최저가를 입력 해주세요.");
-      return;
-    }
-
-    if (!start || !stop) {
-      setStopLossError("");
-      return;
-    }
-
-    const stopLossResult = stopLossPriceSchema.safeParse(stop);
-    if (!stopLossResult.success) {
-      setStopLossError(stopLossResult.error.issues[0]?.message || "");
-      return;
-    }
-
-    if (stop > start * STOP_LOSS_PERCENTAGE) {
-      setStopLossError("판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다.");
-    } else {
-      setStopLossError("");
-    }
-  };
-
-  // 가격 하락 단위 검증 (최소 0.5%)
-  const validateDropPrice = (
-    start: number | null,
-    drop: number | null,
-    stopLoss: number | null
-  ) => {
-    if (start && !drop) {
-      setDropPriceError("하락단위를 입력 해주세요.");
-      return;
-    }
-
-    if (!start || !drop) {
-      setDropPriceError("");
-      return;
-    }
-
-    const dropPriceResult = dropPriceSchema.safeParse(drop);
-    if (!dropPriceResult.success) {
-      setDropPriceError(dropPriceResult.error.issues[0]?.message || "");
-      return;
-    }
-
-    if (drop >= start) {
-      setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
-    } else if (stopLoss && drop > start - stopLoss) {
-      setDropPriceError(
-        "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
-      );
-    } else if (drop < start * MIN_DROP_PERCENTAGE) {
-      setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만 일 수 없습니다.");
-    } else {
-      setDropPriceError("");
-    }
-  };
 
   const handleStartPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -152,12 +83,12 @@ export function AddItemScreen() {
     // 스탑로스 자동 계산 (시작가의 90%)
     const calculatedStopLoss = Math.floor(startPrice * STOP_LOSS_PERCENTAGE);
     setStopLossPrice(calculatedStopLoss);
-    validateStopLossPrice(startPrice, calculatedStopLoss);
+    validateStopLossPrice(startPrice, calculatedStopLoss, setStopLossError);
 
     // 가격 하락 단위 자동 계산 (시작가의 1%)
     const calculatedDropPrice = Math.floor(startPrice * DEFAULT_DROP_PERCENTAGE);
     setDropPrice(calculatedDropPrice);
-    validateDropPrice(startPrice, calculatedDropPrice, calculatedStopLoss);
+    validateDropPrice(startPrice, calculatedDropPrice, calculatedStopLoss, setDropPriceError);
   };
 
   const handleStopLossPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,9 +111,9 @@ export function AddItemScreen() {
       return;
     }
 
-    validateStopLossPrice(startPrice, stopLossPrice);
+    validateStopLossPrice(startPrice, stopLossPrice, setStopLossError);
     // 최저가 변경 시 가격 하락 단위도 재검증
-    validateDropPrice(startPrice, dropPrice, stopLossPrice);
+    validateDropPrice(startPrice, dropPrice, stopLossPrice, setDropPriceError);
   };
 
   const handleDropPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,7 +136,7 @@ export function AddItemScreen() {
       return;
     }
 
-    validateDropPrice(startPrice, dropPrice, stopLossPrice);
+    validateDropPrice(startPrice, dropPrice, stopLossPrice, setDropPriceError);
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
@@ -232,19 +163,38 @@ export function AddItemScreen() {
     }
   };
 
-  // 모든 필수 필드가 채워졌는지 확인 (경매 예약하기 버튼 활성화 여부)
-  const isFormValid = () => {
-    const hasBasicInfo = productName.trim() !== "" && category !== "" && description.trim() !== "";
-    const hasPriceInfo = startPrice !== null && stopLossPrice !== null && dropPrice !== null;
-    const hasSchedule = selectedDate !== null;
-    const hasNoErrors = startPriceError === "" && stopLossError === "" && dropPriceError === "";
-
-    return hasBasicInfo && hasPriceInfo && hasSchedule && hasNoErrors;
-  };
+  // 모든 폼 데이터 검증 (태그 제외)
+  const formValid = useMemo(
+    () =>
+      isFormValid({
+        productName,
+        category,
+        description,
+        startPrice,
+        stopLossPrice,
+        dropPrice,
+        selectedDate,
+        startPriceError,
+        stopLossError,
+        dropPriceError,
+      }),
+    [
+      productName,
+      category,
+      description,
+      startPrice,
+      stopLossPrice,
+      dropPrice,
+      selectedDate,
+      startPriceError,
+      stopLossError,
+      dropPriceError,
+    ]
+  );
 
   return (
     <ScrollArea className="mx-auto min-h-screen max-w-full gap-2 p-4 py-6">
-      <h1 className="mb-6 text-2xl font-bold">판매 물품 등록</h1>
+      <p className="mb-6 text-2xl font-bold">판매 물품 등록</p>
       <div className="space-y-6">
         {/* 이미지 업로드 */}
         <div>
@@ -469,7 +419,7 @@ export function AddItemScreen() {
           <Button id="cancel-button" variant="outline" className="flex-1">
             취소
           </Button>
-          <Button id="reserve-button" className="flex-1" disabled={!isFormValid()}>
+          <Button id="reserve-button" className="flex-1" disabled={!formValid}>
             경매 예약하기
           </Button>
         </div>
