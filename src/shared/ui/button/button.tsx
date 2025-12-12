@@ -10,12 +10,13 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-brand text-brand-foreground hover:bg-brand/90",
+        primary: "bg-brand text-brand-contrast hover:bg-brand/90",
+        accent: "bg-brand-surface text-brand-text",
         outline:
           "bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 border shadow-xs",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary hover:text-brand",
+        link: "text-primary hover:text-brand-text",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -27,16 +28,16 @@ export const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   }
 );
 
-type ButtonProps = ComponentPropsWithoutRef<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-  };
+interface ButtonProps
+  extends ComponentPropsWithoutRef<"button">, VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
 
 export default function Button({
   className,
