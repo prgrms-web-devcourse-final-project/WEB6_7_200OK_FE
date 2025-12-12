@@ -18,14 +18,13 @@ import {
 } from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
 
-// 가격 관련 상수
-const STOP_LOSS_PERCENTAGE = 0.9; // 스탑로스 기본 값 시작가 90%
-const DEFAULT_DROP_PERCENTAGE = 0.01; // 기본 하락 단위 1%
-const MIN_DROP_PERCENTAGE = 0.005; // 기본 하락 단위 최소 값 0.5%
-const MIN_START_PRICE = 1000; // 최소 시작가
-
-// 태그 관련 상수
-const MAX_TAGS = 5; // 최대 태그 개수
+import {
+  DEFAULT_DROP_PERCENTAGE,
+  MAX_TAGS,
+  MIN_DROP_PERCENTAGE,
+  MIN_START_PRICE,
+  STOP_LOSS_PERCENTAGE,
+} from "../lib/constants";
 
 // 필드 검증용
 const startPriceSchema = z
