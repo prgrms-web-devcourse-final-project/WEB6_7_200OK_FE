@@ -9,14 +9,23 @@ import Button from "@/shared/ui/button/button";
 import FileInput from "@/shared/ui/input/file-input";
 import Input from "@/shared/ui/input/input";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
 
 // 가격 관련 상수
 const STOP_LOSS_PERCENTAGE = 0.9; // 스탑로스 기본 값 시작가 90%
 const DEFAULT_DROP_PERCENTAGE = 0.01; // 기본 하락 단위 1%
 const MIN_DROP_PERCENTAGE = 0.005; // 기본 하락 단위 최소 값 0.5%
-
 const MIN_START_PRICE = 1000; // 최소 시작가
+
+// 태그 관련 상수
+const MAX_TAGS = 5; // 최대 태그 개수
 
 // 필드 검증용
 const startPriceSchema = z
@@ -27,9 +36,8 @@ const stopLossPriceSchema = z.number().positive("최저가를 입력 해주세�
 const dropPriceSchema = z.number().positive("하락단위를 입력 해주세요.");
 
 export function AddItemScreen() {
-  // const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [selectedDate] = useState<Date | null>(null);
-  const [displayText] = useState("날짜 및 시간을 선택해주세요");
+  const [displayText] = useState<string>("날짜 및 시간을 선택해주세요");
 
   // 기본 정보
   const [productName, setProductName] = useState<string>("");
@@ -51,143 +59,154 @@ export function AddItemScreen() {
   const [dropPriceError, setDropPriceError] = useState<string>("");
 
   // 스탑로스 가격 검증 (최소 90%)
-  const validateStopLossPrice = (start: number, stop: number) => {
-    // 시작가가 있는데 최저가가 없는 경우
+  const validateStopLossPrice = (start: number | null, stop: number | null) => {
     if (start && !stop) {
       setStopLossError("최저가를 입력 해주세요.");
       return;
     }
 
-    // 둘 다 없거나 시작가만 없는 경우
     if (!start || !stop) {
       setStopLossError("");
       return;
     }
 
-    const startValue = start;
-    const stopValue = stop;
+    const stopLossResult = stopLossPriceSchema.safeParse(stop);
+    if (!stopLossResult.success) {
+      setStopLossError(stopLossResult.error.issues[0]?.message || "");
+      return;
+    }
 
-    // 타입 검증
-    const stopLossResult = stopLossPriceSchema.safeParse(stopValue);
-
-    if (!Number.isNaN(startValue) && !Number.isNaN(stopValue)) {
-      // 검증 실패 시
-      if (!stopLossResult.success) {
-        setStopLossError(stopLossResult.error.issues[0]?.message || "");
-        return;
-      }
-
-      if (stopValue > startValue * STOP_LOSS_PERCENTAGE) {
-        setStopLossError("판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다.");
-      } else {
-        setStopLossError("");
-      }
+    if (stop > start * STOP_LOSS_PERCENTAGE) {
+      setStopLossError("판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다.");
+    } else {
+      setStopLossError("");
     }
   };
 
   // 가격 하락 단위 검증 (최소 0.5%)
-  const validateDropPrice = (start: number, drop: number, stopLoss: number) => {
-    // 시작가가 있는데 하락 단위가 없는 경우
+  const validateDropPrice = (
+    start: number | null,
+    drop: number | null,
+    stopLoss: number | null
+  ) => {
     if (start && !drop) {
       setDropPriceError("하락단위를 입력 해주세요.");
       return;
     }
 
-    // 둘 다 없거나 시작가만 없는 경우
     if (!start || !drop) {
       setDropPriceError("");
       return;
     }
 
-    const startValue = start;
-    const dropValue = drop;
-    const stopLossValue = stopLoss ?? null;
+    const dropPriceResult = dropPriceSchema.safeParse(drop);
+    if (!dropPriceResult.success) {
+      setDropPriceError(dropPriceResult.error.issues[0]?.message || "");
+      return;
+    }
 
-    // 타입 검증
-    const dropPriceResult = dropPriceSchema.safeParse(dropValue);
-
-    if (!Number.isNaN(startValue) && !Number.isNaN(dropValue)) {
-      // 검증 실패 시
-      if (!dropPriceResult.success) {
-        setDropPriceError(dropPriceResult.error.issues[0]?.message || "");
-        return;
-      }
-
-      if (dropValue >= startValue) {
-        setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
-      } else if (
-        // 가격 하락 단위가 큰 경우 (시작가 1000, 최저가 900, 가격 하락 단위 100 이상일 경우 발생)
-        stopLoss &&
-        !Number.isNaN(stopLossValue) &&
-        dropValue > startValue - stopLossValue
-      ) {
-        setDropPriceError(
-          "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
-        );
-      } else if (dropValue < startValue * MIN_DROP_PERCENTAGE) {
-        setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만 일 수 없습니다.");
-      } else {
-        setDropPriceError(""); // 모든 조건이 OK일 때만 초기화
-      }
+    if (drop >= start) {
+      setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
+    } else if (stopLoss && drop > start - stopLoss) {
+      setDropPriceError(
+        "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
+      );
+    } else if (drop < start * MIN_DROP_PERCENTAGE) {
+      setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만 일 수 없습니다.");
+    } else {
+      setDropPriceError("");
     }
   };
 
   const handleStartPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setStartPrice(Number(value));
 
-    if (value) {
-      const price = Number(value);
+    if (!value) {
+      setStartPrice(null);
+      return;
+    }
 
-      // 시작가 검증
-      const startPriceResult = startPriceSchema.safeParse(price);
+    const price = Number(value);
+    if (Number.isNaN(price)) return;
 
-      if (!startPriceResult.success) {
-        setStartPriceError(startPriceResult.error.issues[0]?.message || "");
-      } else {
-        setStartPriceError("");
-      }
+    setStartPrice(price);
+  };
 
-      if (!Number.isNaN(price)) {
-        // 스탑로스 자동 계산 (시작가의 90%)
-        const calculatedStopLoss = Math.floor(price * STOP_LOSS_PERCENTAGE);
-        setStopLossPrice(calculatedStopLoss);
-        validateStopLossPrice(Number(value), calculatedStopLoss);
-
-        // 가격 하락 단위 자동 계산 (시작가의 1%)
-        const calculatedDropPrice = Math.floor(price * DEFAULT_DROP_PERCENTAGE);
-        setDropPrice(calculatedDropPrice);
-        validateDropPrice(Number(value), calculatedDropPrice, calculatedStopLoss);
-      }
-    } else {
-      setStopLossPrice(0);
-      setDropPrice(0);
+  const handleStartPriceBlur = () => {
+    if (!startPrice) {
+      setStopLossPrice(null);
+      setDropPrice(null);
       setStartPriceError("");
       setStopLossError("");
       setDropPriceError("");
+      return;
     }
+
+    // 시작가 검증
+    const startPriceResult = startPriceSchema.safeParse(startPrice);
+    if (!startPriceResult.success) {
+      setStartPriceError(startPriceResult.error.issues[0]?.message || "");
+      return;
+    }
+    setStartPriceError("");
+
+    // 스탑로스 자동 계산 (시작가의 90%)
+    const calculatedStopLoss = Math.floor(startPrice * STOP_LOSS_PERCENTAGE);
+    setStopLossPrice(calculatedStopLoss);
+    validateStopLossPrice(startPrice, calculatedStopLoss);
+
+    // 가격 하락 단위 자동 계산 (시작가의 1%)
+    const calculatedDropPrice = Math.floor(startPrice * DEFAULT_DROP_PERCENTAGE);
+    setDropPrice(calculatedDropPrice);
+    validateDropPrice(startPrice, calculatedDropPrice, calculatedStopLoss);
   };
 
   const handleStopLossPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setStopLossPrice(Number(value));
-    validateStopLossPrice(startPrice ?? 0, Number(value));
+
+    if (!value) {
+      setStopLossPrice(null);
+      return;
+    }
+
+    const numValue = Number(value);
+    if (Number.isNaN(numValue)) return;
+
+    setStopLossPrice(numValue);
+  };
+
+  const handleStopLossPriceBlur = () => {
+    if (!stopLossPrice) {
+      setStopLossError("");
+      return;
+    }
+
+    validateStopLossPrice(startPrice, stopLossPrice);
     // 최저가 변경 시 가격 하락 단위도 재검증
-    validateDropPrice(startPrice ?? 0, dropPrice ?? 0, Number(value));
+    validateDropPrice(startPrice, dropPrice, stopLossPrice);
   };
 
   const handleDropPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setDropPrice(Number(value));
-    validateDropPrice(startPrice ?? 0, Number(value), stopLossPrice ?? 0);
+
+    if (!value) {
+      setDropPrice(null);
+      return;
+    }
+
+    const numValue = Number(value);
+    if (Number.isNaN(numValue)) return;
+
+    setDropPrice(numValue);
   };
 
-  const handleAddTag = (value: string) => {
-    const trimmedValue = value.trim();
-    if (trimmedValue && !tags.includes(trimmedValue)) {
-      setTags([...tags, trimmedValue]);
-      setTagInput("");
+  const handleDropPriceBlur = () => {
+    if (!dropPrice) {
+      setDropPriceError("");
+      return;
     }
+
+    validateDropPrice(startPrice, dropPrice, stopLossPrice);
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
@@ -197,22 +216,22 @@ export function AddItemScreen() {
   const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      handleAddTag(tagInput);
+
+      if (tags.length >= MAX_TAGS) {
+        return;
+      }
+
+      const trimmedValue = tagInput.trim();
+
+      // 이미 존재하는 값일 시, 값이 없을 경우 무시
+      if (!trimmedValue || tags.includes(trimmedValue)) {
+        return;
+      }
+
+      setTags((prevTags) => [...prevTags, trimmedValue]);
+      setTagInput("");
     }
   };
-
-  // const formatDateTime = (date: Date, time: { hour: number; minute: number; period: string }) =>
-  //   `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${time.period} ${time.hour}:${String(time.minute).padStart(2, "0")}`;
-
-  // const handleDateTimeConfirm = (
-  //   date: Date,
-  //   time: { hour: number; minute: number; period: string }
-  // ) => {
-  //   setSelectedDate(date);
-  //   setSelectedTime(time);
-  //   setDisplayText(formatDateTime(date, time));
-  //   setIsDateModalOpen(false);
-  // };
 
   // 모든 필수 필드가 채워졌는지 확인 (경매 예약하기 버튼 활성화 여부)
   const isFormValid = () => {
@@ -253,26 +272,23 @@ export function AddItemScreen() {
             카테고리
           </label>
           <div className="relative">
-            <select
-              id="category"
-              className="border-input focus-visible:border-ring focus-visible:ring-ring/50 bg-background text-foreground [&>option]:bg-background [&>option]:text-foreground dark:bg-card dark:[&>option]:bg-card h-10 w-full appearance-none rounded-lg border px-3 pr-10 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="" disabled className="text-muted-foreground">
-                카테고리를 선택해주세요
-              </option>
-              <option value="clothing">의류</option>
-              <option value="accessories">잡화</option>
-              <option value="furniture">가구/인테리어</option>
-              <option value="digital">디지털</option>
-              <option value="appliances">가전제품</option>
-              <option value="sports">스포츠/레저</option>
-              <option value="pet">반려동물</option>
-              <option value="hobby">취미</option>
-              <option value="books">도서/티켓</option>
-              <option value="etc">기타</option>
-            </select>
+            <Select value={category} onValueChange={(value) => setCategory(value)}>
+              <SelectTrigger className="h-10 w-full rounded-lg border bg-transparent px-3">
+                <SelectValue placeholder="카테고리를 선택해주세요" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="clothing">의류</SelectItem>
+                <SelectItem value="accessories">잡화</SelectItem>
+                <SelectItem value="furniture">가구/인테리어</SelectItem>
+                <SelectItem value="digital">디지털</SelectItem>
+                <SelectItem value="appliances">가전제품</SelectItem>
+                <SelectItem value="sports">스포츠/레저</SelectItem>
+                <SelectItem value="pet">반려동물</SelectItem>
+                <SelectItem value="hobby">취미</SelectItem>
+                <SelectItem value="books">도서/티켓</SelectItem>
+                <SelectItem value="etc">기타</SelectItem>
+              </SelectContent>
+            </Select>
             <svg
               className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2"
               fill="none"
@@ -292,15 +308,17 @@ export function AddItemScreen() {
         {/* 태그 */}
         <div>
           <label htmlFor="tags" className="mb-2 block text-sm font-medium">
-            태그
+            태그 ({tags.length}/{MAX_TAGS})
           </label>
           <Input
             id="tags"
             type="text"
-            placeholder="태그를 입력해주세요."
+            placeholder={tags.length <= MAX_TAGS ? "태그를 입력해주세요." : undefined}
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={handleTagInputKeyDown}
+            disabled={tags.length >= MAX_TAGS}
+            className={tags.length >= MAX_TAGS ? "select-none" : ""}
           />
           {tags.length > 0 && (
             <div className="mt-2 flex min-h-10 w-full flex-wrap items-center gap-2 rounded-lg bg-transparent py-2">
@@ -345,14 +363,15 @@ export function AddItemScreen() {
           <label htmlFor="start-price" className="mb-2 block text-sm font-medium">
             판매 시작가
           </label>
-          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px]">
             <span className="text-muted-foreground shrink-0">₩</span>
             <Input
               id="start-price"
               type="number"
               placeholder="0"
-              value={startPrice}
+              value={startPrice ?? ""}
               onChange={handleStartPriceChange}
+              onBlur={handleStartPriceBlur}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
@@ -364,14 +383,15 @@ export function AddItemScreen() {
           <label htmlFor="stop-loss-price" className="mb-2 block text-sm font-medium">
             판매 최저가 (Stop Loss)
           </label>
-          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px]">
             <span className="text-muted-foreground shrink-0">₩</span>
             <Input
               id="stop-loss-price"
               type="number"
               placeholder="시작가의 90% 이하 가격을 설정해주세요."
-              value={stopLossPrice}
+              value={stopLossPrice ?? ""}
               onChange={handleStopLossPriceChange}
+              onBlur={handleStopLossPriceBlur}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
@@ -391,14 +411,15 @@ export function AddItemScreen() {
           <label htmlFor="drop-price" className="mb-2 block text-sm font-medium">
             가격 하락 단위
           </label>
-          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px]">
             <span className="text-muted-foreground shrink-0">₩</span>
             <Input
               id="drop-price"
               type="number"
               placeholder="시작가의 0.5% 이상 가격을 설정해주세요."
-              value={dropPrice}
+              value={dropPrice ?? ""}
               onChange={handleDropPriceChange}
+              onBlur={handleDropPriceBlur}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
@@ -454,16 +475,6 @@ export function AddItemScreen() {
           </Button>
         </div>
       </div>
-
-      {/* 날짜/시간 선택 모달 */}
-      {/* {isDateModalOpen && (
-        <DateTimeModal
-          selectedDate={selectedDate}
-          selectedTime={selectedTime}
-          onClose={() => setIsDateModalOpen(false)}
-          onConfirm={handleDateTimeConfirm}
-        />
-      )} */}
     </ScrollArea>
   );
 }
