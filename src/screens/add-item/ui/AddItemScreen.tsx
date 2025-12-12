@@ -16,8 +16,117 @@ export function AddItemScreen() {
   const [selectedTime, setSelectedTime] = useState({ hour: 10, minute: 30, period: "오전" }); // 디폴트 값, 추후 변경 필요
   const [displayText, setDisplayText] = useState("날짜 및 시간을 선택해주세요");
 
+  // 태그
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+
+  // 판매 시작가, 최저가, 가격 하락 단위
+  const [startPrice, setStartPrice] = useState("");
+  const [stopLossPrice, setStopLossPrice] = useState("");
+  const [dropPrice, setDropPrice] = useState("");
+
+  // 에러 메시지 관리 (스탑로스, 가격 하락 단위)
+  const [startPriceError, setStartPriceError] = useState("");
+  const [stopLossError, setStopLossError] = useState("");
+  const [dropPriceError, setDropPriceError] = useState("");
+
+  // 스탑로스 가격 검증 (최소 90%)
+  const validateStopLossPrice = (start: string, stop: string) => {
+    if (!start || !stop) {
+      setStopLossError("");
+      return;
+    }
+
+    const startValue = parseFloat(start);
+    const stopValue = parseFloat(stop);
+
+    if (!Number.isNaN(startValue) && !Number.isNaN(stopValue)) {
+      if (stopValue > startValue * 0.9) {
+        setStopLossError("판매 최저가는 판매 시작가의 90%을 초과할 수 없습니다.");
+      } else {
+        setStopLossError("");
+      }
+    }
+  };
+
+  // 가격 하락 단위 검증 (최소 0.5%)
+  const validateDropPrice = (start: string, drop: string, stopLoss: string) => {
+    if (!start || !drop) {
+      setDropPriceError("");
+      return;
+    }
+
+    const startValue = parseFloat(start);
+    const dropValue = parseFloat(drop);
+    const stopLossValue = stopLoss ? parseFloat(stopLoss) : 0;
+
+    if (!Number.isNaN(startValue) && !Number.isNaN(dropValue)) {
+      if (dropValue >= startValue) {
+        setDropPriceError("가격 하락 단위는 판매 시작가보다 높을 수 없습니다.");
+      } else if (
+        // 가격 하락 단위가 큰 경우 (시작가 1000, 최저가 900, 가격 하락 단위 100 이상일 경우 발생)
+        stopLoss &&
+        !Number.isNaN(stopLossValue) &&
+        dropValue > startValue - stopLossValue
+      ) {
+        setDropPriceError("가격 하락 단위가 너무 큽니다. (시작가 - 최저가) 이하로 설정해주세요.");
+      } else if (dropValue < startValue * 0.005) {
+        setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만 일 수 없습니다.");
+      } else {
+        setDropPriceError(""); // 모든 조건이 OK일 때만 초기화
+      }
+    }
+  };
+
+  const handleStartPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setStartPrice(value);
+
+    if (value) {
+      const price = parseFloat(value);
+
+      // 판매 시작가 최소값 1000 설정
+      if (price < 1000) {
+        setStartPriceError("판매 시작가는 1000원 이상 설정해주세요.");
+      } else {
+        setStartPriceError("");
+      }
+
+      if (!Number.isNaN(price)) {
+        // 스탑로스 자동 계산
+        const calculatedStopLoss = Math.floor(price * 0.9).toString();
+        setStopLossPrice(calculatedStopLoss);
+        validateStopLossPrice(value, calculatedStopLoss);
+
+        // 가격 하락 단위 자동 계산
+        const calculatedDropPrice = Math.floor(price * 0.01).toString();
+        setDropPrice(calculatedDropPrice);
+        validateDropPrice(value, calculatedDropPrice, calculatedStopLoss);
+      }
+    } else {
+      setStopLossPrice("");
+      setDropPrice("");
+      setStartPriceError("");
+      setStopLossError("");
+      setDropPriceError("");
+    }
+  };
+
+  const handleStopLossPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setStopLossPrice(value);
+    validateStopLossPrice(startPrice, value);
+    // 최저가 변경 시 가격 하락 단위도 재검증
+    if (dropPrice) {
+      validateDropPrice(startPrice, dropPrice, value);
+    }
+  };
+
+  const handleDropPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setDropPrice(value);
+    validateDropPrice(startPrice, value, stopLossPrice);
+  };
 
   const handleAddTag = (value: string) => {
     const trimmedValue = value.trim();
@@ -36,6 +145,19 @@ export function AddItemScreen() {
       e.preventDefault();
       handleAddTag(tagInput);
     }
+  };
+
+  const formatDateTime = (date: Date, time: { hour: number; minute: number; period: string }) =>
+    `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${time.period} ${time.hour}:${String(time.minute).padStart(2, "0")}`;
+
+  const handleDateTimeConfirm = (
+    date: Date,
+    time: { hour: number; minute: number; period: string }
+  ) => {
+    setSelectedDate(date);
+    setSelectedTime(time);
+    setDisplayText(formatDateTime(date, time));
+    setIsDateModalOpen(false);
   };
 
   return (
@@ -157,9 +279,12 @@ export function AddItemScreen() {
               id="start-price"
               type="number"
               placeholder="0"
+              value={startPrice}
+              onChange={handleStartPriceChange}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
+          {startPriceError && <p className="text-destructive mt-1 text-xs">{startPriceError}</p>}
         </div>
 
         {/* 판매 최저가 (Shop Loss) */}
@@ -173,9 +298,12 @@ export function AddItemScreen() {
               id="stop-loss-price"
               type="number"
               placeholder="시작가의 90% 이하 가격을 설정해주세요."
+              value={stopLossPrice}
+              onChange={handleStopLossPriceChange}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
+          {stopLossError && <p className="text-destructive mt-1 text-xs">{stopLossError}</p>}
           {/* 경고 메시지 */}
           <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-md border p-3">
             <AlertCircle className="text-info-text size-4 shrink-0" />
@@ -196,10 +324,13 @@ export function AddItemScreen() {
             <Input
               id="drop-price"
               type="number"
-              placeholder="1%"
+              placeholder="시작가의 0.5% 이상 가격을 설정해주세요."
+              value={dropPrice}
+              onChange={handleDropPriceChange}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
+          {dropPriceError && <p className="text-destructive mt-1 text-xs">{dropPriceError}</p>}
           {/* 경고 메시지 */}
           <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-md border p-3">
             <AlertCircle className="text-info-text size-4 shrink-0" />
@@ -258,13 +389,7 @@ export function AddItemScreen() {
           selectedDate={selectedDate}
           selectedTime={selectedTime}
           onClose={() => setIsDateModalOpen(false)}
-          onConfirm={(date, time) => {
-            setSelectedDate(date);
-            setSelectedTime(time);
-            const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${time.period} ${time.hour}:${String(time.minute).padStart(2, "0")}`;
-            setDisplayText(formatted);
-            setIsDateModalOpen(false);
-          }}
+          onConfirm={handleDateTimeConfirm}
         />
       )}
     </div>
