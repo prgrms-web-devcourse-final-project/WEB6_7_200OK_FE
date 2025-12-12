@@ -38,7 +38,7 @@ export function DateTimeModal({
   minDate.setHours(0, 0, 0, 0);
 
   const maxDate = new Date();
-  maxDate.setDate(maxDate.getDate() + 8);
+  maxDate.setDate(maxDate.getDate() + 7);
   maxDate.setHours(23, 59, 59, 999);
 
   const getDaysInMonth = (date: Date) => {
@@ -127,12 +127,12 @@ export function DateTimeModal({
   return (
     <>
       {/* 백드롭 */}
-      <Button
-        type="button"
-        variant="ghost"
-        className="fixed inset-0 z-50 h-full w-full rounded-none bg-black/50 backdrop-blur-sm hover:bg-black/50"
+      <div
+        className="fixed inset-0 z-50 h-full w-full rounded-none backdrop-blur-sm transition-colors"
         onClick={onClose}
         aria-label="모달 닫기"
+        role="presentation"
+        tabIndex={-1}
       />
 
       {/* 모달 */}

@@ -11,6 +11,13 @@ import { DateTimeModal } from "@/shared/ui/modal/date-time-modal";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 import { Textarea } from "@/shared/ui/textarea/textarea";
 
+// 가격 관련 상수
+const STOP_LOSS_PERCENTAGE = 0.9; // 스탑로스 기본 값 시작가 90%
+const DEFAULT_DROP_PERCENTAGE = 0.01; // 기본 하락 단위 1%
+const MIN_DROP_PERCENTAGE = 0.005; // 기본 하락 단위 최소 값 0.5%
+
+const MIN_START_PRICE = 1000; // 최소 시작가
+
 export function AddItemScreen() {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -54,8 +61,8 @@ export function AddItemScreen() {
     const stopValue = parseFloat(stop);
 
     if (!Number.isNaN(startValue) && !Number.isNaN(stopValue)) {
-      if (stopValue > startValue * 0.9) {
-        setStopLossError("판매 최저가는 판매 시작가의 90%을 초과할 수 없습니다.");
+      if (stopValue > startValue * STOP_LOSS_PERCENTAGE) {
+        setStopLossError("판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다.");
       } else {
         setStopLossError("");
       }
@@ -66,7 +73,7 @@ export function AddItemScreen() {
   const validateDropPrice = (start: string, drop: string, stopLoss: string) => {
     // 시작가가 있는데 하락 단위가 없는 경우
     if (start && !drop) {
-      setDropPriceError("하락 단위를 입력 해주세요.");
+      setDropPriceError("하락단위를 입력 해주세요.");
       return;
     }
 
@@ -92,7 +99,7 @@ export function AddItemScreen() {
         setDropPriceError(
           "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
         );
-      } else if (dropValue < startValue * 0.005) {
+      } else if (dropValue < startValue * MIN_DROP_PERCENTAGE) {
         setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만 일 수 없습니다.");
       } else {
         setDropPriceError(""); // 모든 조건이 OK일 때만 초기화
@@ -107,21 +114,23 @@ export function AddItemScreen() {
     if (value) {
       const price = parseFloat(value);
 
-      // 판매 시작가 최소값 1000 설정
-      if (price < 1000) {
-        setStartPriceError("판매 시작가는 1000원 이상 설정해주세요.");
+      // 판매 시작가 최소값 설정
+      if (price < MIN_START_PRICE) {
+        setStartPriceError(
+          `판매 시작가는 ${MIN_START_PRICE.toLocaleString()}원 이상 설정해주세요.`
+        );
       } else {
         setStartPriceError("");
       }
 
       if (!Number.isNaN(price)) {
-        // 스탑로스 자동 계산
-        const calculatedStopLoss = Math.floor(price * 0.9).toString();
+        // 스탑로스 자동 계산 (시작가의 90%)
+        const calculatedStopLoss = Math.floor(price * STOP_LOSS_PERCENTAGE).toString();
         setStopLossPrice(calculatedStopLoss);
         validateStopLossPrice(value, calculatedStopLoss);
 
-        // 가격 하락 단위 자동 계산
-        const calculatedDropPrice = Math.floor(price * 0.01).toString();
+        // 가격 하락 단위 자동 계산 (시작가의 1%)
+        const calculatedDropPrice = Math.floor(price * DEFAULT_DROP_PERCENTAGE).toString();
         setDropPrice(calculatedDropPrice);
         validateDropPrice(value, calculatedDropPrice, calculatedStopLoss);
       }
