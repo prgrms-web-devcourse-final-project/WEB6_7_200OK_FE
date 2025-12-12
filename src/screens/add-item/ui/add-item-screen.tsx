@@ -8,7 +8,6 @@ import { z } from "zod";
 import Button from "@/shared/ui/button/button";
 import FileInput from "@/shared/ui/input/file-input";
 import Input from "@/shared/ui/input/input";
-import { DateTimeModal } from "@/shared/ui/modal/date-time-modal";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 import { Textarea } from "@/shared/ui/textarea/textarea";
 
@@ -16,6 +15,7 @@ import { Textarea } from "@/shared/ui/textarea/textarea";
 const STOP_LOSS_PERCENTAGE = 0.9; // 스탑로스 기본 값 시작가 90%
 const DEFAULT_DROP_PERCENTAGE = 0.01; // 기본 하락 단위 1%
 const MIN_DROP_PERCENTAGE = 0.005; // 기본 하락 단위 최소 값 0.5%
+
 const MIN_START_PRICE = 1000; // 최소 시작가
 
 // 필드 검증용
@@ -24,14 +24,12 @@ const startPriceSchema = z
   .min(MIN_START_PRICE, `판매 시작가는 ${MIN_START_PRICE.toLocaleString()}원 이상 설정해주세요.`);
 
 const stopLossPriceSchema = z.number().positive("최저가를 입력 해주세요.");
-
 const dropPriceSchema = z.number().positive("하락단위를 입력 해주세요.");
 
 export function AddItemScreen() {
-  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState({ hour: 10, minute: 30, period: "오전" }); // 디폴트 값, 추후 변경 필요
-  const [displayText, setDisplayText] = useState("날짜 및 시간을 선택해주세요");
+  // const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [selectedDate] = useState<Date | null>(null);
+  const [displayText] = useState("날짜 및 시간을 선택해주세요");
 
   // 기본 정보
   const [productName, setProductName] = useState("");
@@ -203,18 +201,18 @@ export function AddItemScreen() {
     }
   };
 
-  const formatDateTime = (date: Date, time: { hour: number; minute: number; period: string }) =>
-    `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${time.period} ${time.hour}:${String(time.minute).padStart(2, "0")}`;
+  // const formatDateTime = (date: Date, time: { hour: number; minute: number; period: string }) =>
+  //   `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${time.period} ${time.hour}:${String(time.minute).padStart(2, "0")}`;
 
-  const handleDateTimeConfirm = (
-    date: Date,
-    time: { hour: number; minute: number; period: string }
-  ) => {
-    setSelectedDate(date);
-    setSelectedTime(time);
-    setDisplayText(formatDateTime(date, time));
-    setIsDateModalOpen(false);
-  };
+  // const handleDateTimeConfirm = (
+  //   date: Date,
+  //   time: { hour: number; minute: number; period: string }
+  // ) => {
+  //   setSelectedDate(date);
+  //   setSelectedTime(time);
+  //   setDisplayText(formatDateTime(date, time));
+  //   setIsDateModalOpen(false);
+  // };
 
   // 모든 필수 필드가 채워졌는지 확인 (경매 예약하기 버튼 활성화 여부)
   const isFormValid = () => {
@@ -229,7 +227,6 @@ export function AddItemScreen() {
   return (
     <ScrollArea className="mx-auto min-h-screen max-w-full gap-2 p-4 py-8">
       <h1 className="mb-6 text-2xl font-bold">판매 물품 등록</h1>
-
       <div className="space-y-6">
         {/* 이미지 업로드 */}
         <div>
@@ -335,7 +332,7 @@ export function AddItemScreen() {
           <Textarea
             id="description"
             placeholder="상품에 대한 상세한 설명을 입력해주세요."
-            className="min-h-32 resize-none"
+            className="min-h-34 resize-none"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
@@ -420,7 +417,7 @@ export function AddItemScreen() {
           </label>
           <Button
             type="button"
-            onClick={() => setIsDateModalOpen(true)}
+            // onClick={() => setIsDateModalOpen(true)}
             variant="outline"
             className="h-10 w-full justify-between font-normal"
           >
@@ -457,14 +454,14 @@ export function AddItemScreen() {
       </div>
 
       {/* 날짜/시간 선택 모달 */}
-      {isDateModalOpen && (
+      {/* {isDateModalOpen && (
         <DateTimeModal
           selectedDate={selectedDate}
           selectedTime={selectedTime}
           onClose={() => setIsDateModalOpen(false)}
           onConfirm={handleDateTimeConfirm}
         />
-      )}
+      )} */}
     </ScrollArea>
   );
 }
