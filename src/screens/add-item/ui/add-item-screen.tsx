@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { ImagePlus, X, AlertCircle, Info, Calendar } from "lucide-react";
+import { z } from "zod";
 
 import Button from "@/shared/ui/button/button";
 import FileInput from "@/shared/ui/input/file-input";
@@ -15,8 +16,16 @@ import { Textarea } from "@/shared/ui/textarea/textarea";
 const STOP_LOSS_PERCENTAGE = 0.9; // 스탑로스 기본 값 시작가 90%
 const DEFAULT_DROP_PERCENTAGE = 0.01; // 기본 하락 단위 1%
 const MIN_DROP_PERCENTAGE = 0.005; // 기본 하락 단위 최소 값 0.5%
-
 const MIN_START_PRICE = 1000; // 최소 시작가
+
+// 필드 검증용
+const startPriceSchema = z
+  .number()
+  .min(MIN_START_PRICE, `판매 시작가는 ${MIN_START_PRICE.toLocaleString()}원 이상 설정해주세요.`);
+
+const stopLossPriceSchema = z.number().positive("최저가를 입력 해주세요.");
+
+const dropPriceSchema = z.number().positive("하락단위를 입력 해주세요.");
 
 export function AddItemScreen() {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
@@ -60,7 +69,16 @@ export function AddItemScreen() {
     const startValue = parseFloat(start);
     const stopValue = parseFloat(stop);
 
+    // 타입 검증
+    const stopLossResult = stopLossPriceSchema.safeParse(stopValue);
+
     if (!Number.isNaN(startValue) && !Number.isNaN(stopValue)) {
+      // 검증 실패 시
+      if (!stopLossResult.success) {
+        setStopLossError(stopLossResult.error.issues[0]?.message || "");
+        return;
+      }
+
       if (stopValue > startValue * STOP_LOSS_PERCENTAGE) {
         setStopLossError("판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다.");
       } else {
@@ -87,7 +105,16 @@ export function AddItemScreen() {
     const dropValue = parseFloat(drop);
     const stopLossValue = stopLoss ? parseFloat(stopLoss) : 0;
 
+    // 타입 검증
+    const dropPriceResult = dropPriceSchema.safeParse(dropValue);
+
     if (!Number.isNaN(startValue) && !Number.isNaN(dropValue)) {
+      // 검증 실패 시
+      if (!dropPriceResult.success) {
+        setDropPriceError(dropPriceResult.error.issues[0]?.message || "");
+        return;
+      }
+
       if (dropValue >= startValue) {
         setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
       } else if (
@@ -114,11 +141,11 @@ export function AddItemScreen() {
     if (value) {
       const price = parseFloat(value);
 
-      // 판매 시작가 최소값 설정
-      if (price < MIN_START_PRICE) {
-        setStartPriceError(
-          `판매 시작가는 ${MIN_START_PRICE.toLocaleString()}원 이상 설정해주세요.`
-        );
+      // 시작가 검증
+      const startPriceResult = startPriceSchema.safeParse(price);
+
+      if (!startPriceResult.success) {
+        setStartPriceError(startPriceResult.error.issues[0]?.message || "");
       } else {
         setStartPriceError("");
       }
@@ -189,7 +216,7 @@ export function AddItemScreen() {
     setIsDateModalOpen(false);
   };
 
-  // 모든 필수 필드가 채워졌는지 확인
+  // 모든 필수 필드가 채워졌는지 확인 (경매 예약하기 버튼 활성화 여부)
   const isFormValid = () => {
     const hasBasicInfo = productName.trim() !== "" && category !== "" && description.trim() !== "";
     const hasPriceInfo = startPrice !== "" && stopLossPrice !== "" && dropPrice !== "";
