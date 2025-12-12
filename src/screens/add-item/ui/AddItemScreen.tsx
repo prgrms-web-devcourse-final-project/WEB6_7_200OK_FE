@@ -62,14 +62,14 @@ export function AddItemScreen() {
 
     if (!Number.isNaN(startValue) && !Number.isNaN(dropValue)) {
       if (dropValue >= startValue) {
-        setDropPriceError("가격 하락 단위는 판매 시작가보다 높을 수 없습니다.");
+        setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
       } else if (
         // 가격 하락 단위가 큰 경우 (시작가 1000, 최저가 900, 가격 하락 단위 100 이상일 경우 발생)
         stopLoss &&
         !Number.isNaN(stopLossValue) &&
         dropValue > startValue - stopLossValue
       ) {
-        setDropPriceError("가격 하락 단위가 너무 큽니다. (시작가 - 최저가) 이하로 설정해주세요.");
+        setDropPriceError("가격 하락 단위가 너무 큽니다.");
       } else if (dropValue < startValue * 0.005) {
         setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만 일 수 없습니다.");
       } else {
