@@ -1,1 +1,1 @@
-export { AddItemScreen } from "./ui/AddItemScreen";
+export { AddItemScreen } from "./ui/add-item-screen";
