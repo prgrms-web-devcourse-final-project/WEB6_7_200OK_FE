@@ -32,26 +32,26 @@ export function AddItemScreen() {
   const [displayText] = useState("날짜 및 시간을 선택해주세요");
 
   // 기본 정보
-  const [productName, setProductName] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
+  const [productName, setProductName] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   // 태그
   const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
+  const [tagInput, setTagInput] = useState<string>("");
 
   // 판매 시작가, 최저가, 가격 하락 단위
-  const [startPrice, setStartPrice] = useState("");
-  const [stopLossPrice, setStopLossPrice] = useState("");
-  const [dropPrice, setDropPrice] = useState("");
+  const [startPrice, setStartPrice] = useState<number | null>(null);
+  const [stopLossPrice, setStopLossPrice] = useState<number | null>(null);
+  const [dropPrice, setDropPrice] = useState<number | null>(null);
 
   // 에러 메시지 관리 (스탑로스, 가격 하락 단위)
-  const [startPriceError, setStartPriceError] = useState("");
-  const [stopLossError, setStopLossError] = useState("");
-  const [dropPriceError, setDropPriceError] = useState("");
+  const [startPriceError, setStartPriceError] = useState<string>("");
+  const [stopLossError, setStopLossError] = useState<string>("");
+  const [dropPriceError, setDropPriceError] = useState<string>("");
 
   // 스탑로스 가격 검증 (최소 90%)
-  const validateStopLossPrice = (start: string, stop: string) => {
+  const validateStopLossPrice = (start: number, stop: number) => {
     // 시작가가 있는데 최저가가 없는 경우
     if (start && !stop) {
       setStopLossError("최저가를 입력 해주세요.");
@@ -64,8 +64,8 @@ export function AddItemScreen() {
       return;
     }
 
-    const startValue = parseFloat(start);
-    const stopValue = parseFloat(stop);
+    const startValue = start;
+    const stopValue = stop;
 
     // 타입 검증
     const stopLossResult = stopLossPriceSchema.safeParse(stopValue);
@@ -86,7 +86,7 @@ export function AddItemScreen() {
   };
 
   // 가격 하락 단위 검증 (최소 0.5%)
-  const validateDropPrice = (start: string, drop: string, stopLoss: string) => {
+  const validateDropPrice = (start: number, drop: number, stopLoss: number) => {
     // 시작가가 있는데 하락 단위가 없는 경우
     if (start && !drop) {
       setDropPriceError("하락단위를 입력 해주세요.");
@@ -99,9 +99,9 @@ export function AddItemScreen() {
       return;
     }
 
-    const startValue = parseFloat(start);
-    const dropValue = parseFloat(drop);
-    const stopLossValue = stopLoss ? parseFloat(stopLoss) : 0;
+    const startValue = start;
+    const dropValue = drop;
+    const stopLossValue = stopLoss ?? null;
 
     // 타입 검증
     const dropPriceResult = dropPriceSchema.safeParse(dropValue);
@@ -134,10 +134,10 @@ export function AddItemScreen() {
 
   const handleStartPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setStartPrice(value);
+    setStartPrice(Number(value));
 
     if (value) {
-      const price = parseFloat(value);
+      const price = Number(value);
 
       // 시작가 검증
       const startPriceResult = startPriceSchema.safeParse(price);
@@ -150,18 +150,18 @@ export function AddItemScreen() {
 
       if (!Number.isNaN(price)) {
         // 스탑로스 자동 계산 (시작가의 90%)
-        const calculatedStopLoss = Math.floor(price * STOP_LOSS_PERCENTAGE).toString();
+        const calculatedStopLoss = Math.floor(price * STOP_LOSS_PERCENTAGE);
         setStopLossPrice(calculatedStopLoss);
-        validateStopLossPrice(value, calculatedStopLoss);
+        validateStopLossPrice(Number(value), calculatedStopLoss);
 
         // 가격 하락 단위 자동 계산 (시작가의 1%)
-        const calculatedDropPrice = Math.floor(price * DEFAULT_DROP_PERCENTAGE).toString();
+        const calculatedDropPrice = Math.floor(price * DEFAULT_DROP_PERCENTAGE);
         setDropPrice(calculatedDropPrice);
-        validateDropPrice(value, calculatedDropPrice, calculatedStopLoss);
+        validateDropPrice(Number(value), calculatedDropPrice, calculatedStopLoss);
       }
     } else {
-      setStopLossPrice("");
-      setDropPrice("");
+      setStopLossPrice(0);
+      setDropPrice(0);
       setStartPriceError("");
       setStopLossError("");
       setDropPriceError("");
@@ -170,16 +170,16 @@ export function AddItemScreen() {
 
   const handleStopLossPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setStopLossPrice(value);
-    validateStopLossPrice(startPrice, value);
+    setStopLossPrice(Number(value));
+    validateStopLossPrice(startPrice ?? 0, Number(value));
     // 최저가 변경 시 가격 하락 단위도 재검증
-    validateDropPrice(startPrice, dropPrice, value);
+    validateDropPrice(startPrice ?? 0, dropPrice ?? 0, Number(value));
   };
 
   const handleDropPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setDropPrice(value);
-    validateDropPrice(startPrice, value, stopLossPrice);
+    setDropPrice(Number(value));
+    validateDropPrice(startPrice ?? 0, Number(value), stopLossPrice ?? 0);
   };
 
   const handleAddTag = (value: string) => {
@@ -217,7 +217,7 @@ export function AddItemScreen() {
   // 모든 필수 필드가 채워졌는지 확인 (경매 예약하기 버튼 활성화 여부)
   const isFormValid = () => {
     const hasBasicInfo = productName.trim() !== "" && category !== "" && description.trim() !== "";
-    const hasPriceInfo = startPrice !== "" && stopLossPrice !== "" && dropPrice !== "";
+    const hasPriceInfo = startPrice !== null && stopLossPrice !== null && dropPrice !== null;
     const hasSchedule = selectedDate !== null;
     const hasNoErrors = startPriceError === "" && stopLossError === "" && dropPriceError === "";
 
@@ -225,7 +225,7 @@ export function AddItemScreen() {
   };
 
   return (
-    <ScrollArea className="mx-auto min-h-screen max-w-full gap-2 p-4 py-8">
+    <ScrollArea className="mx-auto min-h-screen max-w-full gap-2 p-4 py-6">
       <h1 className="mb-6 text-2xl font-bold">판매 물품 등록</h1>
       <div className="space-y-6">
         {/* 이미지 업로드 */}
@@ -240,6 +240,7 @@ export function AddItemScreen() {
           </label>
           <Input
             id="product-name"
+            type="text"
             placeholder="상품명을 입력해주세요"
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
@@ -254,7 +255,7 @@ export function AddItemScreen() {
           <div className="relative">
             <select
               id="category"
-              className="border-input focus-visible:border-ring focus-visible:ring-ring/50 bg-background text-foreground [&>option]:bg-background [&>option]:text-foreground dark:bg-card dark:[&>option]:bg-card h-10 w-full appearance-none rounded-md border px-3 pr-10 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
+              className="border-input focus-visible:border-ring focus-visible:ring-ring/50 bg-background text-foreground [&>option]:bg-background [&>option]:text-foreground dark:bg-card dark:[&>option]:bg-card h-10 w-full appearance-none rounded-lg border px-3 pr-10 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
@@ -295,17 +296,18 @@ export function AddItemScreen() {
           </label>
           <Input
             id="tags"
+            type="text"
             placeholder="태그를 입력해주세요."
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={handleTagInputKeyDown}
           />
           {tags.length > 0 && (
-            <div className="mt-2 flex min-h-10 w-full flex-wrap items-center gap-2 rounded-md bg-transparent py-2">
+            <div className="mt-2 flex min-h-10 w-full flex-wrap items-center gap-2 rounded-lg bg-transparent py-2">
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="bg-accent text-accent-foreground flex items-center gap-1 rounded-md px-2 py-1 text-sm"
+                  className="bg-accent text-accent-foreground flex items-center gap-1 rounded-lg px-2 py-1 text-sm"
                 >
                   # {tag}
                   <Button
@@ -343,7 +345,7 @@ export function AddItemScreen() {
           <label htmlFor="start-price" className="mb-2 block text-sm font-medium">
             판매 시작가
           </label>
-          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
             <span className="text-muted-foreground shrink-0">₩</span>
             <Input
               id="start-price"
@@ -362,7 +364,7 @@ export function AddItemScreen() {
           <label htmlFor="stop-loss-price" className="mb-2 block text-sm font-medium">
             판매 최저가 (Stop Loss)
           </label>
-          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
             <span className="text-muted-foreground shrink-0">₩</span>
             <Input
               id="stop-loss-price"
@@ -375,7 +377,7 @@ export function AddItemScreen() {
           </div>
           {stopLossError && <p className="text-destructive mt-1 text-xs">{stopLossError}</p>}
           {/* 경고 메시지 */}
-          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-md border p-3">
+          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-lg border p-3">
             <AlertCircle className="text-info-text size-4 shrink-0" />
             <p className="text-info-text text-xs">
               최저가는 판매자만 볼 수 있으며, 이 가격까지 판매되지 않으면 경매가 자동으로
@@ -389,7 +391,7 @@ export function AddItemScreen() {
           <label htmlFor="drop-price" className="mb-2 block text-sm font-medium">
             가격 하락 단위
           </label>
-          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
+          <div className="border-input focus-within:border-ring focus-within:ring-ring/50 dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]">
             <span className="text-muted-foreground shrink-0">₩</span>
             <Input
               id="drop-price"
@@ -402,7 +404,7 @@ export function AddItemScreen() {
           </div>
           {dropPriceError && <p className="text-destructive mt-1 text-xs">{dropPriceError}</p>}
           {/* 경고 메시지 */}
-          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-md border p-3">
+          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-lg border p-3">
             <AlertCircle className="text-info-text size-4 shrink-0" />
             <p className="text-info-text text-xs">
               5분마다 설정된 가격이 자동으로 하락합니다. 최소 가격은 시작 가격의 0.5%입니다.
