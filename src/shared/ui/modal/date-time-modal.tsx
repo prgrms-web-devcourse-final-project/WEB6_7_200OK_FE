@@ -20,7 +20,7 @@ export function DateTimeModal({
   onClose,
   onConfirm,
 }: DateTimeModalProps) {
-  // 기본값 (다음 날 설정 추후 로직 분리 필요)
+  // 기본 값 (다음 날 설정 추후 로직 분리 필요)
   const getDefaultDate = () => {
     if (selectedDate) return selectedDate;
     const date = new Date();
