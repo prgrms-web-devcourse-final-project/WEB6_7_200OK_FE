@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { ImagePlus, X, AlertCircle, Info, Calendar } from "lucide-react";
 
+import { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
 import Button from "@/shared/ui/button/button";
 import FileInput from "@/shared/ui/input/file-input";
 import Input from "@/shared/ui/input/input";
@@ -226,16 +227,11 @@ export function NewItemScreen() {
                 <SelectValue placeholder="카테고리를 선택해주세요" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="clothing">의류</SelectItem>
-                <SelectItem value="accessories">잡화</SelectItem>
-                <SelectItem value="furniture">가구/인테리어</SelectItem>
-                <SelectItem value="digital">디지털</SelectItem>
-                <SelectItem value="appliances">가전제품</SelectItem>
-                <SelectItem value="sports">스포츠/레저</SelectItem>
-                <SelectItem value="pet">반려동물</SelectItem>
-                <SelectItem value="hobby">취미</SelectItem>
-                <SelectItem value="books">도서/티켓</SelectItem>
-                <SelectItem value="etc">기타</SelectItem>
+                {ITEM_CATEGORIES.map((item) => (
+                  <SelectItem key={item} value={item}>
+                    {CATEGORY_LABEL[item]}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <svg
