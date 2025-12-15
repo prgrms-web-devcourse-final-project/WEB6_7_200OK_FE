@@ -22,8 +22,8 @@ export function BottomNavItem({
         aria-current={isActive ? "page" : undefined}
         className="relative flex w-13 flex-col items-center gap-1"
       >
-        <Icon size={24} className={cn(isActive && "text-brand")} />
-        <span className={cn("text-sm", isActive && "text-brand")}>{label}</span>
+        <Icon size={24} className={cn(isActive && "text-brand-text")} />
+        <span className={cn("text-sm", isActive && "text-brand-text")}>{label}</span>
 
         {hasNotification && (
           <>
