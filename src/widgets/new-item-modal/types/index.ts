@@ -1,9 +1,9 @@
 import { Dayjs } from "dayjs";
 
-export type TimeZone = "오전" | "오후";
+import type { Hour, TimeZone } from "@/entities/item/model/registration-constants";
 
 export interface TimeSelection {
-  hour: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  hour: Hour;
   minute: number;
   timezone: TimeZone;
 }
