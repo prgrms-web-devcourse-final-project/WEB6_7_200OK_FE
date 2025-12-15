@@ -38,7 +38,7 @@ export function PurchasedCardRow({ item, onReviewClick, onConfirm }: PurchasedCa
                 <MessageCircle className="size-4" />
                 <span className="text-sm">1:1 채팅</span>
                 {hasUnreadMessages && (
-                  <span className="ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 text-[10px] text-white">
+                  <span className="text-2.5 ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 text-white">
                     {item.unreadMessageCount}
                   </span>
                 )}
