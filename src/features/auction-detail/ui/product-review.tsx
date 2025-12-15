@@ -5,6 +5,7 @@ export default function ProductReview() {
     <div className="flex flex-col gap-4">
       <ProductReviewRating />
       <ProductReviewList />
+      <ProductReviewRecommends />
     </div>
   );
 }
@@ -46,6 +47,14 @@ function ProductReviewList() {
           </span>
         </div>
       ))}
+    </div>
+  );
+}
+
+function ProductReviewRecommends() {
+  return (
+    <div>
+      <span className="font-base font-semibold">판매 상품</span>
     </div>
   );
 }
