@@ -1,5 +1,5 @@
 import { ScrollArea, ScrollBar } from "@/shared/ui/scroll-area/scroll-area";
-import { Separator } from "@/shared/ui/seperator/separator";
+import Separator from "@/shared/ui/separator/separator";
 
 export default function AuctionDetailScreen() {
   return (
