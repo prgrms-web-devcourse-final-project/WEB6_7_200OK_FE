@@ -17,14 +17,14 @@ export interface DateTimeModalProps {
   selectedDate: Date | null;
   selectedTime: TimeSelection;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (date: Date, time: TimeSelection) => void;
 }
 
 export interface CalendarViewProps {
   viewDate: Dayjs;
   selectedDate: Date | null;
   dateRange: DateRange;
-  onDateSelect: () => void;
+  onDateSelect: (date: Date) => void;
 }
 
 export interface DateRange {
