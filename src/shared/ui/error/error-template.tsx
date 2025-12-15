@@ -58,7 +58,7 @@ export function ErrorTemplate({
         <Button variant="outline" size="lg" className="flex-1" onClick={onPrevClick}>
           이전 페이지
         </Button>
-        <Button variant="default" size="lg" className="flex-1" onClick={onMainClick}>
+        <Button size="lg" className="flex-1" onClick={onMainClick}>
           메인 페이지
         </Button>
       </div>
