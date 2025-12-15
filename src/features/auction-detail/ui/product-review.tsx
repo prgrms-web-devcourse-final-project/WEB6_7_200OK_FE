@@ -4,7 +4,7 @@ export default function ProductReview() {
   return (
     <div className="flex flex-col gap-4">
       <ProductReviewRating />
-      <ProductReviewScroll />
+      <ProductReviewList />
     </div>
   );
 }
@@ -28,7 +28,7 @@ function ProductReviewRating() {
   );
 }
 
-function ProductReviewScroll() {
+function ProductReviewList() {
   const reviews = [
     {
       id: 1,
