@@ -14,10 +14,10 @@ interface ReviewCardProps {
 
 export function ReviewCard({ review }: ReviewCardProps) {
   return (
-    <article className="bg-card border-border flex w-full flex-col gap-3 rounded-[14px] border p-4">
+    <article className="bg-card border-border flex w-full flex-col gap-3 rounded-2xl border p-4">
       <div className="flex flex-col gap-3">
         <div className="flex items-start gap-3">
-          <div className="bg-secondary relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full">
+          <div className="bg-secondary relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full">
             {review.reviewer.avatarUrl ? (
               <Image
                 src={review.reviewer.avatarUrl}
@@ -26,14 +26,12 @@ export function ReviewCard({ review }: ReviewCardProps) {
                 className="object-cover"
               />
             ) : (
-              <User className="text-foreground h-6 w-6" />
+              <User className="text-foreground size-6" />
             )}
           </div>
           <div className="flex flex-col pt-1">
-            <span className="text-foreground text-base leading-6 font-medium">
-              {review.reviewer.name}
-            </span>
-            <span className="text-muted-foreground text-xs leading-4">{review.date}</span>
+            <span className="text-foreground text-base">{review.reviewer.name}</span>
+            <span className="text-muted-foreground text-xs">{review.date}</span>
           </div>
         </div>
         <Rating value={review.rating} readOnly className="gap-0.5">
@@ -42,9 +40,9 @@ export function ReviewCard({ review }: ReviewCardProps) {
           ))}
         </Rating>
       </div>
-      <p className="text-foreground/90 text-sm leading-relaxed tracking-tight">{review.content}</p>
-      <div className="bg-secondary/50 mt-1 flex w-full items-center gap-3 rounded-[10px] px-3 py-3">
-        <div className="bg-muted relative h-16 w-16 shrink-0 overflow-hidden rounded-[10px]">
+      <p className="text-foreground/90 text-sm">{review.content}</p>
+      <div className="bg-secondary/50 mt-1 flex w-full items-center gap-3 rounded-xl p-3">
+        <div className="bg-muted relative size-16 shrink-0 overflow-hidden rounded-xl">
           {review.product.imageUrl && (
             <Image
               src={review.product.imageUrl}
@@ -55,10 +53,8 @@ export function ReviewCard({ review }: ReviewCardProps) {
           )}
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-xs leading-4">거래 상품</span>
-          <span className="text-foreground text-sm leading-5 font-medium">
-            {review.product.name}
-          </span>
+          <span className="text-muted-foreground text-xs">거래 상품</span>
+          <span className="text-foreground text-sm">{review.product.name}</span>
         </div>
       </div>
     </article>

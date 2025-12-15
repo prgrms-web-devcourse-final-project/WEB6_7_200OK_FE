@@ -16,35 +16,35 @@ interface UserProfileProps {
 
 export function UserProfile({ profile, isOwn = false }: UserProfileProps) {
   return (
-    <div className="bg-card border-border flex w-full flex-col gap-6 rounded-lg border px-4 py-6">
+    <div className="bg-card border-border flex w-full flex-col gap-6 rounded-lg border p-4">
       <div className="flex items-center gap-6">
-        <div className="relative h-20 w-20 shrink-0">
+        <div className="relative size-20 shrink-0">
           <div className="bg-secondary flex h-full w-full items-center justify-center overflow-hidden rounded-full">
             {profile.avatarUrl ? (
               <Image src={profile.avatarUrl} alt={profile.name} fill className="object-cover" />
             ) : (
-              <User className="text-foreground h-10 w-10" />
+              <User className="text-foreground size-10" />
             )}
           </div>
 
           {isOwn && (
             <button
               type="button"
-              className="bg-brand absolute right-0 bottom-0 flex h-7 w-7 items-center justify-center rounded-full shadow-xs transition-transform hover:scale-105"
+              className="bg-brand absolute right-0 bottom-0 flex size-7 items-center justify-center rounded-full shadow-xs transition-transform hover:scale-105"
               aria-label="프로필 수정"
             >
-              <Camera className="text-brand-contrast h-3.5 w-3.5" />
+              <Camera className="text-brand-contrast size-3.5" />
             </button>
           )}
         </div>
 
         <div className="flex flex-1 flex-col gap-1">
           <div className="flex items-center gap-1">
-            <h2 className="text-foreground text-xl font-medium tracking-tight">{profile.name}</h2>
+            <h2 className="text-foreground text-xl">{profile.name}</h2>
 
             {isOwn && (
-              <Button variant="ghost" size="icon-sm" className="text-muted-foreground h-5 w-5">
-                <PenLine className="text-foreground h-4 w-4" />
+              <Button variant="ghost" size="icon-sm" className="text-muted-foreground size-5">
+                <PenLine className="text-foreground size-4" />
               </Button>
             )}
           </div>
@@ -62,7 +62,7 @@ export function UserProfile({ profile, isOwn = false }: UserProfileProps) {
               <span className="text-foreground text-base">{profile.rating}</span>
               <span className="text-muted-foreground text-sm">
                 ({profile.reviewCount}
-                <span className="hidden min-[400px]:inline">개의 후기</span>)
+                <span className="hidden min-[400]:inline">개의 후기</span>)
               </span>
             </div>
           </div>
