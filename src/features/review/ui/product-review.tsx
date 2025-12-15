@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 import { Box, MessageSquareOff } from "lucide-react";
 
 import EmptyState from "@/shared/ui/empty/empty";
@@ -14,6 +16,7 @@ export default function ProductReview() {
 }
 
 function ProductReviewRating() {
+  const id = useId();
   const value = 3;
   const reviewsLength = 127;
   return (
@@ -21,8 +24,8 @@ function ProductReviewRating() {
       <h3 className="text-foreground font-lg font-semibold">판매자 후기</h3>
       <div className="flex items-center gap-1">
         <Rating defaultValue={value} readOnly>
-          {Array.from({ length: 5 }, (_, i) => i + 1).map((_) => (
-            <RatingButton className="text-brand" key={_} size={20} />
+          {Array.from({ length: 5 }, (_, i) => i + 1).map((v) => (
+            <RatingButton className="text-brand" key={id + v} size={20} />
           ))}
         </Rating>
         <span className="text-foreground text-base">{value}</span>
