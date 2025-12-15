@@ -18,14 +18,14 @@ function ProductReviewRating() {
   const reviewsLength = 127;
   return (
     <div className="flex items-center gap-4">
-      <span className="text-foreground font-lg font-semibold">판매자 후기</span>
+      <h3 className="text-foreground font-lg font-semibold">판매자 후기</h3>
       <div className="flex items-center gap-1">
         <Rating defaultValue={value} readOnly>
           {Array.from({ length: 5 }, (_, i) => i + 1).map((_) => (
             <RatingButton className="text-brand" key={_} size={20} />
           ))}
         </Rating>
-        <span className="text-foreground text-base">3</span>
+        <span className="text-foreground text-base">{value}</span>
         <span className="text-muted-foreground text-sm">{`(${reviewsLength}개의 후기)`}</span>
       </div>
     </div>
@@ -54,9 +54,9 @@ function ProductReviewList() {
       {reviews.map((review) => (
         <div key={review.id} className="flex gap-1">
           <span className="text-muted-foreground text-sm">구매자1</span>
-          <span className="text-foreground flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
+          <p className="text-foreground flex-1 overflow-hidden text-sm text-ellipsis whitespace-nowrap">
             상품 상태가 매우 좋았고 빠른 배송 감사합니다.
-          </span>
+          </p>
         </div>
       ))}
     </div>
@@ -68,7 +68,7 @@ function ProductReviewRecommends() {
   if (!hasItem)
     return (
       <div>
-        <span className="font-base font-semibold">판매 상품</span>
+        <h3 className="font-base font-semibold">판매 상품</h3>
         <EmptyState
           Icon={Box}
           title="현재 판매중인 물품이 없어요."
@@ -78,7 +78,7 @@ function ProductReviewRecommends() {
     );
   return (
     <div>
-      <span className="font-base font-semibold">판매 상품</span>
+      <h3 className="font-base font-semibold">판매 상품</h3>
     </div>
   );
 }
