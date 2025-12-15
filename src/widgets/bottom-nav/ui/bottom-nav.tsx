@@ -1,0 +1,29 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
+import { BOTTOM_NAV_ITEMS } from "@/widgets/bottom-nav/model/item";
+import { BottomNavItem } from "@/widgets/bottom-nav/ui/bottom-nav-item";
+
+export function BottomNav() {
+  const pathname = usePathname();
+
+  const hasNotificationsById: Record<string, boolean> = {
+    notification: true,
+  };
+
+  return (
+    <nav className="h-14 border-t pt-1.5 md:hidden" aria-label="하단 내비게이션">
+      <ul className="flex justify-around">
+        {BOTTOM_NAV_ITEMS.map((item) => (
+          <BottomNavItem
+            key={item.id}
+            {...item}
+            isActive={pathname === item.href}
+            hasNotification={!!hasNotificationsById[item.id]}
+          />
+        ))}
+      </ul>
+    </nav>
+  );
+}
