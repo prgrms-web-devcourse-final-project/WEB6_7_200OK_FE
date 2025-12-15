@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 
 import "@/shared/styles/globals.css";
 import { ToastRegistry } from "@/shared/ui/toast/toast-registry";
+import { BottomNav } from "@/widgets/bottom-nav";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({
         >
           {children}
           <ToastRegistry />
+          <BottomNav />
         </ThemeProvider>
       </body>
     </html>

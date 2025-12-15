@@ -8,6 +8,7 @@ import { BottomNavItem } from "@/widgets/bottom-nav/ui/bottom-nav-item";
 export function BottomNav() {
   const pathname = usePathname();
 
+  // TODO: 알림 연결 후 하드 코딩 삭제
   const hasNotificationsById: Record<string, boolean> = {
     notification: true,
   };
