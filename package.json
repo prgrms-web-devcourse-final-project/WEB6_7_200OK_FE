@@ -15,7 +15,11 @@
     "test": "vitest"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@radix-ui/react-alert-dialog": "^1.1.15",
+=======
+    "@radix-ui/react-avatar": "^1.1.11",
+>>>>>>> 82b21b0 (feat(ui): shared 레이어 아바타 컴포넌트 추가)
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-progress": "^1.1.8",
