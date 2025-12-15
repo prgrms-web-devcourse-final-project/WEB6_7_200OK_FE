@@ -17,6 +17,7 @@ import {
   validateStopLossPrice,
 } from "@/shared/lib/utils/validator/validators";
 import Button from "@/shared/ui/button/button";
+import { InfoAlert } from "@/shared/ui/info-alert/info-alert";
 import FileInput from "@/shared/ui/input/file-input";
 import Input from "@/shared/ui/input/input";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
@@ -28,7 +29,6 @@ import {
   SelectValue,
 } from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
-import { InfoAlert } from "@/widgets/auctions";
 
 export function NewItemScreen() {
   const [selectedDate] = useState<Date | null>(null);
