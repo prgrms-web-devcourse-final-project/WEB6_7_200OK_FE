@@ -26,7 +26,10 @@ export function BottomNavItem({
         <span className={cn("text-sm", isActive && "text-brand")}>{label}</span>
 
         {hasNotification && (
-          <span className="absolute top-0 right-2 h-2 w-2 rounded-full bg-red-500" aria-hidden />
+          <>
+            <span className="absolute top-0 right-2 h-2 w-2 rounded-full bg-red-500" aria-hidden />
+            <span className="sr-only">새 알림</span>
+          </>
         )}
       </Link>
     </li>
