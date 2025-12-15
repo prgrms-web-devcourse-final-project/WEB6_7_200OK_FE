@@ -1,13 +1,18 @@
-export function filterItemsByStatus<T extends { status: string }>(
+export function filterItemsByStatus<S extends string, T extends { status: S }>(
   items: T[],
   filterStatus: string,
   allLabel = "전체"
 ): T[] {
-  if (filterStatus === allLabel) return items;
+  if (filterStatus === allLabel) {
+    return items;
+  }
   return items.filter((item) => item.status === filterStatus);
 }
 
-export function generateFilterOptions(statuses: string[], allLabel = "전체"): string[] {
+export function generateFilterOptions<S extends string>(
+  statuses: S[],
+  allLabel = "전체"
+): string[] {
   const sortedStatuses = [...statuses].sort((a, b) => a.localeCompare(b));
   return [allLabel, ...sortedStatuses];
 }
