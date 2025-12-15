@@ -29,7 +29,6 @@ import {
   SelectValue,
 } from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
-import { InfoAlert } from "@/widgets/auctions";
 
 export function NewItemScreen() {
   const [selectedDate] = useState<Date | null>(null);
