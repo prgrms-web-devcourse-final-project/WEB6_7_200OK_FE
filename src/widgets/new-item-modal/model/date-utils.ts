@@ -11,12 +11,12 @@ export const getDefaultDate = (selectedDate: Date | null): Dayjs => {
 
 export const getDateRange = (): DateRange => {
   const minDate = dayjs().add(1, "day").startOf("day").toDate();
-  const maxDate = dayjs().add(7, "days").endOf("day").toDate();
+  const maxDate = dayjs().add(6, "days").endOf("day").toDate();
   return { minDate, maxDate };
 };
 
 export const formatDateTimeDisplay = (date: Date, time: TimeSelection): string => {
   const dateStr = dayjs(date).format("YYYY년 M월 D일");
-  const timeStr = `${time.timezone} ${time.hour}:${String(time.minute).padStart(2, "0")}`;
+  const timeStr = `${time.timezone} ${String(time.hour).padStart(2, "0")}:${String(time.minute).padStart(2, "0")}`;
   return `${dateStr} ${timeStr}`;
 };
