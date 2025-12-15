@@ -87,7 +87,7 @@ export const validateDropPrice = (
       "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
     );
   } else if (drop < start * MIN_DROP_PERCENTAGE) {
-    setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만 일 수 없습니다.");
+    setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
   } else {
     setDropPriceError("");
   }

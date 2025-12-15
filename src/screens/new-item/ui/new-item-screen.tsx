@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { ImagePlus, X, AlertCircle, Info, Calendar } from "lucide-react";
+import { ImagePlus, X, Info, Calendar } from "lucide-react";
 
 import { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
 import {
@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
+import { InfoAlert } from "@/widgets/auctions";
 
 export function NewItemScreen() {
   const [selectedDate] = useState<Date | null>(null);
@@ -52,18 +53,21 @@ export function NewItemScreen() {
   const [stopLossError, setStopLossError] = useState<string>("");
   const [dropPriceError, setDropPriceError] = useState<string>("");
 
-  const handleStartPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePriceChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setter: (value: number | null) => void
+  ) => {
     const { value } = e.target;
 
     if (!value) {
-      setStartPrice(null);
+      setter(null);
       return;
     }
 
-    const price = Number(value);
-    if (Number.isNaN(price)) return;
+    const numValue = Number(value);
+    if (Number.isNaN(numValue)) return;
 
-    setStartPrice(price);
+    setter(numValue);
   };
 
   const handleStartPriceBlur = () => {
@@ -95,20 +99,6 @@ export function NewItemScreen() {
     validateDropPrice(startPrice, calculatedDropPrice, calculatedStopLoss, setDropPriceError);
   };
 
-  const handleStopLossPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
-    if (!value) {
-      setStopLossPrice(null);
-      return;
-    }
-
-    const numValue = Number(value);
-    if (Number.isNaN(numValue)) return;
-
-    setStopLossPrice(numValue);
-  };
-
   const handleStopLossPriceBlur = () => {
     if (!stopLossPrice) {
       setStopLossError("");
@@ -118,20 +108,6 @@ export function NewItemScreen() {
     validateStopLossPrice(startPrice, stopLossPrice, setStopLossError);
     // 최저가 변경 시 가격 하락 단위도 재검증
     validateDropPrice(startPrice, dropPrice, stopLossPrice, setDropPriceError);
-  };
-
-  const handleDropPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
-    if (!value) {
-      setDropPrice(null);
-      return;
-    }
-
-    const numValue = Number(value);
-    if (Number.isNaN(numValue)) return;
-
-    setDropPrice(numValue);
   };
 
   const handleDropPriceBlur = () => {
@@ -247,19 +223,6 @@ export function NewItemScreen() {
                 ))}
               </SelectContent>
             </Select>
-            <svg
-              className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
           </div>
         </div>
 
@@ -329,7 +292,7 @@ export function NewItemScreen() {
               type="number"
               placeholder="0"
               value={startPrice ?? ""}
-              onChange={handleStartPriceChange}
+              onChange={(e) => handlePriceChange(e, setStartPrice)}
               onBlur={handleStartPriceBlur}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
@@ -349,20 +312,16 @@ export function NewItemScreen() {
               type="number"
               placeholder="시작가의 90% 이하 가격을 설정해주세요."
               value={stopLossPrice ?? ""}
-              onChange={handleStopLossPriceChange}
+              onChange={(e) => handlePriceChange(e, setStopLossPrice)}
               onBlur={handleStopLossPriceBlur}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
           {stopLossError && <p className="text-destructive mt-1 text-xs">{stopLossError}</p>}
-          {/* 경고 메시지 */}
-          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-lg border p-3">
-            <AlertCircle className="text-info-text size-4 shrink-0" />
-            <p className="text-info-text text-xs">
-              최저가는 판매자만 볼 수 있으며, 이 가격까지 판매되지 않으면 경매가 자동으로
-              종료됩니다.
-            </p>
-          </div>
+          <InfoAlert
+            message="최저가는 판매자만 볼 수 있으며, 이 가격까지 판매되지 않으면 경매가 자동으로 종료됩니다."
+            className="mt-2"
+          />
         </div>
 
         {/* 가격 하락 단위 */}
@@ -377,19 +336,16 @@ export function NewItemScreen() {
               type="number"
               placeholder="시작가의 0.5% 이상 가격을 설정해주세요."
               value={dropPrice ?? ""}
-              onChange={handleDropPriceChange}
+              onChange={(e) => handlePriceChange(e, setDropPrice)}
               onBlur={handleDropPriceBlur}
               className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
             />
           </div>
           {dropPriceError && <p className="text-destructive mt-1 text-xs">{dropPriceError}</p>}
-          {/* 경고 메시지 */}
-          <div className="border-info-bg/70 bg-info-bg/30 mt-2 flex items-center gap-2 rounded-lg border p-3">
-            <AlertCircle className="text-info-text size-4 shrink-0" />
-            <p className="text-info-text text-xs">
-              5분마다 설정된 가격이 자동으로 하락합니다. 최소 가격은 시작 가격의 0.5%입니다.
-            </p>
-          </div>
+          <InfoAlert
+            message="5분마다 설정된 가격이 자동으로 하락합니다. 최소 가격은 시작 가격의 0.5%입니다."
+            className="mt-2"
+          />
         </div>
 
         {/* 경매 시작 일정 */}
