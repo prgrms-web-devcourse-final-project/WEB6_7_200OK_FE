@@ -1,3 +1,6 @@
+import { Box, MessageSquareOff } from "lucide-react";
+
+import EmptyState from "@/shared/ui/empty/empty";
 import { Rating, RatingButton } from "@/shared/ui/rating/rating";
 
 export default function ProductReview() {
@@ -37,6 +40,15 @@ function ProductReviewList() {
       text: "상품 상태가 매우 좋았고 빠른 배송 감사합니다.상품 상태가 매우 좋았고 빠른 배송 감사합니다 상품 상태가 매우 좋았고 빠른 배송 감사합니다",
     },
   ];
+  if (reviews.length === 0) {
+    return (
+      <EmptyState
+        title="판매자 리뷰가 없어요"
+        description="해당 판매자의 리뷰가 없습니다."
+        Icon={MessageSquareOff}
+      />
+    );
+  }
   return (
     <div>
       {reviews.map((review) => (
@@ -52,6 +64,18 @@ function ProductReviewList() {
 }
 
 function ProductReviewRecommends() {
+  const hasItem = false;
+  if (!hasItem)
+    return (
+      <div>
+        <span className="font-base font-semibold">판매 상품</span>
+        <EmptyState
+          Icon={Box}
+          title="현재 판매중인 물품이 없어요."
+          description="판매자가 판매중인 물품이 없습니다."
+        />
+      </div>
+    );
   return (
     <div>
       <span className="font-base font-semibold">판매 상품</span>
