@@ -5,6 +5,17 @@ import { useMemo, useState } from "react";
 import { ImagePlus, X, AlertCircle, Info, Calendar } from "lucide-react";
 
 import { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
+import {
+  DEFAULT_DROP_PERCENTAGE,
+  MAX_TAGS,
+  STOP_LOSS_PERCENTAGE,
+} from "@/entities/item/model/registration-constants";
+import {
+  isFormValid,
+  startPriceSchema,
+  validateDropPrice,
+  validateStopLossPrice,
+} from "@/shared/lib/utils/validator/validators";
 import Button from "@/shared/ui/button/button";
 import FileInput from "@/shared/ui/input/file-input";
 import Input from "@/shared/ui/input/input";
@@ -17,14 +28,6 @@ import {
   SelectValue,
 } from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
-
-import { DEFAULT_DROP_PERCENTAGE, MAX_TAGS, STOP_LOSS_PERCENTAGE } from "../config/constants";
-import {
-  isFormValid,
-  startPriceSchema,
-  validateDropPrice,
-  validateStopLossPrice,
-} from "../lib/validators";
 
 export function NewItemScreen() {
   const [selectedDate] = useState<Date | null>(null);
