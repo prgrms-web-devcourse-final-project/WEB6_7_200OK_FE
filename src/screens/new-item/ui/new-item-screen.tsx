@@ -144,6 +144,16 @@ export function NewItemScreen() {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
+  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value: inputValue } = e.target;
+    let value = inputValue;
+
+    // 한글, 영어, 숫자만 허용
+    value = value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/g, "");
+
+    setTagInput(value);
+  };
+
   const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -260,10 +270,11 @@ export function NewItemScreen() {
             type="text"
             placeholder={tags.length <= MAX_TAGS ? "태그를 입력해주세요." : undefined}
             value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            onChange={handleTagInputChange}
             onKeyDown={handleTagInputKeyDown}
             disabled={tags.length >= MAX_TAGS}
             className={tags.length >= MAX_TAGS ? "select-none" : ""}
+            maxLength={10}
           />
           {tags.length > 0 && (
             <div className="mt-2 flex min-h-10 w-full flex-wrap items-center gap-2 rounded-lg bg-transparent py-2">
