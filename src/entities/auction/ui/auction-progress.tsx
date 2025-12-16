@@ -1,6 +1,6 @@
 import { Progress } from "@/shared/ui/progress/progress";
 
-export default function ProductProgress() {
+export default function AuctionProgress() {
   // TODO: timeout end trigger
   // TODO: timeout get default time
   return (
