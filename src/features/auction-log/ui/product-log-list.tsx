@@ -1,4 +1,7 @@
+import { TrendingDown } from "lucide-react";
+
 import { cn } from "@/shared/lib/utils/utils";
+import EmptyState from "@/shared/ui/empty/empty";
 
 export default function ProductLogList({ isSheet = false }: { isSheet?: boolean }) {
   const MOCK = [
@@ -28,19 +31,29 @@ export default function ProductLogList({ isSheet = false }: { isSheet?: boolean 
       time: "50분전",
     },
   ];
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
         <h3 className={cn(isSheet ? "text-base" : "text-2xl", "font-medium")}>
-          하락 {MOCK.length}
+          하락 {MOCK.length !== 0 ? MOCK.length : ""}
         </h3>
-        <span className="text-base text-red-400">▼ 40,000(-5.0%)</span>
+        {MOCK.length !== 0 && <span className="text-base text-red-400">▼ 40,000(-5.0%)</span>}
       </div>
-      <ul className={cn("flex flex-col", isSheet ? "gap-3" : "gap-1")}>
-        {MOCK.map((item) => (
-          <ProductLogListItem key={item.now} prev={item.prev} now={item.now} time={item.time} />
-        ))}
-      </ul>
+      {MOCK.length === 0 ? (
+        <EmptyState
+          Icon={TrendingDown}
+          title="아직 가격 하락 기록이 없어요"
+          description="가격이 하락하면 여기에 표시됩니다."
+          size="md"
+        />
+      ) : (
+        <ul className={cn("flex flex-col", isSheet ? "gap-3" : "gap-2")}>
+          {MOCK.map((item) => (
+            <ProductLogListItem key={item.now} prev={item.prev} now={item.now} time={item.time} />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
