@@ -9,8 +9,6 @@ import {
   type ChartConfig,
 } from "@/shared/ui/chart/chart";
 
-export const description = "A simple area chart";
-
 const chartData = [
   { price: "120000", watch: 186 },
   { price: "130000", watch: 305 },
@@ -24,8 +22,8 @@ const chartData = [
 ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  watch: {
+    label: "관심도",
     color: "var(--color-brand)",
   },
 } satisfies ChartConfig;
