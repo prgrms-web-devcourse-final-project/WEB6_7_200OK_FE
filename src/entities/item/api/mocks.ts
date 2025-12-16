@@ -1,4 +1,4 @@
-import { SellingItem, PurchaseItem, WatchlistItem, RecentlyViewedItem } from "../model/types";
+import { SellingItem, PurchaseItem, WishlistItem, RecentlyViewedItem } from "../model/types";
 
 export const MOCK_SELLING_ITEMS: SellingItem[] = [
   {
@@ -126,7 +126,7 @@ export const MOCK_PURCHASES: PurchaseItem[] = [
   },
 ];
 
-export const MOCK_WATCHLIST_ITEMS: WatchlistItem[] = [
+export const MOCK_WISHLIST_ITEMS: WishlistItem[] = [
   {
     id: "w1",
     status: "판매 완료",

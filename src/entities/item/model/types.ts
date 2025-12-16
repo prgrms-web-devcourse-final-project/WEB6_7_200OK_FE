@@ -26,7 +26,7 @@ export interface PurchaseItem extends BaseItem {
   };
 }
 
-export interface WatchlistItem extends BaseItem {
+export interface WishlistItem extends BaseItem {
   status: TradeStatus;
 }
 

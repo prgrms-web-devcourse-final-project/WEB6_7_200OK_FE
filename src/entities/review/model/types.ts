@@ -11,7 +11,6 @@ export interface Review {
     name: string;
     imageUrl?: string;
   };
-  // [추가] 판매자 정보 필드 추가
   seller?: {
     name: string;
     avatarUrl?: string;

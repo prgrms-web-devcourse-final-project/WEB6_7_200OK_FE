@@ -5,15 +5,15 @@ import { useState, useMemo, useCallback } from "react";
 import { MOCK_PURCHASES } from "@/entities/item/api/mocks";
 import { PurchaseItem } from "@/entities/item/model/types";
 import { Review } from "@/entities/review/model/types";
+import { PurchasedItemCard } from "@/features/purchase/ui/purchased-item-card";
 import { ReviewEditModal } from "@/features/review/ui/review-edit-modal";
 import { ReviewWriteModal } from "@/features/review/ui/review-write-modal";
-import { ItemFilter } from "@/features/trade/ui/item-filter";
-import { PurchasedCardRow } from "@/features/trade/ui/purchased-card-row";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
+import { ItemCardFilter } from "@/shared/ui/item-card-filter/item-card-filter";
 import { DashboardListLayout } from "@/shared/ui/layout/dashboard-list-layout";
 import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
 
@@ -67,11 +67,11 @@ export function PurchaseList() {
     <>
       <DashboardListLayout
         filterNode={
-          <ItemFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
+          <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
       >
         {filteredPurchases.map((item) => (
-          <PurchasedCardRow
+          <PurchasedItemCard
             key={item.id}
             item={item}
             onReviewClick={handleReviewBtnClick}
