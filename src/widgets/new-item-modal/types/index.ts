@@ -15,7 +15,7 @@ export interface DateTimeSelection {
 
 export interface DateTimeModalProps {
   selectedDate: Date | null;
-  selectedTime: TimeSelection;
+  selectedTime: TimeSelection | null;
   onClose: () => void;
   onConfirm: (date: Date, time: TimeSelection) => void;
 }

@@ -29,10 +29,13 @@ import {
   SelectValue,
 } from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
+import { DateTimeModal, type TimeSelection } from "@/widgets/new-item-modal/index";
+import { combineDateTime, formatDateTimeDisplay } from "@/widgets/new-item-modal/model/date-utils";
 
 export function NewItemScreen() {
-  const [selectedDate] = useState<Date | null>(null);
-  const [displayText] = useState<string>("날짜 및 시간을 선택해주세요");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<TimeSelection | null>(null);
+  const [isDateTimeModalOpen, setIsDateTimeModalOpen] = useState<boolean>(false);
 
   // 기본 정보
   const [productName, setProductName] = useState<string>("");
@@ -117,6 +120,40 @@ export function NewItemScreen() {
     }
 
     validateDropPrice(startPrice, dropPrice, stopLossPrice, setDropPriceError);
+  };
+
+  const handleDateTimeConfirm = (date: Date, time: TimeSelection) => {
+    setSelectedDate(date);
+    setSelectedTime(time);
+    setIsDateTimeModalOpen(false);
+  };
+
+  const getDisplayText = (): string => {
+    if (!selectedDate) {
+      return "날짜 및 시간을 선택해주세요";
+    }
+    return formatDateTimeDisplay(selectedDate, selectedTime);
+  };
+
+  const handleSubmit = async () => {
+    if (!formValid || !selectedDate || !selectedTime) {
+      return;
+    }
+
+    const auctionStartDate = combineDateTime(selectedDate, selectedTime);
+
+    const submitData = {
+      productName,
+      category,
+      description,
+      tags,
+      startPrice: startPrice!,
+      stopLossPrice: stopLossPrice!,
+      dropPrice: dropPrice!,
+      auctionStartDate,
+    } as Record<string, string | number | string[] | Date>;
+
+    console.warn("submitData preview:", submitData);
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
@@ -355,12 +392,12 @@ export function NewItemScreen() {
           </label>
           <Button
             type="button"
-            // onClick={() => setIsDateModalOpen(true)}
+            onClick={() => setIsDateTimeModalOpen(true)}
             variant="outline"
             className="h-10 w-full justify-between font-normal"
           >
             <span className={selectedDate ? "text-foreground" : "text-muted-foreground"}>
-              {displayText}
+              {getDisplayText()}
             </span>
             <Calendar className="text-muted-foreground size-4" />
           </Button>
@@ -385,11 +422,26 @@ export function NewItemScreen() {
           <Button id="cancel-button" variant="outline" className="flex-1">
             취소
           </Button>
-          <Button id="reserve-button" className="flex-1" disabled={!formValid}>
+          <Button
+            id="reserve-button"
+            className="flex-1"
+            disabled={!formValid}
+            onClick={handleSubmit}
+          >
             경매 예약하기
           </Button>
         </div>
       </div>
+
+      {/* 날짜/시간 선택 모달 */}
+      {isDateTimeModalOpen && (
+        <DateTimeModal
+          selectedDate={selectedDate}
+          selectedTime={selectedTime}
+          onClose={() => setIsDateTimeModalOpen(false)}
+          onConfirm={handleDateTimeConfirm}
+        />
+      )}
     </ScrollArea>
   );
 }
