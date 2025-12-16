@@ -13,7 +13,7 @@ import {
 export default function ProductLogSheet() {
   const isEmpty = false;
   if (isEmpty) {
-    return "";
+    return null;
   }
   return (
     <Sheet>
