@@ -7,7 +7,7 @@ import { Heart } from "lucide-react";
 import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 
-export default function ProductWishToggle() {
+export default function ProductLikeToggle() {
   const [isActive, setIsActive] = useState(false);
   return (
     <Button
