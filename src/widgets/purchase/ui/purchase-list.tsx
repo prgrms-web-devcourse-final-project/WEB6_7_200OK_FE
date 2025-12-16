@@ -5,6 +5,7 @@ import { useState, useMemo, useCallback } from "react";
 import { MOCK_PURCHASES } from "@/entities/item/api/mocks";
 import { PurchaseItem } from "@/entities/item/model/types";
 import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
+import { MOCK_REVIEWS } from "@/entities/review/api/mocks";
 import { Review } from "@/entities/review/model/types";
 import { PurchasedItemCard } from "@/features/purchase/ui/purchased-item-card";
 import { ReviewEditModal } from "@/features/review/ui/review-edit-modal";
@@ -36,7 +37,9 @@ export function PurchaseList() {
   const handleReviewBtnClick = useCallback((item: PurchaseItem) => {
     if (item.hasReview) {
       // TODO: API 연동 - 리뷰 데이터 조회
-      setEditModalReview(null);
+      const targetReview =
+        MOCK_REVIEWS.find((r) => r.product.name === item.name) || MOCK_REVIEWS[0];
+      setEditModalReview(targetReview);
     } else {
       setWriteModalItem(item);
     }
