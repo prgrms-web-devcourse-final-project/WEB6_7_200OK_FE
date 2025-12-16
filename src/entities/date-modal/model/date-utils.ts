@@ -18,7 +18,7 @@ export const getDefaultDate = (selectedDate: Date | null): Dayjs => {
 
 export const getDateRange = (): DateRange => {
   const minDate = dayjs().add(1, "day").startOf("day").toDate();
-  const maxDate = dayjs().add(6, "days").endOf("day").toDate();
+  const maxDate = dayjs().add(7, "days").endOf("day").toDate();
   return { minDate, maxDate };
 };
 
