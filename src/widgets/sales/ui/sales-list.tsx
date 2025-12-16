@@ -4,13 +4,13 @@ import { useState, useMemo, useCallback } from "react";
 
 import { MOCK_SELLING_ITEMS } from "@/entities/item/api/mocks";
 import { SellingItem } from "@/entities/item/model/types";
+import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
 import { SellingItemCard } from "@/features/sales/ui/selling-item-card";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { ItemCardFilter } from "@/shared/ui/item-card-filter/item-card-filter";
 import { DashboardListLayout } from "@/shared/ui/layout/dashboard-list-layout";
 import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
 
