@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { ImagePlus, X, Info, Calendar } from "lucide-react";
 
+import { combineDateTime, formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
 import { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
 import {
   DEFAULT_DROP_PERCENTAGE,
@@ -29,8 +30,7 @@ import {
   SelectValue,
 } from "@/shared/ui/select/select";
 import { Textarea } from "@/shared/ui/textarea/textarea";
-import { DateTimeModal, type TimeSelection } from "@/widgets/new-item-modal/index";
-import { combineDateTime, formatDateTimeDisplay } from "@/widgets/new-item-modal/model/date-utils";
+import { DateTimeModal } from "@/widgets/new-item-modal/index";
 
 export function NewItemScreen() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);

@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 
-import type { DateRange, TimeSelection } from "../types";
+import type { DateRange, TimeSelection } from "./types";
 
 // 기본 시간 선택
 export const DEFAULT_TIME_SELECTION: TimeSelection = {
@@ -36,11 +36,13 @@ export const formatDateTimeDisplay = (date: Date, time: TimeSelection | null): s
 export const combineDateTime = (date: Date, time: TimeSelection): Date => {
   const dateDayjs = dayjs(date);
   const { hour, minute } = time;
-  let hourValue = hour;
-  if (time.timezone === "오후" && hour !== 12) {
-    hourValue += 12;
-  } else if (time.timezone === "오전" && hour === 12) {
+  let hourValue: number = hour;
+
+  if (time.timezone === "오전" && hour === 12) {
     hourValue = 0;
+  } else if (time.timezone === "오후" && hour !== 12) {
+    hourValue += 12;
   }
+
   return dateDayjs.hour(hourValue).minute(minute).second(0).millisecond(0).toDate();
 };
