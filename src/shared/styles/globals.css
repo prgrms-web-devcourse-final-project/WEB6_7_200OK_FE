@@ -24,6 +24,10 @@
   --text-7xl--letter-spacing: -0.09rem; /* 7-x-large */
   --text-8xl--letter-spacing: -0.12rem; /* 8-x-large */
   --text-9xl--letter-spacing: -0.16rem; /* 9-x-large */
+
+  /* Header Height */
+  --header-h: 56px;
+  --spacing-header: var(--header-h);
 }
 
 @theme inline {

@@ -18,7 +18,7 @@ export function SubHeader({ content = "", className, ...props }: SubHeaderProps)
 
   return (
     <header className={cn("w-full md:hidden", className)} {...props}>
-      <div className="flex h-14 items-center gap-3 px-2.5">
+      <div className="h-header flex items-center gap-3 px-2.5">
         <Button variant="ghost" size="icon-lg" aria-label="뒤로가기" onClick={() => router.back()}>
           <ChevronLeft />
         </Button>

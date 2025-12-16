@@ -10,7 +10,7 @@ import SearchInput from "@/shared/ui/input/search-input";
 // TODO: BottomNav와 model 공유할 수 있도록 refactor
 export function Header() {
   return (
-    <header className="bg-background sticky top-0 z-50 hidden h-14 select-none md:flex">
+    <header className="bg-background h-header sticky top-0 z-50 hidden select-none md:flex">
       <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-between gap-4 px-4">
         <Link href="/" className="shrink-0">
           <h1 className="flex items-center gap-2">
