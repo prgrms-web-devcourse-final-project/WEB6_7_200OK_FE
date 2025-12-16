@@ -20,6 +20,7 @@ export function TimeSelector() {
         type="button"
         variant="outline"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="시간 선택"
         className="border-input focus-visible:border-ring focus-visible:ring-ring/50 dark:bg-input/30 flex h-12 w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
       >
         <div className="flex items-center gap-2">
@@ -38,7 +39,7 @@ export function TimeSelector() {
       <div
         className={cn(
           "bg-popover text-popover-foreground relative z-50 mt-2 w-full overflow-hidden rounded-md border shadow-md transition-all duration-200",
-          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          isOpen ? "max-h-96 opacity-100" : "pointer-events-none max-h-0 opacity-0"
         )}
       >
         <div className="divide-border grid grid-cols-3 divide-x">
@@ -106,7 +107,12 @@ export function TimeSelector() {
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} aria-hidden="true" />
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+          role="presentation"
+        />
       )}
     </div>
   );

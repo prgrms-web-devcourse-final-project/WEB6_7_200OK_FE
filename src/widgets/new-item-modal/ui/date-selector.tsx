@@ -15,17 +15,17 @@ export function DateSelector({
   dateRange,
   onDateSelect,
 }: DateSelectorProps) {
+  const { minDate, maxDate } = dateRange;
   // 비활성화 날짜
   const isDisabled = useMemo(
     () => (date: Date) => {
       const dateDayjs = dayjs(date).startOf("day");
-      const minDayjs = dayjs(dateRange.minDate).startOf("day");
-      const maxDayjs = dayjs(dateRange.maxDate).startOf("day");
-
+      const minDayjs = dayjs(minDate).startOf("day");
+      const maxDayjs = dayjs(maxDate).startOf("day");
       // 범위 벗어날 경우 disabled
       return dateDayjs.isBefore(minDayjs) || dateDayjs.isAfter(maxDayjs);
     },
-    [dateRange]
+    [minDate, maxDate]
   );
 
   const handleSelect = (date: Date | undefined) => {
