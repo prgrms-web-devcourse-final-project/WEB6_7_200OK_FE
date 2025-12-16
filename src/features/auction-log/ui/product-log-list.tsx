@@ -66,7 +66,7 @@ function ProductLogListItem({ prev, now, time }: { prev: string; now: string; ti
         <span>→</span>
         <span>{now}</span>
       </div>
-      <span className="text-muted-foreground">{time}</span>
+      <time className="text-muted-foreground">{time}</time>
     </li>
   );
 }
