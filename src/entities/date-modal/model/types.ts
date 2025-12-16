@@ -8,11 +8,6 @@ export interface TimeSelection {
   timezone: TimeZone;
 }
 
-export interface DateTimeSelection {
-  date: Date;
-  time: TimeSelection;
-}
-
 export interface DateTimeModalProps {
   selectedDate: Date | null;
   selectedTime: TimeSelection | null;
@@ -20,7 +15,7 @@ export interface DateTimeModalProps {
   onConfirm: (date: Date, time: TimeSelection) => void;
 }
 
-export interface CalendarViewProps {
+export interface DateSelectorProps {
   viewDate: Dayjs;
   selectedDate: Date | null;
   dateRange: DateRange;
