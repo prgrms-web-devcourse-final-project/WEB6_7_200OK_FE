@@ -30,7 +30,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ProductLogChart() {
+export default function ProductLogChart() {
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-base font-medium">관심도</h3>
