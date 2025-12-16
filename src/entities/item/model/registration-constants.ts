@@ -9,7 +9,7 @@ export const MAX_TAGS = 5; // 최대 태그 개수
 
 // 시간 관련 타입
 export type TimeZone = "오전" | "오후";
-export type Hour = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type Hour = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 // 시간 관련 상수
 export const TIMEZONES = ["오전", "오후"] as const;
