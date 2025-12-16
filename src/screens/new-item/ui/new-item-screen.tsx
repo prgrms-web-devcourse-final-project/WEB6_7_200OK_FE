@@ -294,7 +294,7 @@ export function NewItemScreen() {
               value={startPrice ?? ""}
               onChange={(e) => handlePriceChange(e, setStartPrice)}
               onBlur={handleStartPriceBlur}
-              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent"
             />
           </div>
           {startPriceError && <p className="text-destructive mt-1 text-xs">{startPriceError}</p>}
@@ -314,7 +314,7 @@ export function NewItemScreen() {
               value={stopLossPrice ?? ""}
               onChange={(e) => handlePriceChange(e, setStopLossPrice)}
               onBlur={handleStopLossPriceBlur}
-              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent"
             />
           </div>
           {stopLossError && <p className="text-destructive mt-1 text-xs">{stopLossError}</p>}
@@ -338,7 +338,7 @@ export function NewItemScreen() {
               value={dropPrice ?? ""}
               onChange={(e) => handlePriceChange(e, setDropPrice)}
               onBlur={handleDropPriceBlur}
-              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+              className="h-full flex-1 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent"
             />
           </div>
           {dropPriceError && <p className="text-destructive mt-1 text-xs">{dropPriceError}</p>}
