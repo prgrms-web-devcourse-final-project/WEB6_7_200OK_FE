@@ -7,19 +7,19 @@ import { ItemBadge } from "@/entities/item/ui/item-badge";
 import { ItemCard } from "@/entities/item/ui/item-card";
 import Button from "@/shared/ui/button/button";
 
-interface PurchasedCardRowProps {
+interface PurchasedItemCardProps {
   item: PurchaseItem;
   onReviewClick?: (item: PurchaseItem) => void;
   onConfirm?: (item: PurchaseItem) => void;
   onChatClick?: (item: PurchaseItem) => void;
 }
 
-export function PurchasedCardRow({
+export function PurchasedItemCard({
   item,
   onReviewClick,
   onConfirm,
   onChatClick,
-}: PurchasedCardRowProps) {
+}: PurchasedItemCardProps) {
   const isConfirmed = item.status === "구매 확정";
   const hasUnreadMessages = item.unreadMessageCount && item.unreadMessageCount > 0;
 

@@ -1,0 +1,61 @@
+"use client";
+
+import { useState, useMemo } from "react";
+
+import { MOCK_WISHLIST_ITEMS } from "@/entities/item/api/mocks";
+import { WishlistItem } from "@/entities/item/model/types";
+import { WishlistItemCard } from "@/features/wishlist/ui/wishlist-item-card";
+import {
+  filterItemsByStatus,
+  generateFilterOptions,
+  sortItemsByDateAndName,
+} from "@/shared/lib/utils/filter/user-page-item-filter";
+import { ItemCardFilter } from "@/shared/ui/item-card-filter/item-card-filter";
+import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
+
+const WISHLIST_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
+
+export function Wishlist() {
+  const [filterStatus, setFilterStatus] = useState("전체");
+  const [deleteItem, setDeleteItem] = useState<WishlistItem | null>(null);
+
+  const filterOptions = useMemo(() => generateFilterOptions(WISHLIST_STATUSES), []);
+
+  const filteredWishlist = useMemo(
+    () => sortItemsByDateAndName(filterItemsByStatus(MOCK_WISHLIST_ITEMS, filterStatus)),
+    [filterStatus]
+  );
+
+  const handleDelete = () => {
+    if (!deleteItem) return;
+    setDeleteItem(null);
+  };
+
+  return (
+    <>
+      <div className="flex h-[34px] w-full flex-col items-end justify-center gap-2.5">
+        <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
+      </div>
+
+      <div className="flex flex-col gap-4">
+        {filteredWishlist.map((item) => (
+          <WishlistItemCard
+            key={item.id}
+            item={item}
+            onRemove={(target) => setDeleteItem(target)}
+          />
+        ))}
+      </div>
+
+      <ConfirmDeleteModal
+        open={!!deleteItem}
+        onOpenChange={(open) => !open && setDeleteItem(null)}
+        onConfirm={handleDelete}
+        title="관심 목록 해제"
+        description="선택하신 상품을 관심 목록에서 제외하시겠습니까?"
+        confirmText="해제하기"
+        variant="destructive"
+      />
+    </>
+  );
+}

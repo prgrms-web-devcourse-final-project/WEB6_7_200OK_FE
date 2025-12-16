@@ -1,6 +1,6 @@
-import { NotificationItem } from "../model/types";
+import { NotificationPreferenceItem } from "../model/types";
 
-export const MOCK_NOTIFICATIONS: NotificationItem[] = [
+export const MOCK_NOTIFICATIONS: NotificationPreferenceItem[] = [
   {
     id: "n1",
     status: "판매중",

@@ -1,0 +1,225 @@
+"use client";
+
+import { useCallback, useMemo, useState } from "react";
+
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Calendar,
+  dayjsLocalizer,
+  EventProps,
+  ToolbarProps,
+  View,
+  DateHeaderProps,
+} from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
+import { cn } from "@/shared/lib/utils/utils";
+import Button from "@/shared/ui/button/button";
+
+import { CalendarEvent } from "../model/types";
+
+dayjs.locale("ko");
+const localizer = dayjsLocalizer(dayjs);
+
+interface AuctionCalendarProps {
+  events: CalendarEvent[];
+  onSelectDate: (date: Date) => void;
+  selectedDate: Date | null;
+}
+
+const createDateHeaderWrapper =
+  (selectedDate: Date | null, currentDate: Date, onSelectDate: (date: Date) => void) =>
+  (props: DateHeaderProps) => (
+    <CustomDateHeader
+      {...props}
+      selectedDate={selectedDate}
+      currentViewDate={currentDate}
+      onSelectDate={onSelectDate}
+    />
+  );
+
+const CustomToolbar = ({ date, onNavigate }: ToolbarProps<CalendarEvent>) => (
+  <div className="flex h-7 w-full items-center justify-between px-0.5 pb-6">
+    <h3 className="text-foreground text-sm leading-5 font-semibold tracking-[-0.009375rem]">
+      {dayjs(date).format("YYYY년 M월")}
+    </h3>
+    <div className="flex gap-1">
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        className="hover:bg-secondary/50 h-7 w-7 rounded-lg"
+        onClick={() => onNavigate("PREV")}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        className="hover:bg-secondary/50 h-7 w-7 rounded-lg"
+        onClick={() => onNavigate("NEXT")}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+    </div>
+  </div>
+);
+
+const CustomHeader = ({ date }: { date: Date }) => {
+  const day = dayjs(date).day();
+  const colorClass = cn(
+    "text-foreground",
+    day === 0 && "text-red-500",
+    day === 6 && "text-blue-500"
+  );
+
+  return (
+    <span
+      className={cn("text-[0.8125rem] leading-5 font-medium tracking-[-0.00476rem]", colorClass)}
+    >
+      {dayjs(date).format("ddd")}
+    </span>
+  );
+};
+
+interface CustomDateHeaderProps extends DateHeaderProps {
+  selectedDate: Date | null;
+  currentViewDate: Date;
+  onSelectDate: (date: Date) => void;
+}
+
+const CustomDateHeader = ({
+  label,
+  date,
+  selectedDate,
+  currentViewDate,
+  onSelectDate,
+}: CustomDateHeaderProps) => {
+  const isSelected = selectedDate && dayjs(date).isSame(selectedDate, "day");
+  const isOffRange = dayjs(date).month() !== dayjs(currentViewDate).month();
+  const day = dayjs(date).day();
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSelectDate(date);
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon-sm"
+      onClick={handleClick}
+      disabled={isOffRange}
+      className={cn(
+        // 캘린더 전용 추가 스타일
+        "rounded-full text-sm",
+        // 선택된 날짜
+        isSelected && "bg-accent dark:bg-accent/50",
+        // 범위 밖 날짜 스타일
+        isOffRange &&
+          "text-muted-foreground hover:text-muted-foreground cursor-default opacity-50 hover:bg-transparent",
+        // 요일별 색상
+        !isOffRange && cn(day === 0 && "text-red-500", day === 6 && "text-blue-500")
+      )}
+    >
+      {label}
+    </Button>
+  );
+};
+
+const CustomEvent = ({ event }: EventProps<CalendarEvent>) => {
+  const isProgress = event.type === "progress";
+  return (
+    <div
+      className={cn(
+        "pointer-events-none mx-auto mb-0.5 flex h-3.25 w-full max-w-8.25 items-center justify-center rounded",
+        isProgress ? "bg-brand" : "bg-zinc-200 dark:bg-zinc-700"
+      )}
+    >
+      <span
+        className={cn(
+          "text-[0.5625rem] leading-2.25 font-medium tracking-[0.010437rem] whitespace-nowrap",
+          isProgress ? "text-white" : "text-zinc-600 dark:text-zinc-400"
+        )}
+      >
+        {event.title}
+      </span>
+    </div>
+  );
+};
+
+export function AuctionCalendar({ events, onSelectDate, selectedDate }: AuctionCalendarProps) {
+  const [currentDate, setCurrentDate] = useState(selectedDate || new Date());
+  const [currentView, setCurrentView] = useState<View>("month");
+
+  const handleNavigate = useCallback((newDate: Date) => {
+    setCurrentDate(newDate);
+  }, []);
+
+  const handleViewChange = useCallback((newView: View) => {
+    setCurrentView(newView);
+  }, []);
+
+  const { components } = useMemo(
+    () => ({
+      components: {
+        toolbar: CustomToolbar,
+        event: CustomEvent,
+        month: {
+          header: CustomHeader,
+          dateHeader: createDateHeaderWrapper(selectedDate, currentDate, onSelectDate),
+        },
+      },
+    }),
+    [selectedDate, currentDate, onSelectDate]
+  );
+
+  return (
+    <div className="bg-card border-border flex w-full flex-col gap-4 rounded-2xl border p-6 shadow-sm">
+      <div className="h-101 w-full">
+        <Calendar
+          className="clean-calendar"
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: "100%", width: "100%" }}
+          views={["month"]}
+          view={currentView}
+          date={currentDate}
+          onView={handleViewChange}
+          onNavigate={handleNavigate}
+          onSelectSlot={() => {}}
+          selectable
+          components={components}
+          eventPropGetter={() => ({
+            style: {
+              backgroundColor: "transparent",
+              padding: 0,
+              outline: "none",
+            },
+          })}
+          dayPropGetter={() => ({
+            style: { backgroundColor: "transparent", cursor: "default" },
+          })}
+          formats={{
+            monthHeaderFormat: "YYYY년 M월",
+            weekdayFormat: "ddd",
+            dateFormat: "D",
+          }}
+          culture="ko"
+        />
+      </div>
+
+      <div className="border-border bg-secondary/30 flex w-full flex-col gap-3 rounded-[0.625rem] border px-3 py-3">
+        <span className="text-muted-foreground text-sm leading-5 font-normal tracking-[-0.009375rem]">
+          선택된 날짜
+        </span>
+        <span className="text-brand text-base leading-6 font-medium tracking-[-0.019531rem]">
+          {selectedDate ? dayjs(selectedDate).format("YYYY년 M월 D일") : "날짜를 선택해주세요"}
+        </span>
+      </div>
+    </div>
+  );
+}

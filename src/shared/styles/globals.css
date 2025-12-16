@@ -154,3 +154,36 @@
     cursor: pointer;
   }
 }
+
+/* Auction Calendar Styles */
+.clean-calendar .rbc-month-view,
+.clean-calendar .rbc-header,
+.clean-calendar .rbc-month-row,
+.clean-calendar .rbc-day-bg,
+.clean-calendar .rbc-date-cell {
+  border: none !important;
+}
+.clean-calendar .rbc-header {
+  padding-bottom: 0.75rem;
+  font-weight: 500;
+}
+.clean-calendar .rbc-off-range-bg {
+  background: transparent !important;
+}
+.clean-calendar .rbc-row-content {
+  z-index: 5;
+  pointer-events: none;
+}
+.clean-calendar .rbc-date-cell {
+  pointer-events: auto !important;
+  padding: 0.25rem 0 0 0;
+  text-align: center;
+}
+.clean-calendar .rbc-date-cell button {
+  margin: 0 auto;
+}
+/* 오늘 날짜 bold 제거 */
+.clean-calendar .rbc-today button,
+.clean-calendar .rbc-now button {
+  font-weight: normal !important;
+}
