@@ -4,13 +4,13 @@ import { useState, useMemo } from "react";
 
 import { MOCK_WISHLIST_ITEMS } from "@/entities/item/api/mocks";
 import { WishlistItem } from "@/entities/item/model/types";
+import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
 import { WishlistItemCard } from "@/features/wishlist/ui/wishlist-item-card";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { ItemCardFilter } from "@/shared/ui/item-card-filter/item-card-filter";
 import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
 
 const WISHLIST_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];

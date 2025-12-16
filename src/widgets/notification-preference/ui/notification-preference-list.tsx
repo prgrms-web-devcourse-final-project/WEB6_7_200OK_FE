@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 
+import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
 import { MOCK_NOTIFICATIONS } from "@/features/notification-preference/api/mocks";
 import { NotificationPreferenceItem } from "@/features/notification-preference/model/types";
 import { NotificationPreferenceItemCard } from "@/features/notification-preference/ui/notification-preference-item-card";
@@ -11,7 +12,6 @@ import {
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { ItemCardFilter } from "@/shared/ui/item-card-filter/item-card-filter";
 
 const NOTI_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
