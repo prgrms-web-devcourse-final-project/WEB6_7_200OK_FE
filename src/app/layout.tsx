@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import "@/shared/styles/globals.css";
 import { ToastRegistry } from "@/shared/ui/toast/toast-registry";
 import { BottomNav } from "@/widgets/bottom-nav";
+import { Header } from "@/widgets/header/header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Header />
           {children}
           <ToastRegistry />
           <BottomNav />
