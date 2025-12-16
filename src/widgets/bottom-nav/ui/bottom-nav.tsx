@@ -15,7 +15,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="bg-background sticky bottom-0 z-50 h-14 border-t pt-1.5 md:hidden"
+      className="bg-background h-header sticky bottom-0 z-50 border-t pt-1.5 md:hidden"
       aria-label="하단 내비게이션"
     >
       <ul className="flex justify-around">
