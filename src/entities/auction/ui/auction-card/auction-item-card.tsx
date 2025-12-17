@@ -9,10 +9,10 @@ import CtaButton from "@/entities/auction/ui/auction-card/ui/cta-button";
 import LikeButton from "@/entities/auction/ui/auction-card/ui/like-button";
 import RankingBadge from "@/entities/auction/ui/auction-card/ui/ranking-badge";
 import UpcomingInfo from "@/entities/auction/ui/auction-card/ui/upcoming-info";
-import { AuctionCardVariant, VARIANT_MAP } from "@/entities/auction/ui/auction-card/variants";
+import { AuctionCardVariantType, VARIANT_MAP } from "@/entities/auction/ui/auction-card/variants";
 
 export interface AuctionItemCardProps {
-  variant: AuctionCardVariant;
+  variant: AuctionCardVariantType;
   auctionId: number;
   imageUrl: string;
   title: string;

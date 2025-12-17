@@ -9,7 +9,7 @@ import { ChevronLeft } from "lucide-react";
 import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 
-export interface SubHeaderProps extends Omit<ComponentProps<"header">, "children" | "content"> {
+interface SubHeaderProps extends Omit<ComponentProps<"header">, "children" | "content"> {
   content?: ReactNode;
 }
 

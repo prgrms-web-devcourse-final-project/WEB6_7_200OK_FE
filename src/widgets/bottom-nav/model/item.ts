@@ -10,10 +10,10 @@ export const BOTTOM_NAV_ITEMS = [
   { id: "profile", label: "내정보", href: "/me", icon: User },
 ] as const;
 
-export type BottomNavId = (typeof BOTTOM_NAV_ITEMS)[number]["id"];
+export type BottomNavIdType = (typeof BOTTOM_NAV_ITEMS)[number]["id"];
 
 export interface BottomNavItem {
-  id: BottomNavId;
+  id: BottomNavIdType;
   label: string;
   href: string;
   icon: LucideIcon;
