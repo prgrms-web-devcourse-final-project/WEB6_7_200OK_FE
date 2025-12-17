@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 
 import { cva } from "class-variance-authority";
+
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 import { SOCIAL_MAPS, type SocialProvider } from "../model/social-maps";
 
@@ -26,13 +30,19 @@ const socialButtonVariants = cva(
 interface SocialButtonProps {
   provider: SocialProvider;
   onClick: () => void;
+  disabled?: boolean;
 }
 
-export function SocialButton({ provider, onClick }: SocialButtonProps) {
+export function SocialButton({ provider, onClick, disabled }: SocialButtonProps) {
   const { icon, label } = SOCIAL_MAPS[provider];
 
   return (
-    <button type="button" className={socialButtonVariants({ provider })} onClick={onClick}>
+    <button
+      type="button"
+      className={socialButtonVariants({ provider })}
+      onClick={onClick}
+      disabled={disabled}
+    >
       <Image src={icon} alt={`${label} 로그인`} width={20} height={20} />
       {label}
     </button>
@@ -40,15 +50,49 @@ export function SocialButton({ provider, onClick }: SocialButtonProps) {
 }
 
 export function SocialLoginButtons() {
-  const handleGoogleLogin = () => {}; // TODO: 구글 로그인 로직
-  const handleNaverLogin = () => {}; // TODO: 네이버 로그인 로직
-  const handleKakaoLogin = () => {}; // TODO: 카카오 로그인 로직
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSocialLogin = async (provider: SocialProvider) => {
+    try {
+      setIsLoading(true);
+
+      const response = await fetch(`/api/v1/auth?provider=${provider}`);
+
+      if (!response.ok) {
+        throw new Error("OAuth URL을 가져오는데 실패했습니다.");
+      }
+
+      const json = await response.json();
+
+      if (json.data) {
+        window.location.href = json.data;
+      } else {
+        throw new Error("OAuth URL이 없습니다.");
+      }
+    } catch (error) {
+      console.error(`${provider} 로그인 오류:`, error);
+      showToast.error("로그인 중 오류가 발생했습니다.");
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <SocialButton provider="google" onClick={handleGoogleLogin} />
-      <SocialButton provider="naver" onClick={handleNaverLogin} />
-      <SocialButton provider="kakao" onClick={handleKakaoLogin} />
+      <SocialButton
+        provider="google"
+        onClick={() => handleSocialLogin("google")}
+        disabled={isLoading}
+      />
+      <SocialButton
+        provider="naver"
+        onClick={() => handleSocialLogin("naver")}
+        disabled={isLoading}
+      />
+      <SocialButton
+        provider="kakao"
+        onClick={() => handleSocialLogin("kakao")}
+        disabled={isLoading}
+      />
     </div>
   );
 }

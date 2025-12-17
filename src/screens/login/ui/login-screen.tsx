@@ -1,10 +1,41 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { SocialLoginButtons } from "@/features/auth/ui/social-login-buttons";
+import { checkAuth } from "@/features/auth/util/check-auth";
 import windfallIcon from "@/shared/assets/icons/windfall.svg";
 import Separator from "@/shared/ui/separator/separator";
 
 export function LoginScreen() {
+  const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const isAuthenticated = await checkAuth();
+
+      if (isAuthenticated) {
+        router.replace("/");
+      } else {
+        setIsChecking(false);
+      }
+    };
+
+    verifyAuth();
+  }, [router]);
+
+  if (isChecking) {
+    return (
+      <div className="bg-background flex min-h-screen w-full items-center justify-center">
+        <div className="text-muted-foreground">로딩 중...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background flex min-h-screen w-full flex-col items-center justify-center px-4">
       <section className="flex w-full max-w-sm flex-col items-center gap-10">
