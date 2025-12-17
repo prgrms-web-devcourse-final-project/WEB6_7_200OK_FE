@@ -1,5 +1,5 @@
-import { DMListWidget } from "@/widgets/dm-list";
+import { DMListScreen } from "@/widgets/dm-list";
 
 export function DMScreen() {
-  return <DMListWidget />;
+  return <DMListScreen />;
 }
