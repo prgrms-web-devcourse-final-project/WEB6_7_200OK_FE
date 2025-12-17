@@ -1,7 +1,7 @@
 import { AuctionProgress } from "@/entities/auction";
 import ProductLogList from "@/features/auction-log/ui/product-log-list";
 import { ProductReview } from "@/features/review";
-import { PAGE_DATA } from "@/screens/auction-detail/model/data";
+import { AUCTION_DETAIL_MOCKDATA } from "@/screens/auction-detail/model/data";
 import { ScrollArea, ScrollBar } from "@/shared/ui/scroll-area/scroll-area";
 import Separator from "@/shared/ui/separator/separator";
 import {
@@ -17,14 +17,14 @@ import {
 } from "@/widgets/auction-detail";
 
 export default function AuctionDetailScreen() {
-  const data = PAGE_DATA;
+  const data = AUCTION_DETAIL_MOCKDATA;
   return (
     <ScrollArea className="h-[calc(100vh-120px)] lg:h-[calc(100vh-120px)]">
       <div className="mx-auto flex w-full max-w-7xl flex-col-reverse lg:flex-row">
         {/* Left Section */}
         <div className="lg:min-w-125 lg:shrink lg:grow-0 lg:basis-189">
           <div className="flex flex-col gap-8 p-4">
-            <ImageCarousel images={data.images} />
+            <ImageCarousel images={data.imageUrls} />
             <Separator />
             <ProductInfo text="제품 설명" />
             <Separator />
