@@ -5,7 +5,7 @@ import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { MOCK_SELLING_ITEMS } from "@/entities/item/api/mocks";
 import { SellingItem } from "@/entities/item/model/types";
 import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
-import { SellingItemCard } from "@/features/sales/ui/selling-item-card";
+import { SellingItemCard } from "@/features/sale/ui/selling-item-card";
 import {
   filterItemsByStatus,
   generateFilterOptions,
