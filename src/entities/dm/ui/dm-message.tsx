@@ -19,12 +19,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       >
         <p className={cn("text-sm")}>{message.message}</p>
       </div>
-      <div
-        className={cn(
-          "mt-1 flex items-center gap-1 px-1",
-          message.isMine ? "flex-row" : "flex-row"
-        )}
-      >
+      <div className={cn("mt-1 flex flex-row items-center gap-1 px-1")}>
         <span className={cn("text-xs opacity-70")}>{message.time}</span>
         {message.isMine && (
           <>
