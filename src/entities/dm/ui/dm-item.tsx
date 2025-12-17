@@ -20,7 +20,7 @@ export function DMItem({ chat, isSelected, onClick }: DMItemProps) {
       variant="ghost"
       onClick={onClick}
       className={cn(
-        "border-border hover:bg-accent border-b-border relative h-auto w-full justify-start rounded-none border-b p-2 text-left",
+        "border-border rounded-y-md hover:bg-accent border-b-border relative h-auto w-full justify-start rounded-t-none rounded-b-none border-b p-2 py-4 text-left",
         isSelected && "bg-accent"
       )}
     >
@@ -56,8 +56,10 @@ export function DMItem({ chat, isSelected, onClick }: DMItemProps) {
         {chat.product && (
           <div
             className={cn(
-              "bg-accent mt-1.5 flex w-fit items-center gap-1.5 rounded-md px-2 py-1.5",
-              isSelected ? "bg-zinc-200/70 dark:bg-zinc-700" : "bg-zinc-200/70 dark:bg-zinc-800"
+              "bg-accent mt-2 flex w-fit items-center gap-1.5 rounded-md px-2 py-1.5",
+              isSelected
+                ? "bg-zinc-200/70 dark:bg-zinc-700/50"
+                : "bg-zinc-200/40 dark:bg-zinc-800/70"
             )}
           >
             {/* 리스트 상품 이미지 표시 영역 */}

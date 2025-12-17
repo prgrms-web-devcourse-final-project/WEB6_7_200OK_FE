@@ -37,7 +37,7 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
         description="채팅 목록에서 대화방을 선택해주세요."
         Icon={MessageSquareOff}
         size="xl"
-        className="border-border rounded-r-mdrounded-none rounded-l-none border"
+        className="border-border rounded-none rounded-l-none rounded-r-md border bg-transparent"
       />
     );
   }
@@ -49,7 +49,7 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
       )}
     >
       {/* 헤더 */}
-      <div className={cn("border-border bg-card flex shrink-0 items-center gap-3 border-b p-2")}>
+      <div className={cn("border-border flex shrink-0 items-center gap-3 border-b p-2")}>
         <Button
           aria-label="뒤로가기"
           variant="ghost"
@@ -82,7 +82,7 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
       </ScrollArea>
 
       {/* 입력 영역 */}
-      <div className={cn("border-border bg-card shrink-0 border-t p-4")}>
+      <div className={cn("border-border shrink-0 border-t p-4")}>
         <div className={cn("flex items-center gap-2")}>
           <Input
             type="text"

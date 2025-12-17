@@ -11,7 +11,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className={cn("bg-card border-border rounded-md border p-4")}>
+    <div className={cn("border-border rounded-md border p-4")}>
       <div className={cn("flex gap-4")}>
         {/* TODO: 상품 이미지 표시 추후 작업 필요 */}
         <Image
