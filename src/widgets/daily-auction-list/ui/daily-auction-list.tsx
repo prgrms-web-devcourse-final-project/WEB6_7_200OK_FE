@@ -12,7 +12,7 @@ import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import EmptyState from "@/shared/ui/empty/empty";
 
-import { DashboardItem } from "../model/calendar";
+import { DashboardItem } from "../model/types";
 
 interface DailyAuctionListProps {
   items: DashboardItem[];
@@ -36,7 +36,7 @@ export function DailyAuctionList({ items, selectedDate }: DailyAuctionListProps)
   );
 
   return (
-    <div className="bg-card border-border flex w-full flex-col gap-4 rounded-2xl border p-6 shadow-sm">
+    <div className="bg-card border-border flex w-full flex-col gap-4 rounded-lg border p-6 shadow-sm">
       <div className="flex h-7 flex-row items-center justify-between">
         <h3 className="text-foreground text-base tracking-(--text-base--letter-spacing)">
           경매 목록
@@ -99,7 +99,7 @@ function FilterButton({
       onClick={onClick}
       variant={active ? "primary" : "ghost"}
       className={cn(
-        "flex h-7 items-center justify-center rounded-[0.625rem] border px-2 text-xs tracking-(--text-xs--letter-spacing) transition-colors"
+        "flex h-7 items-center justify-center rounded-lg border px-2 text-xs tracking-(--text-xs--letter-spacing) transition-colors"
       )}
     >
       {label}

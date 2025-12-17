@@ -48,7 +48,7 @@ export function ReviewWriteModal({ open, onOpenChange, item, onSubmit }: ReviewW
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="rounded-2.5 w-[90%] gap-4 p-6 sm:max-w-lg">
+        <DialogContent className="w-[90%] gap-4 rounded-lg p-6 sm:max-w-lg">
           <DialogHeader className="flex flex-col gap-2 text-left">
             <div className="flex items-center gap-1.5">
               <Star className="h-5 w-5 fill-transparent text-yellow-400" strokeWidth={2.5} />
@@ -133,7 +133,7 @@ export function ReviewWriteModal({ open, onOpenChange, item, onSubmit }: ReviewW
                 <textarea
                   id="review-content"
                   className={cn(
-                    "border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-[116px] w-full resize-none rounded-lg border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    "border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:ring-ring flex h-29 w-full resize-none rounded-lg border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                   )}
                   placeholder="거래에 대한 솔직한 리뷰를 작성해주세요.&#13;&#10;• 상품의 상태는 어떠셨나요?&#13;&#10;• 판매자와의 거래는 만족스러우셨나요?&#13;&#10;• 다른 구매자분들께 도움이 될 내용을 작성해주세요."
                   value={content}

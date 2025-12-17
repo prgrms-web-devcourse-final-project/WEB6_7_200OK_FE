@@ -1,7 +1,7 @@
 "use client";
 
 import { MOCK_OWN_PROFILE } from "@/entities/user/api/mocks";
-// import { MOCK_OTHER_PROFILE } from "@/entities/user/api/mocks;";
+// import { MOCK_OTHER_PROFILE } from "@/entities/user/api/mocks";
 import { UserProfileWidget } from "@/widgets/user/ui/user-profile-widget";
 
 import { UserDashboard } from "./user-dashboard";
