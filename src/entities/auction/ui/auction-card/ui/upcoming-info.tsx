@@ -8,16 +8,18 @@ interface UpcomingInfoProps {
 export default function UpcomingInfo({ startedAt, startPrice }: UpcomingInfoProps) {
   return (
     <dl className="grid grid-cols-2 items-center gap-y-1.5 text-sm">
-      <dt className="text-zinc-600">경매 시작</dt>
-      <dd className="text-right text-zinc-900">
+      <dt className="text-muted-foreground">경매 시작</dt>
+      <dd className="text-muted-foreground text-right">
         <time dateTime={startedAt}>
           {dayjs.utc(startedAt).tz("Asia/Seoul").format("M월 D일 A h시 m분")}
         </time>
       </dd>
 
-      <dt className="text-zinc-600">시작 예정가</dt>
+      <dt className="text-muted-foreground">시작 예정가</dt>
       <dd className="text-right">
-        <strong className="text-brand text-base font-bold">{startPrice.toLocaleString()}원</strong>
+        <strong className="text-brand dark:text-brand-text text-base font-bold">
+          {startPrice.toLocaleString()}원
+        </strong>
       </dd>
     </dl>
   );
