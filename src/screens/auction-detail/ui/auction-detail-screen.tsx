@@ -1,17 +1,36 @@
+import { AuctionProgress } from "@/entities/auction";
+import ProductLogList from "@/features/auction-log/ui/product-log-list";
+import { ProductReview } from "@/features/review";
+import { PAGE_DATA } from "@/screens/auction-detail/model/data";
 import { ScrollArea, ScrollBar } from "@/shared/ui/scroll-area/scroll-area";
 import Separator from "@/shared/ui/separator/separator";
-import ProductCategory from "@/widgets/auction-detail/ui/product-category";
-import ProductName from "@/widgets/auction-detail/ui/product-name";
-import ProductPrice from "@/widgets/auction-detail/ui/product-price";
-import ProductSeller from "@/widgets/auction-detail/ui/product-seller";
-import ProductTags from "@/widgets/auction-detail/ui/product-tags";
+import {
+  ProductCategory,
+  ProductPrice,
+  ProductName,
+  ProductTags,
+  ProductSeller,
+  ProductInfo,
+  ProductLogSheet,
+  ProductUserActions,
+  ImageCarousel,
+} from "@/widgets/auction-detail";
 
 export default function AuctionDetailScreen() {
+  const data = PAGE_DATA;
   return (
     <ScrollArea className="h-[calc(100vh-120px)] lg:h-[calc(100vh-120px)]">
       <div className="mx-auto flex w-full max-w-7xl flex-col-reverse lg:flex-row">
         {/* Left Section */}
-        <div className="lg:min-w-125 lg:shrink lg:grow-0 lg:basis-189" />
+        <div className="lg:min-w-125 lg:shrink lg:grow-0 lg:basis-189">
+          <div className="flex flex-col gap-8 p-4">
+            <ImageCarousel images={data.images} />
+            <Separator />
+            <ProductInfo text="제품 설명" />
+            <Separator />
+            <ProductReview />
+          </div>
+        </div>
 
         {/* Divider */}
         <Separator orientation="vertical" />
@@ -24,6 +43,12 @@ export default function AuctionDetailScreen() {
             <ProductName />
             <ProductTags />
             <ProductSeller />
+            <AuctionProgress />
+            <ProductUserActions />
+            <div className="flex flex-col gap-3">
+              <ProductLogList />
+              <ProductLogSheet />
+            </div>
           </div>
         </div>
       </div>
