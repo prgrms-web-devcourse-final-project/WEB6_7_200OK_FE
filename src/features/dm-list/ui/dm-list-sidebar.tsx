@@ -70,12 +70,12 @@ export function ChatListSidebar({
   return (
     <div
       className={cn(
-        "border-border bg-sidebar relative flex h-full w-full flex-col border-r lg:w-2/5",
+        "border-border bg-sidebar relative flex h-full w-full flex-col rounded-l-md rounded-r-none border border-r p-4 lg:w-2/5",
         selectedChatId ? "hidden lg:flex" : "flex"
       )}
     >
       {/* 탭 네비게이션 */}
-      <div className={cn("border-border bg-card flex items-center gap-1 border-b px-2 py-2")}>
+      <div className={cn("bg-sidebar mb-4 flex items-center gap-2")}>
         {filterOptions.map((option) => {
           const Icon = option.icon;
           const isActive = filter === option.value;

@@ -37,12 +37,17 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
         description="채팅 목록에서 대화방을 선택해주세요."
         Icon={MessageSquareOff}
         size="xl"
+        className="border-border rounded-r-mdrounded-none rounded-l-none border"
       />
     );
   }
 
   return (
-    <div className={cn("flex h-full min-h-0 flex-col")}>
+    <div
+      className={cn(
+        "border-border flex h-full min-h-0 flex-col rounded-l-none rounded-r-md border"
+      )}
+    >
       {/* 헤더 */}
       <div className={cn("border-border bg-card flex shrink-0 items-center gap-3 border-b p-2")}>
         <Button

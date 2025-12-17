@@ -30,7 +30,11 @@ export function DMListScreen() {
   };
 
   return (
-    <div className={cn("flex h-[calc(100vh-var(--header-h))] min-h-0 w-full overflow-hidden")}>
+    <div
+      className={cn(
+        "bg-background border-border mx-auto flex h-[calc(100vh-var(--header-h))] min-h-0 w-full max-w-7xl overflow-hidden py-4"
+      )}
+    >
       <ChatListSidebar
         chats={mockChats}
         selectedChatId={selectedChatId}

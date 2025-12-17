@@ -20,7 +20,7 @@ export function DMItem({ chat, isSelected, onClick }: DMItemProps) {
       variant="ghost"
       onClick={onClick}
       className={cn(
-        "border-border hover:bg-accent relative h-auto w-full justify-start rounded-none border-b p-4 text-left",
+        "border-border hover:bg-accent border-b-border relative h-auto w-full justify-start rounded-none border-b p-2 text-left",
         isSelected && "bg-accent"
       )}
     >
@@ -30,9 +30,9 @@ export function DMItem({ chat, isSelected, onClick }: DMItemProps) {
             <Image
               src={AvatarSvg}
               alt={chat.name}
-              width={40}
-              height={40}
-              className={cn("rounded-full object-cover")}
+              width={36}
+              height={36}
+              className={cn("h-9 w-9 rounded-full object-cover")}
             />
           </div>
           <div className={cn("min-w-0 flex-1")}>
