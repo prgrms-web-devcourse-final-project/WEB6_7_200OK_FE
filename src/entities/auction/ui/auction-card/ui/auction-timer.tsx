@@ -32,13 +32,13 @@ export default function AuctionTimer({ type, time }: AuctionTimerProps) {
 
   return (
     <div
-      className="flex h-11 w-full items-center gap-1.5 rounded-md bg-zinc-100 p-3 text-sm text-zinc-600"
+      className="bg-muted flex h-11 w-full items-center gap-1.5 rounded-md p-3 text-sm"
       role="group"
       aria-label={ariaLabel}
     >
       <Icon aria-hidden className="size-4" />
       <span>{label}</span>
-      <time dateTime={time} className="ml-auto font-medium text-zinc-900">
+      <time dateTime={time} className="ml-auto font-semibold">
         {time}
       </time>
     </div>

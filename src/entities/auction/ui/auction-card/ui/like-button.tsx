@@ -9,6 +9,7 @@ interface LikeButtonProps extends ComponentProps<"button"> {
   onToggle?: () => void;
 }
 
+// TODO: onToggle 시 Link와 기능이 겹치지 않도록 stopPropagation 적용
 export default function LikeButton({ isLiked, onToggle, className, ...props }: LikeButtonProps) {
   return (
     <button
