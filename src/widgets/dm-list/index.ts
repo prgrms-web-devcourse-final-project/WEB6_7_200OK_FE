@@ -1,1 +1,1 @@
-export { DMListWidget } from "./ui/dm-list-screen";
+export { DMListScreen } from "./ui/dm-list-screen";

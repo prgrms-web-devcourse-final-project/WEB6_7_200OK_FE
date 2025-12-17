@@ -8,7 +8,7 @@ import { ChatDetail } from "@/features/dm-detail/ui/dm-detail";
 import { ChatListSidebar } from "@/features/dm-list/ui/dm-list-sidebar";
 import { cn } from "@/shared/lib/utils/utils";
 
-export function DMListWidget() {
+export function DMListScreen() {
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [filter, setFilter] = useState<ListFilter>("all");
   const [messages] = useState<Record<string, Message[]>>(mockMessages);
