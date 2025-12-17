@@ -5,6 +5,7 @@ import { MessageCircle, X } from "lucide-react";
 import { SellingItem } from "@/entities/item/model/types";
 import { ItemBadge } from "@/entities/item/ui/item-badge";
 import { ItemCard } from "@/entities/item/ui/item-card";
+import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 
 interface SellingItemCardProps {
@@ -75,19 +76,21 @@ export function SellingItemCard({
                 e.stopPropagation();
                 onChatClick?.(item);
               }}
-              className={`h-9 flex-1 gap-1 rounded-lg ${
+              className={cn(
+                "h-9 flex-1 gap-1 rounded-lg",
                 hasUnreadMessages
                   ? "bg-brand hover:bg-brand/90"
                   : "bg-background hover:bg-accent border-border border"
-              }`}
+              )}
             >
               <MessageCircle
-                className={`size-4 ${hasUnreadMessages ? "text-background" : "text-foreground"}`}
+                className={cn("size-4", hasUnreadMessages ? "text-background" : "text-foreground")}
               />
               <span
-                className={`text-sm font-medium ${
+                className={cn(
+                  "text-sm font-medium",
                   hasUnreadMessages ? "text-background" : "text-foreground"
-                }`}
+                )}
               >
                 1:1 채팅
               </span>

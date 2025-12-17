@@ -45,7 +45,7 @@ export function ReviewEditModal({
   if (!review) return null;
 
   const handleEditClick = () => {
-    if (rating === 0) {
+    if (rating < 0.5) {
       setShowWarning(true);
       return;
     }
