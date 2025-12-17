@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import { Package, BellRing } from "lucide-react";
 
+import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/ui/dialog/dialog";
 import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
@@ -163,11 +164,12 @@ export function NotificationPreferenceSettingsModal({
             <Button
               type="button"
               onClick={handleSaveOrDelete}
-              className={
+              className={cn(
+                "h-10 flex-1 rounded-lg sm:h-9",
                 isAllOff
-                  ? "bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 flex-1 rounded-lg sm:h-9"
-                  : "bg-brand text-brand-contrast hover:bg-brand/90 h-10 flex-1 rounded-lg sm:h-9"
-              }
+                  ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  : "bg-brand text-brand-contrast hover:bg-brand/90"
+              )}
             >
               {isAllOff ? "알림 삭제" : "저장"}
             </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
 import { MOCK_SELLING_ITEMS } from "@/entities/item/api/mocks";
 import { SellingItem } from "@/entities/item/model/types";
@@ -22,7 +22,14 @@ interface SalesListProps {
 
 export function SalesList({ isOwn = false }: SalesListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
+
   const [deleteItem, setDeleteItem] = useState<SellingItem | null>(null);
+
+  const deleteItemRef = useRef<SellingItem | null>(null);
+
+  useEffect(() => {
+    deleteItemRef.current = deleteItem;
+  }, [deleteItem]);
 
   const filterOptions = useMemo(() => generateFilterOptions(SALES_STATUSES), []);
 
@@ -32,10 +39,14 @@ export function SalesList({ isOwn = false }: SalesListProps) {
   );
 
   const handleDelete = useCallback(() => {
-    if (!deleteItem) return;
-    // TODO: API 실제 판매글 삭제 요청 로직 구현 필요
+    const targetItem = deleteItemRef.current;
+
+    if (!targetItem) return;
+
+    // TODO: API 삭제 요청 (targetItem.id 사용)
+
     setDeleteItem(null);
-  }, [deleteItem]);
+  }, []);
 
   return (
     <>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
 import { MOCK_PURCHASES } from "@/entities/item/api/mocks";
 import { PurchaseItem } from "@/entities/item/model/types";
@@ -25,7 +25,14 @@ export function PurchaseList() {
 
   const [writeModalItem, setWriteModalItem] = useState<PurchaseItem | null>(null);
   const [editModalReview, setEditModalReview] = useState<Review | null>(null);
+
   const [confirmItem, setConfirmItem] = useState<PurchaseItem | null>(null);
+
+  const confirmItemRef = useRef<PurchaseItem | null>(null);
+
+  useEffect(() => {
+    confirmItemRef.current = confirmItem;
+  }, [confirmItem]);
 
   const filterOptions = useMemo(() => generateFilterOptions(PURCHASE_STATUSES), []);
 
@@ -61,10 +68,14 @@ export function PurchaseList() {
   }, []);
 
   const handleConfirmPurchase = useCallback(() => {
-    if (!confirmItem) return;
-    // TODO: API 연동 - 구매 확정
+    const targetItem = confirmItemRef.current;
+
+    if (!targetItem) return;
+
+    // TODO: API 연동 - 구매 확정 (targetItem.id 사용)
+
     setConfirmItem(null);
-  }, [confirmItem]);
+  }, []);
 
   return (
     <>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
 import { MOCK_RECENT_ITEMS } from "@/entities/item/api/mocks";
 import { RecentlyViewedItem } from "@/entities/item/model/types";
@@ -18,7 +18,14 @@ const RECENT_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 
 
 export function RecentViewedList() {
   const [filterStatus, setFilterStatus] = useState("전체");
+
   const [deleteItem, setDeleteItem] = useState<RecentlyViewedItem | null>(null);
+
+  const deleteItemRef = useRef<RecentlyViewedItem | null>(null);
+
+  useEffect(() => {
+    deleteItemRef.current = deleteItem;
+  }, [deleteItem]);
 
   const filterOptions = useMemo(() => generateFilterOptions(RECENT_STATUSES), []);
 
@@ -28,10 +35,14 @@ export function RecentViewedList() {
   );
 
   const handleDelete = useCallback(() => {
-    if (!deleteItem) return;
-    // TODO: API 실제 최근 본 목록 삭제 요청 로직 구현 필요
+    const targetItem = deleteItemRef.current;
+
+    if (!targetItem) return;
+
+    // TODO: API 실제 최근 본 목록 삭제 요청 로직 구현 필요 (targetItem.id 사용)
+
     setDeleteItem(null);
-  }, [deleteItem]);
+  }, []);
 
   return (
     <>

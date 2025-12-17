@@ -30,7 +30,7 @@ export function ReviewWriteModal({ open, onOpenChange, item, onSubmit }: ReviewW
   if (!item) return null;
 
   const handleAttemptSubmit = () => {
-    if (rating === 0) {
+    if (rating < 0.5) {
       setShowWarning(true);
       return;
     }

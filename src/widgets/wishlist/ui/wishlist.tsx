@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
 import { MOCK_WISHLIST_ITEMS } from "@/entities/item/api/mocks";
 import { WishlistItem } from "@/entities/item/model/types";
@@ -18,7 +18,14 @@ const WISHLIST_STATUSES = ["판매중", "판매 완료", "경매 예정", "경�
 
 export function Wishlist() {
   const [filterStatus, setFilterStatus] = useState("전체");
+
   const [deleteItem, setDeleteItem] = useState<WishlistItem | null>(null);
+
+  const deleteItemRef = useRef<WishlistItem | null>(null);
+
+  useEffect(() => {
+    deleteItemRef.current = deleteItem;
+  }, [deleteItem]);
 
   const filterOptions = useMemo(() => generateFilterOptions(WISHLIST_STATUSES), []);
 
@@ -28,10 +35,14 @@ export function Wishlist() {
   );
 
   const handleDelete = useCallback(() => {
-    if (!deleteItem) return;
-    // TODO: API 실제 관심 목록 해제 요청 로직 구현 필요
+    const targetItem = deleteItemRef.current;
+
+    if (!targetItem) return;
+
+    // TODO: API 실제 관심 목록 해제 요청 로직 구현 필요 (targetItem.id 등 사용)
+
     setDeleteItem(null);
-  }, [deleteItem]);
+  }, []);
 
   return (
     <>
