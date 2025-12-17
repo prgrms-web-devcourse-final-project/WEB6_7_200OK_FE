@@ -70,7 +70,7 @@ function ProductReviewRecommends() {
   const hasItem = false;
   if (!hasItem)
     return (
-      <div>
+      <div className="flex flex-col gap-2">
         <h3 className="font-base font-semibold">판매 상품</h3>
         <EmptyState
           Icon={Box}
