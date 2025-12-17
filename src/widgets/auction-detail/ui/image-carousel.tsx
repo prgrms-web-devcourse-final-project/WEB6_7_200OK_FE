@@ -8,13 +8,8 @@ import {
   CarouselPrevious,
 } from "@/shared/ui/carousel/carousel";
 
-interface ImageType {
-  src: string;
-  id: string;
-}
-
 interface ImageCarouselProps {
-  images: ImageType[];
+  images: string[];
 }
 
 export default function ImageCarousel({ images }: ImageCarouselProps) {
@@ -23,13 +18,13 @@ export default function ImageCarousel({ images }: ImageCarouselProps) {
       <Carousel className="h-162 w-full shrink">
         <CarouselContent className="h-162">
           {images.map((image) => (
-            <CarouselItem key={image.id}>
+            <CarouselItem key={image}>
               <Image
-                src={image.src}
+                src={image}
                 alt="auction image-carousel"
                 width={648}
                 height={648}
-                className="h-full w-full rounded-2xl object-cover dark:brightness-[0.2] dark:grayscale"
+                className="h-full w-full rounded-2xl object-cover"
               />
             </CarouselItem>
           ))}
