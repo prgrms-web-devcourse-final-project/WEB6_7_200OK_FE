@@ -9,13 +9,14 @@ interface LikeButtonProps extends ComponentProps<"button"> {
   onToggle?: () => void;
 }
 
-export default function LikeButton({ isLiked, onToggle, className }: LikeButtonProps) {
+export default function LikeButton({ isLiked, onToggle, className, ...props }: LikeButtonProps) {
   return (
     <button
       type="button"
       aria-label={isLiked ? "관심 상품 해제하기" : "관심 상품 추가하기"}
       onClick={onToggle}
       className={cn("absolute right-3 bottom-3 rounded-full bg-transparent", className)}
+      {...props}
     >
       <Heart
         className={cn(

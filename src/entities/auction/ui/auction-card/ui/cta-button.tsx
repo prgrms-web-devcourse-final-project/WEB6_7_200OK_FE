@@ -2,10 +2,10 @@ import { Bell, ShoppingBag, type LucideIcon } from "lucide-react";
 
 import Button from "@/shared/ui/button/button";
 
-export type CTAButtonType = "buy" | "notify";
+export type CtaButtonType = "buy" | "notify";
 
 const CTA_BUTTON_MAP: Record<
-  CTAButtonType,
+  CtaButtonType,
   {
     label: string;
     ariaLabel: string;
@@ -25,7 +25,7 @@ const CTA_BUTTON_MAP: Record<
 };
 
 interface CtaButtonProps {
-  type: CTAButtonType;
+  type: CtaButtonType;
 }
 
 export default function CtaButton({ type }: CtaButtonProps) {
