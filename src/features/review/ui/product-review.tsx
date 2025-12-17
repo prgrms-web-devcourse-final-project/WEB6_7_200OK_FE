@@ -20,7 +20,7 @@ function ProductReviewRating() {
   const value = 3;
   const reviewsLength = 127;
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col gap-4 md:flex-row md:items-center">
       <h3 className="text-foreground font-lg font-semibold">판매자 후기</h3>
       <div className="flex items-center gap-1">
         <Rating defaultValue={value} readOnly>
