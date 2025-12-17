@@ -1,5 +1,5 @@
-import { AuctionTimerType } from "@/entities/auction/ui/auction-card/ui/auction-timer";
-import { CtaButtonType } from "@/entities/auction/ui/auction-card/ui/cta-button";
+import { AuctionTimerType } from "@/entities/auction/ui/auction-item-card/ui/auction-timer";
+import { CtaButtonType } from "@/entities/auction/ui/auction-item-card/ui/cta-button";
 
 export type AuctionCardVariantType = "live" | "ranking" | "upcoming" | "compact";
 

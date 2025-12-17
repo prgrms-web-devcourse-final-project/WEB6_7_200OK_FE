@@ -3,14 +3,14 @@ import Link from "next/link";
 
 import LiveBadge from "@/entities/auction/ui/auction-badge/live-badge";
 import UpcomingBadge from "@/entities/auction/ui/auction-badge/upcoming-badge";
-import { VARIANT_CONFIG } from "@/entities/auction/ui/auction-card/model/config";
-import { AuctionCardVariantType } from "@/entities/auction/ui/auction-card/model/types";
-import AuctionPrice from "@/entities/auction/ui/auction-card/ui/auction-price";
-import AuctionTimer from "@/entities/auction/ui/auction-card/ui/auction-timer";
-import CtaButton from "@/entities/auction/ui/auction-card/ui/cta-button";
-import LikeButton from "@/entities/auction/ui/auction-card/ui/like-button";
-import RankingBadge from "@/entities/auction/ui/auction-card/ui/ranking-badge";
-import UpcomingInfo from "@/entities/auction/ui/auction-card/ui/upcoming-info";
+import { VARIANT_CONFIG } from "@/entities/auction/ui/auction-item-card/model/config";
+import { AuctionCardVariantType } from "@/entities/auction/ui/auction-item-card/model/types";
+import AuctionPrice from "@/entities/auction/ui/auction-item-card/ui/auction-price";
+import AuctionTimer from "@/entities/auction/ui/auction-item-card/ui/auction-timer";
+import CtaButton from "@/entities/auction/ui/auction-item-card/ui/cta-button";
+import LikeButton from "@/entities/auction/ui/auction-item-card/ui/like-button";
+import RankingBadge from "@/entities/auction/ui/auction-item-card/ui/ranking-badge";
+import UpcomingInfo from "@/entities/auction/ui/auction-item-card/ui/upcoming-info";
 
 export interface AuctionItemCardProps {
   variant: AuctionCardVariantType;
@@ -39,7 +39,7 @@ export function AuctionItemCard({
   const config = VARIANT_CONFIG[variant];
 
   return (
-    <article className="bg-card h-fit w-full overflow-hidden rounded-xl border shadow-sm">
+    <article className="bg-card h-fit w-full overflow-hidden rounded-xl border shadow-sm select-none">
       <Link href={`/auctions/${auctionId}`}>
         <div className="relative aspect-square">
           <Image src={imageUrl} alt={title} fill className="object-cover" />

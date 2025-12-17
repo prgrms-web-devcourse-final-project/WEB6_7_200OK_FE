@@ -1,7 +1,7 @@
 import {
   AuctionCardVariant,
   AuctionCardVariantType,
-} from "@/entities/auction/ui/auction-card/model/types";
+} from "@/entities/auction/ui/auction-item-card/model/types";
 
 export const VARIANT_CONFIG: Record<AuctionCardVariantType, AuctionCardVariant> = {
   ranking: {
