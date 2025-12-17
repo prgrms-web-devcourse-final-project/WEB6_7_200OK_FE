@@ -38,7 +38,9 @@ export default function AuctionTimer({ type, time }: AuctionTimerProps) {
     >
       <Icon aria-hidden className="size-4" />
       <span>{label}</span>
-      <time className="ml-auto font-medium text-zinc-900">{time}</time>
+      <time dateTime={time} className="ml-auto font-medium text-zinc-900">
+        {time}
+      </time>
     </div>
   );
 }
