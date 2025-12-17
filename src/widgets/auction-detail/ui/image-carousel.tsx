@@ -17,7 +17,7 @@ interface ImageCarouselProps {
   images: ImageType[];
 }
 
-export function ImageCarousel({ images }: ImageCarouselProps) {
+export default function ImageCarousel({ images }: ImageCarouselProps) {
   return (
     <div className="flex max-w-full">
       <Carousel className="h-162 w-full shrink">
