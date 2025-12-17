@@ -10,7 +10,7 @@ export function DashboardListLayout({ filterNode, children, className }: Dashboa
   return (
     <div className={className}>
       {filterNode && (
-        <div className="mb-4 flex h-[34px] w-full flex-col items-end justify-center gap-2.5">
+        <div className="mb-4 flex h-9 w-full flex-col items-end justify-center gap-2.5">
           {filterNode}
         </div>
       )}

@@ -21,7 +21,7 @@ export function ItemCardFilter({ value, options, onChange, className }: ItemCard
   return (
     <div className={className}>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="border-border hover:bg-accent/50 flex h-[34px] w-auto items-center justify-center gap-1 rounded-lg px-3 transition-colors focus:ring-0 [&>svg]:hidden">
+        <SelectTrigger className="border-border hover:bg-accent/50 flex h-9 w-auto items-center justify-center gap-1 rounded-lg px-3 transition-colors focus:ring-0 [&>svg]:hidden">
           <div className="flex items-center gap-1">
             <SlidersHorizontal className="size-4" />
             <SelectValue placeholder="필터" />

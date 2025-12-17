@@ -42,7 +42,7 @@ const createDateHeaderWrapper =
 
 const CustomToolbar = ({ date, onNavigate }: ToolbarProps<CalendarEvent>) => (
   <div className="flex h-7 w-full items-center justify-between px-0.5 pb-6">
-    <h3 className="text-foreground text-sm leading-5 font-semibold tracking-[-0.009375rem]">
+    <h3 className="text-foreground text-sm leading-5 font-semibold tracking-tight">
       {dayjs(date).format("YYYY년 M월")}
     </h3>
     <div className="flex gap-1">
@@ -75,9 +75,7 @@ const CustomHeader = ({ date }: { date: Date }) => {
   );
 
   return (
-    <span
-      className={cn("text-[0.8125rem] leading-5 font-medium tracking-[-0.00476rem]", colorClass)}
-    >
+    <span className={cn("text-xs leading-5 font-medium tracking-normal", colorClass)}>
       {dayjs(date).format("ddd")}
     </span>
   );
@@ -133,13 +131,13 @@ const CustomEvent = ({ event }: EventProps<CalendarEvent>) => {
   return (
     <div
       className={cn(
-        "pointer-events-none mx-auto mb-0.5 flex h-3.25 w-full max-w-8.25 items-center justify-center rounded",
+        "pointer-events-none mx-auto mb-0.5 flex h-3.5 w-full max-w-8 items-center justify-center rounded",
         isProgress ? "bg-brand" : "bg-zinc-200 dark:bg-zinc-700"
       )}
     >
       <span
         className={cn(
-          "text-[0.5625rem] leading-2.25 font-medium tracking-[0.010437rem] whitespace-nowrap",
+          "text-[10px] leading-3 font-medium tracking-wide whitespace-nowrap",
           isProgress ? "text-white" : "text-zinc-600 dark:text-zinc-400"
         )}
       >
@@ -176,8 +174,8 @@ export function AuctionCalendar({ events, onSelectDate, selectedDate }: AuctionC
   );
 
   return (
-    <div className="bg-card border-border flex w-full flex-col gap-4 rounded-2xl border p-6 shadow-sm">
-      <div className="h-101 w-full">
+    <div className="bg-card border-border flex w-full flex-col gap-4 rounded-lg border p-6 shadow-sm">
+      <div className="h-102 w-full">
         <Calendar
           className="clean-calendar"
           localizer={localizer}
@@ -212,11 +210,11 @@ export function AuctionCalendar({ events, onSelectDate, selectedDate }: AuctionC
         />
       </div>
 
-      <div className="border-border bg-secondary/30 flex w-full flex-col gap-3 rounded-[0.625rem] border px-3 py-3">
-        <span className="text-muted-foreground text-sm leading-5 font-normal tracking-[-0.009375rem]">
+      <div className="border-border bg-secondary/30 flex w-full flex-col gap-3 rounded-lg border px-3 py-3">
+        <span className="text-muted-foreground text-sm leading-5 font-normal tracking-normal">
           선택된 날짜
         </span>
-        <span className="text-brand text-base leading-6 font-medium tracking-[-0.019531rem]">
+        <span className="text-brand text-base leading-6 font-medium tracking-tight">
           {selectedDate ? dayjs(selectedDate).format("YYYY년 M월 D일") : "날짜를 선택해주세요"}
         </span>
       </div>

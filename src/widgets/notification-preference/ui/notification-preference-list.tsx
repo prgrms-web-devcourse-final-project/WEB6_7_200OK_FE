@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 
 import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
 import { MOCK_NOTIFICATIONS } from "@/features/notification-preference/api/mocks";
@@ -12,6 +12,7 @@ import {
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
+import { DashboardListLayout } from "@/shared/ui/layout/dashboard-list-layout";
 
 const NOTI_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
@@ -27,18 +28,22 @@ export function NotificationPreferenceList() {
     () => sortItemsByDateAndName(filterItemsByStatus(MOCK_NOTIFICATIONS, filterStatus)),
     [filterStatus]
   );
-  const handleNotificationPreferenceSettingClick = (item: NotificationPreferenceItem) => {
-    setSelectedNotificationPreference(item);
-    setIsSettingsOpen(true);
-  };
+
+  const handleNotificationPreferenceSettingClick = useCallback(
+    (item: NotificationPreferenceItem) => {
+      setSelectedNotificationPreference(item);
+      setIsSettingsOpen(true);
+    },
+    []
+  );
 
   return (
     <>
-      <div className="flex h-9 w-full flex-col items-end justify-center gap-2.5">
-        <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
-      </div>
-
-      <div className="flex flex-col gap-4">
+      <DashboardListLayout
+        filterNode={
+          <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
+        }
+      >
         {filteredNotificationPreference.map((item) => (
           <NotificationPreferenceItemCard
             key={item.id}
@@ -46,7 +51,7 @@ export function NotificationPreferenceList() {
             onSettingClick={handleNotificationPreferenceSettingClick}
           />
         ))}
-      </div>
+      </DashboardListLayout>
 
       <NotificationPreferenceSettingsModal
         open={isSettingsOpen}

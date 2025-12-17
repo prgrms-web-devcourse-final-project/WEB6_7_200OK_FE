@@ -73,7 +73,7 @@ export function ReviewEditModal({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="rounded-2.5 w-[90%] gap-4 p-6 sm:max-w-lg">
+        <DialogContent className="w-[90%] gap-4 rounded-lg p-6 sm:max-w-lg">
           <DialogHeader className="flex flex-col gap-2 text-left">
             <div className="flex items-center gap-1.5">
               <Star className="h-5 w-5 fill-transparent text-yellow-400" strokeWidth={2.5} />
@@ -85,8 +85,8 @@ export function ReviewEditModal({
           </DialogHeader>
 
           <div className="flex flex-col gap-3">
-            <div className="bg-muted rounded-2.5 flex w-full items-center gap-3 px-3 py-3">
-              <div className="bg-secondary rounded-2.5 relative h-16 w-16 shrink-0 overflow-hidden">
+            <div className="bg-muted flex w-full items-center gap-3 rounded-lg px-3 py-3">
+              <div className="bg-secondary relative h-16 w-16 shrink-0 overflow-hidden rounded-lg">
                 {review.product.imageUrl ? (
                   <Image
                     src={review.product.imageUrl}
@@ -112,7 +112,7 @@ export function ReviewEditModal({
             </div>
 
             {review.seller && (
-              <div className="bg-muted flex w-full items-center gap-3 rounded-[10px] px-3 py-3">
+              <div className="bg-muted flex w-full items-center gap-3 rounded-lg px-3 py-3">
                 <div className="bg-background ring-border relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-1">
                   {review.seller.avatarUrl ? (
                     <Image

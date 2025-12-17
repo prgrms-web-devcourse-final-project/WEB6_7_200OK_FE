@@ -92,7 +92,10 @@ export function SellingItemCard({
                 1:1 채팅
               </span>
               {hasUnreadMessages && (
-                <span className="ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 text-[10px] font-medium text-white">
+                <span
+                  className="text-2.5 ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 font-medium text-white"
+                  aria-label={`${item.unreadMessageCount}개의 읽지 않은 메시지`}
+                >
                   {item.unreadMessageCount}
                 </span>
               )}
