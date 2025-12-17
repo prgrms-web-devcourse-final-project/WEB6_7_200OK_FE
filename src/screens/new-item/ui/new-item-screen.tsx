@@ -220,7 +220,7 @@ export function NewItemScreen() {
   );
 
   return (
-    <ScrollArea className="mx-auto min-h-screen max-w-full gap-2 p-4 py-6">
+    <ScrollArea className="bg-background mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center gap-2 p-4">
       <p className="mb-6 text-2xl font-bold">판매 물품 등록</p>
       <div className="space-y-6">
         {/* 이미지 업로드 */}
