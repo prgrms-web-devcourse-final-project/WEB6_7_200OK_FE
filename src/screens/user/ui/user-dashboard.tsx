@@ -7,7 +7,7 @@ import { NotificationPreferenceList } from "@/widgets/notification-preference";
 import { PurchaseList } from "@/widgets/purchase";
 import { RecentViewedList } from "@/widgets/recent-viewed";
 import { ReviewList } from "@/widgets/review";
-import { SalesList } from "@/widgets/sales";
+import { SalesList } from "@/widgets/sale";
 import { Wishlist } from "@/widgets/wishlist";
 
 import { UserDashboardOverview } from "./user-dashboard-overview";
