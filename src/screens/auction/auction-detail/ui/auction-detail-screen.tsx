@@ -1,20 +1,19 @@
 import { AuctionProgress } from "@/entities/auction";
-import ProductLogList from "@/features/auction-log/ui/product-log-list";
-import { ProductReview } from "@/features/review";
-import { AUCTION_DETAIL_MOCKDATA } from "@/screens/auction-detail/model/data";
-import { ScrollArea, ScrollBar } from "@/shared/ui/scroll-area/scroll-area";
-import Separator from "@/shared/ui/separator/separator";
+import { AuctionLogList } from "@/features/auction/auction-log";
+import { AuctionDetailReview } from "@/features/auction/auction-review";
+import { AUCTION_DETAIL_MOCKDATA } from "@/screens/auction/auction-detail/model/data";
+import { Separator, ScrollArea, ScrollBar } from "@/shared/ui";
 import {
-  ProductCategory,
-  ProductPrice,
-  ProductName,
-  ProductTags,
-  ProductSeller,
-  ProductInfo,
-  ProductLogSheet,
-  ProductUserActions,
+  AuctionDetailCategory,
+  AuctionDetailPrice,
+  AuctionDetailTitle,
+  AuctionDetailTags,
+  AuctionDetailSeller,
+  AuctionDetailDescription,
+  AuctionDetailLogSheet,
+  AuctionDetailUserActions,
   ImageCarousel,
-} from "@/widgets/auction-detail";
+} from "@/widgets/auction/auction-detail";
 
 export default function AuctionDetailScreen() {
   const data = AUCTION_DETAIL_MOCKDATA;
@@ -26,9 +25,9 @@ export default function AuctionDetailScreen() {
           <div className="flex flex-col gap-8 p-4">
             <ImageCarousel images={data.imageUrls} />
             <Separator />
-            <ProductInfo text="제품 설명" />
+            <AuctionDetailDescription text="제품 설명" />
             <Separator />
-            <ProductReview />
+            <AuctionDetailReview />
           </div>
         </div>
 
@@ -38,16 +37,16 @@ export default function AuctionDetailScreen() {
         {/* Right Section */}
         <div className="overflow-y-auto lg:sticky lg:top-0 lg:max-h-[calc(100vh-120px)] lg:min-w-131 lg:shrink-0 lg:grow-0 lg:basis-131">
           <div className="flex flex-col gap-8 p-4">
-            <ProductCategory />
-            <ProductPrice />
-            <ProductName />
-            <ProductTags />
-            <ProductSeller />
+            <AuctionDetailCategory />
+            <AuctionDetailPrice />
+            <AuctionDetailTitle />
+            <AuctionDetailTags />
+            <AuctionDetailSeller />
             <AuctionProgress />
-            <ProductUserActions />
+            <AuctionDetailUserActions />
             <div className="flex flex-col gap-3">
-              <ProductLogList />
-              <ProductLogSheet />
+              <AuctionLogList />
+              <AuctionDetailLogSheet />
             </div>
           </div>
         </div>

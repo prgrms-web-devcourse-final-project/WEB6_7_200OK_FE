@@ -1,4 +1,4 @@
-import type { AuctionDetailType } from "@/screens/auction-detail/model/type";
+import type { AuctionDetailType } from "@/screens/auction/auction-detail/model/types";
 
 export const AUCTION_DETAIL_MOCKDATA: AuctionDetailType = {
   auctionId: 123,
