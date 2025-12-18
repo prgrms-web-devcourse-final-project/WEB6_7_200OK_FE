@@ -6,7 +6,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/shared/ui/carousel/carousel";
+} from "@/shared/ui";
 
 interface ImageCarouselProps {
   images: string[];
