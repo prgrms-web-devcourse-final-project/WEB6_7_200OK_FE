@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 
 import { Package, ShoppingBag, type LucideIcon } from "lucide-react";
 
-import { DMItem } from "@/entities/dm";
+import { DmListItem } from "@/entities/dm";
 import type { Chat, ListFilter } from "@/entities/dm";
 import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
@@ -75,7 +75,7 @@ export function ChatListSidebar({
       )}
     >
       {/* 탭 네비게이션 */}
-      <div className={cn("mb-4 flex items-center gap-2")}>
+      <div className="mb-4 flex items-center gap-2">
         {filterOptions.map((option) => {
           const Icon = option.icon;
           const isActive = filter === option.value;
@@ -111,9 +111,9 @@ export function ChatListSidebar({
 
       {/* 채팅 리스트 */}
       <ScrollArea className="flex-1">
-        <div className={cn("flex flex-col")}>
+        <div className="flex flex-col">
           {chats.map((chat) => (
-            <DMItem
+            <DmListItem
               key={chat.id}
               chat={chat}
               isSelected={selectedChatId === chat.id}
