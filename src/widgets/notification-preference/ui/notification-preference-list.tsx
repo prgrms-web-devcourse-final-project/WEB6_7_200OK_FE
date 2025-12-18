@@ -12,11 +12,15 @@ import {
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardListLayout } from "@/shared/ui/layout/dashboard-list-layout";
+import { DashboardContentLayout } from "@/shared/ui/layout/dashboard-content-layout";
 
 const NOTI_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
-export function NotificationPreferenceList() {
+interface NotificationPreferenceListProps {
+  labelNode?: React.ReactNode;
+}
+
+export function NotificationPreferenceList({ labelNode }: NotificationPreferenceListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
   const [selectedNotificationPreference, setSelectedNotificationPreference] =
     useState<NotificationPreferenceItem | null>(null);
@@ -39,7 +43,8 @@ export function NotificationPreferenceList() {
 
   return (
     <>
-      <DashboardListLayout
+      <DashboardContentLayout
+        labelNode={labelNode}
         filterNode={
           <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
@@ -51,7 +56,7 @@ export function NotificationPreferenceList() {
             onSettingClick={handleNotificationPreferenceSettingClick}
           />
         ))}
-      </DashboardListLayout>
+      </DashboardContentLayout>
 
       <NotificationPreferenceSettingsModal
         open={isSettingsOpen}

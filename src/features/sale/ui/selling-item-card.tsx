@@ -5,7 +5,6 @@ import { MessageCircle, X } from "lucide-react";
 import { SellingItem } from "@/entities/item/model/types";
 import { ItemBadge } from "@/entities/item/ui/item-badge";
 import { ItemCard } from "@/entities/item/ui/item-card";
-import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 
 interface SellingItemCardProps {
@@ -71,32 +70,18 @@ export function SellingItemCard({
         isSoldOut && (
           <div className="-mt-1 flex w-full items-center gap-2">
             <Button
-              type="button"
+              variant={hasUnreadMessages ? "primary" : "outline"}
+              className="h-9 flex-1 gap-1"
               onClick={(e) => {
                 e.stopPropagation();
                 onChatClick?.(item);
               }}
-              className={cn(
-                "h-9 flex-1 gap-1 rounded-lg",
-                hasUnreadMessages
-                  ? "bg-brand hover:bg-brand/90"
-                  : "bg-background hover:bg-accent border-border border"
-              )}
             >
-              <MessageCircle
-                className={cn("size-4", hasUnreadMessages ? "text-background" : "text-foreground")}
-              />
-              <span
-                className={cn(
-                  "text-sm font-medium",
-                  hasUnreadMessages ? "text-background" : "text-foreground"
-                )}
-              >
-                1:1 채팅
-              </span>
+              <MessageCircle className="size-4" />
+              <span className="text-sm">1:1 채팅</span>
               {hasUnreadMessages && (
                 <span
-                  className="text-2.5 ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 font-medium text-white"
+                  className="text-2.5 ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 text-white"
                   aria-label={`${item.unreadMessageCount}개의 읽지 않은 메시지`}
                 >
                   {item.unreadMessageCount}
