@@ -4,7 +4,7 @@ import { cn } from "@/shared/lib/utils/utils";
 
 export function Container({ children, className, ...props }: ComponentProps<"div">) {
   return (
-    <div className={cn("mx-auto w-full max-w-7xl px-4", className)} {...props}>
+    <div className={cn("mx-auto w-full max-w-7xl px-4 py-6", className)} {...props}>
       {children}
     </div>
   );

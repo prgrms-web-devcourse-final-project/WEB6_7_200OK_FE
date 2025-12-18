@@ -39,7 +39,7 @@ export default function AuctionTimer({ type, time }: AuctionTimerProps) {
       <Icon aria-hidden className="size-4" />
       <span>{label}</span>
       <time dateTime={time} className="ml-auto font-semibold">
-        {time}
+        {time} 후
       </time>
     </div>
   );
