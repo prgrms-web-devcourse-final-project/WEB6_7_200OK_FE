@@ -50,7 +50,7 @@ export function AuctionItemCard({
         </div>
 
         <div className="flex flex-col gap-4 p-4">
-          <h3 className="text-base font-medium">{title}</h3>
+          <h3 className="truncate font-medium">{title}</h3>
 
           {config.content === "auction" && (
             <AuctionPrice
