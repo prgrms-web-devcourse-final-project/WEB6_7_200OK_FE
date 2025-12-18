@@ -1,9 +1,0 @@
-export { default as ImageCarousel } from "./ui/image-carousel";
-export { default as ProductCategory } from "./ui/product-category";
-export { default as ProductInfo } from "./ui/product-info";
-export { default as ProductLogSheet } from "./ui/product-log-sheet";
-export { default as ProductName } from "./ui/product-name";
-export { default as ProductPrice } from "./ui/product-price";
-export { default as ProductSeller } from "./ui/product-seller";
-export { default as ProductTags } from "./ui/product-tags";
-export { default as ProductUserActions } from "./ui/product-user-actions";
