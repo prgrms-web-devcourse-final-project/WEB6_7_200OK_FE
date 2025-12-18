@@ -1,9 +1,9 @@
 import { TrendingDown } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
-import EmptyState from "@/shared/ui/empty/empty";
+import { EmptyState } from "@/shared/ui";
 
-export default function ProductLogList({ isSheet = false }: { isSheet?: boolean }) {
+export default function AuctionLogList({ isSheet = false }: { isSheet?: boolean }) {
   const MOCK = [
     {
       prev: "76800",

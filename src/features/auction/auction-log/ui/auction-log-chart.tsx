@@ -2,12 +2,7 @@
 
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/shared/ui/chart/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/shared/ui";
 
 const chartData = [
   { price: "120000", watch: 186 },
@@ -28,7 +23,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function ProductLogChart() {
+export default function AuctionLogChart() {
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-base font-medium">관심도</h3>

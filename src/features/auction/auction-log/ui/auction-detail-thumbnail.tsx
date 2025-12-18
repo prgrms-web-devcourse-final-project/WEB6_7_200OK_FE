@@ -1,4 +1,4 @@
-export default function ProductThumbnail() {
+export default function AuctionDetailThumbnail() {
   // TODO: Avatar 컴포넌트 들어갈 예정
   return (
     <div className="flex gap-3">

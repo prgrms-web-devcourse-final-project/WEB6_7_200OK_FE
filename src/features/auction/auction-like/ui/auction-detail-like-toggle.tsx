@@ -5,9 +5,9 @@ import { useState } from "react";
 import { Heart } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
-import Button from "@/shared/ui/button/button";
+import { Button } from "@/shared/ui";
 
-export default function ProductLikeToggle() {
+export default function AuctionDetailLikeToggle() {
   const [isActive, setIsActive] = useState(false);
   return (
     <Button
