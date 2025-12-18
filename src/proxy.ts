@@ -15,7 +15,13 @@ async function checkAuth(request: NextRequest): Promise<boolean> {
       return false;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/validate-tokens`, {
+    const apiBaseUrl = process.env.BACKEND_API_URL;
+    if (!apiBaseUrl) {
+      console.error("Auth check error: BACKEND_API_URL is not defined");
+      return false;
+    }
+
+    const response = await fetch(`${apiBaseUrl}/api/v1/auth/validate-tokens`, {
       headers: { cookie: cookieHeader },
       cache: "no-store",
     });
@@ -32,7 +38,7 @@ async function checkAuth(request: NextRequest): Promise<boolean> {
   }
 }
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 로그인 페이지: 인증된 사용자는 홈으로
@@ -55,5 +61,5 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/auth/login"],
+  matcher: ["/auth/login", "/user/:path*"],
 };
