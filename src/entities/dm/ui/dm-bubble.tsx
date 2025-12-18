@@ -2,11 +2,11 @@ import { cn } from "@/shared/lib/utils/utils";
 
 import type { Message } from "../model/types";
 
-interface ChatMessageProps {
+interface DmBubbleProps {
   message: Message;
 }
 
-export function ChatMessage({ message }: ChatMessageProps) {
+export function DmBubble({ message }: DmBubbleProps) {
   return (
     <div className={cn("flex flex-col", message.isMine ? "items-end" : "items-start")}>
       <div

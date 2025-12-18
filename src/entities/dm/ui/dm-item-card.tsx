@@ -1,8 +1,7 @@
 import Image from "next/image";
 
+import type { Product } from "@/entities/dm/model/types";
 import SonySvg from "@/shared/assets/images/dm-images/sony.svg";
-
-import type { Product } from "../model/types";
 
 interface DmItemCardProps {
   product: Product;
