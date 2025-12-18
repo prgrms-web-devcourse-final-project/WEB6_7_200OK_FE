@@ -1,7 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar/avatar";
-import { Rating, RatingButton } from "@/shared/ui/rating/rating";
+import { Avatar, AvatarFallback, AvatarImage, Rating, RatingButton } from "@/shared/ui";
 
-export default function ProductSeller() {
+export default function AuctionDetailSeller() {
   return (
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-1">

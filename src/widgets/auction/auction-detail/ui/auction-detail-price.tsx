@@ -1,4 +1,4 @@
-export default function ProductPrice() {
+export default function AuctionDetailPrice() {
   return (
     <div className="flex flex-col gap-2">
       <span className="text-muted-foreground text-base font-medium">판매 시작가 {800000}원</span>

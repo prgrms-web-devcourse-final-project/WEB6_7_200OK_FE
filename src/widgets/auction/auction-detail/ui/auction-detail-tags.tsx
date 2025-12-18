@@ -1,4 +1,4 @@
-export default function ProductTags() {
+export default function AuctionDetailTags() {
   return (
     <div className="flex flex-wrap items-center">
       {Array.from({ length: 5 }, (_, i) => i + 1).map((tag, idx, arr) => (

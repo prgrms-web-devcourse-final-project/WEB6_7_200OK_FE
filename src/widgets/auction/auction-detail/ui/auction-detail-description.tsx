@@ -2,7 +2,7 @@ interface ProductInfoProps {
   text: string;
 }
 
-export default function ProductInfo({ text }: ProductInfoProps) {
+export default function AuctionDetailDescription({ text }: ProductInfoProps) {
   const normalizedText = text.replace(/\\n/g, "\n");
   return (
     <div className="flex flex-col gap-2">
