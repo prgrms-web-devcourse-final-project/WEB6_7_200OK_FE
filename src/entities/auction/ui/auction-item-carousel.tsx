@@ -12,7 +12,7 @@ export function AuctionItemCarousel({ items }: { items: AuctionItemCardProps[] }
     <Carousel
       opts={{
         align: "start",
-        containScroll: "keepSnaps",
+        containScroll: "trimSnaps",
       }}
       className="w-full"
     >
