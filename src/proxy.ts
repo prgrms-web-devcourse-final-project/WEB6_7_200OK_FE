@@ -15,15 +15,9 @@ async function checkAuth(request: NextRequest): Promise<boolean> {
       return false;
     }
 
-<<<<<<< HEAD
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
     if (!apiBaseUrl) {
       console.error("Auth check error: NEXT_PUBLIC_API_URL is not defined");
-=======
-    const apiBaseUrl = process.env.BACKEND_API_URL;
-    if (!apiBaseUrl) {
-      console.error("Auth check error: BACKEND_API_URL is not defined");
->>>>>>> afec2ca (Apply suggestion from @Copilot)
       return false;
     }
 
