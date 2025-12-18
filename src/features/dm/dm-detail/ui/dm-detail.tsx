@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { ChevronLeft, Image as ImageIcon, MessageSquareOff, Send } from "lucide-react";
 
-import { ChatMessage, DmItemCard } from "@/entities/dm";
+import { DmBubble, DmItemCard } from "@/entities/dm";
 import type { Chat, Message } from "@/entities/dm";
 import AvatarSvg from "@/shared/assets/images/dm-images/avatar.svg";
 import { ScrollArea, Button, EmptyState, Input } from "@/shared/ui";
@@ -68,7 +68,7 @@ export function DmDetail({ chat, messages, onSendMessage, onBack }: DmDetailProp
         <div className="flex flex-col gap-4">
           {chat.product && <DmItemCard product={chat.product} />}
           {messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
+            <DmBubble key={message.id} message={message} />
           ))}
         </div>
       </ScrollArea>
