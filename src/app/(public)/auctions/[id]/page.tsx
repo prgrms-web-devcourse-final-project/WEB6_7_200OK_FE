@@ -1,4 +1,4 @@
-import AuctionDetailScreen from "@/screens/auction-detail/ui/auction-detail-screen";
+import { AuctionDetailScreen } from "@/screens/auction/auction-detail";
 
 export default function Page() {
   return <AuctionDetailScreen />;
