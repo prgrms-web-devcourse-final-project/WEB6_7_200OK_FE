@@ -65,7 +65,7 @@ export function DateSelector({
             week: "flex w-full",
             day: cn("relative flex-1 aspect-square p-0 flex items-center justify-center"),
             day_button: cn(
-              "w-full h-full border-none focus:border-none focus:ring-0 focus:outline-none focus-visible:border-none focus-visible:ring-0 focus-visible:outline-none text-sm font-normal data-[selected-single=true]:bg-brand data-[selected-single=true]:rounded-md data-[disabled=true]:text-accent data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed flex items-center justify-center"
+              "w-full h-full border-none focus:border-none focus:ring-0 focus:outline-none focus-visible:border-none focus-visible:ring-0 focus-visible:outline-none text-sm font-normal data-[selected-single=true]:bg-brand data-[selected-single=true]:text-accent dark:data-[selected-single=true]:text-accent-foreground data-[selected-single=true]:rounded-md data-[disabled=true]:text-accent data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed flex items-center justify-center"
             ),
           }}
           className="bg-accent w-full"

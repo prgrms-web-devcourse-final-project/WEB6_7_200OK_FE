@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { X } from "lucide-react";
 
 import {
+  combineDateTime,
   DEFAULT_TIME_SELECTION,
   getDateRange,
   getDefaultDate,
@@ -26,7 +27,9 @@ export function DateTimeModal({
 }: DateTimeModalProps) {
   const [viewDate, setViewDate] = useState(() => getDefaultDate(selectedDate));
   const [currentDate, setCurrentDate] = useState<Date | null>(selectedDate);
-  const [currentTime] = useState<TimeSelection>(selectedTime ?? DEFAULT_TIME_SELECTION);
+  const [currentTime, setCurrentTime] = useState<TimeSelection>(
+    selectedTime ?? DEFAULT_TIME_SELECTION
+  );
   const dateRange = getDateRange();
 
   const handleDateSelect = (date: Date) => {
@@ -36,7 +39,8 @@ export function DateTimeModal({
 
   const handleConfirm = () => {
     if (currentDate) {
-      onConfirm(currentDate, currentTime);
+      const combinedDate = combineDateTime(currentDate, currentTime);
+      onConfirm(combinedDate, currentTime);
     }
   };
 
@@ -82,8 +86,7 @@ export function DateTimeModal({
 
         {/* 시간 선택 */}
         <div className="mb-6">
-          {/* TODO: 시간 선택 영역 (클릭 후 Date 저장 후 처리까지 필요) */}
-          <TimeSelector />
+          <TimeSelector selectedTime={currentTime} onTimeChange={setCurrentTime} />
         </div>
 
         {/* 확인 버튼 */}
