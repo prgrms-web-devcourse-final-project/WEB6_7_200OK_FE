@@ -171,6 +171,10 @@ export function NewItemScreen() {
   };
 
   const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
+
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
 
