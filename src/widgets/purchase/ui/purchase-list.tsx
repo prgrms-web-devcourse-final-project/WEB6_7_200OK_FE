@@ -15,12 +15,16 @@ import {
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardListLayout } from "@/shared/ui/layout/dashboard-list-layout";
+import { DashboardContentLayout } from "@/shared/ui/layout/dashboard-content-layout";
 import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
 
 const PURCHASE_STATUSES = ["구매 완료", "구매 확정"];
 
-export function PurchaseList() {
+interface PurchaseListProps {
+  labelNode?: React.ReactNode;
+}
+
+export function PurchaseList({ labelNode }: PurchaseListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
   const [writeModalItem, setWriteModalItem] = useState<PurchaseItem | null>(null);
@@ -79,7 +83,8 @@ export function PurchaseList() {
 
   return (
     <>
-      <DashboardListLayout
+      <DashboardContentLayout
+        labelNode={labelNode}
         filterNode={
           <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
@@ -92,7 +97,7 @@ export function PurchaseList() {
             onConfirm={setConfirmItem}
           />
         ))}
-      </DashboardListLayout>
+      </DashboardContentLayout>
 
       <ReviewWriteModal
         open={!!writeModalItem}

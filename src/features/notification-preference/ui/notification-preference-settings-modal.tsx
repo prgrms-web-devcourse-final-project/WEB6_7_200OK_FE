@@ -9,6 +9,7 @@ import { Package, BellRing } from "lucide-react";
 import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/ui/dialog/dialog";
+import Input from "@/shared/ui/input/input";
 import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
 import { Switch } from "@/shared/ui/switch/switch";
 
@@ -134,14 +135,14 @@ export function NotificationPreferenceSettingsModal({
                   </label>
 
                   <div className="relative h-9 w-full">
-                    <input
+                    <Input
                       id="target-price"
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
                       value={targetPrice}
                       onChange={(e) => setTargetPrice(e.target.value)}
-                      className="focus:ring-brand/50 bg-background text-foreground ring-border h-9 w-full rounded-md pr-9 pl-3 text-sm ring-1 transition-all outline-none focus:ring-2"
+                      className="h-9 pr-9"
                     />
                     <span className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm">
                       원
@@ -167,7 +168,7 @@ export function NotificationPreferenceSettingsModal({
               className={cn(
                 "h-10 flex-1 rounded-lg sm:h-9",
                 isAllOff
-                  ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  ? "bg-destructive hover:bg-destructive/90 text-white"
                   : "bg-brand text-brand-contrast hover:bg-brand/90"
               )}
             >
