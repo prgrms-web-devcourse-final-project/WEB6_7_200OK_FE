@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "react";
 
 import { MOCK_WISHLIST_ITEMS } from "@/entities/item/api/mocks";
 import { WishlistItem } from "@/entities/item/model/types";
@@ -11,12 +11,16 @@ import {
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardListLayout } from "@/shared/ui/layout/dashboard-list-layout";
+import { DashboardContentLayout } from "@/shared/ui/layout/dashboard-content-layout";
 import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
 
 const WISHLIST_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
-export function Wishlist() {
+interface WishlistProps {
+  labelNode?: ReactNode;
+}
+
+export function Wishlist({ labelNode }: WishlistProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
   const [deleteItem, setDeleteItem] = useState<WishlistItem | null>(null);
@@ -46,7 +50,8 @@ export function Wishlist() {
 
   return (
     <>
-      <DashboardListLayout
+      <DashboardContentLayout
+        labelNode={labelNode}
         filterNode={
           <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
@@ -58,7 +63,7 @@ export function Wishlist() {
             onRemove={(target) => setDeleteItem(target)}
           />
         ))}
-      </DashboardListLayout>
+      </DashboardContentLayout>
 
       <ConfirmDeleteModal
         open={!!deleteItem}

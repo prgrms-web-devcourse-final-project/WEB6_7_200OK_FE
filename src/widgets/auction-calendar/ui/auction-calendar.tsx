@@ -110,10 +110,9 @@ const CustomDateHeader = ({
       onClick={handleClick}
       disabled={isOffRange}
       className={cn(
-        // 캘린더 전용 추가 스타일
         "rounded-full text-sm",
-        // 선택된 날짜
-        isSelected && "bg-accent dark:bg-accent/50",
+        // 선택된 날짜 - brand-surface 배경색 사용
+        isSelected && "bg-brand-surface",
         // 범위 밖 날짜 스타일
         isOffRange &&
           "text-muted-foreground hover:text-muted-foreground cursor-default opacity-50 hover:bg-transparent",
@@ -174,50 +173,84 @@ export function AuctionCalendar({ events, onSelectDate, selectedDate }: AuctionC
   );
 
   return (
-    <div className="bg-card border-border flex w-full flex-col gap-4 rounded-lg border p-6 shadow-sm">
-      <div className="h-102 w-full">
-        <Calendar
-          className="clean-calendar"
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: "100%", width: "100%" }}
-          views={["month"]}
-          view={currentView}
-          date={currentDate}
-          onView={handleViewChange}
-          onNavigate={handleNavigate}
-          onSelectSlot={() => {}}
-          selectable
-          components={components}
-          eventPropGetter={() => ({
-            style: {
-              backgroundColor: "transparent",
-              padding: 0,
-              outline: "none",
-            },
-          })}
-          dayPropGetter={() => ({
-            style: { backgroundColor: "transparent", cursor: "default" },
-          })}
-          formats={{
-            monthHeaderFormat: "YYYY년 M월",
-            weekdayFormat: "ddd",
-            dateFormat: "D",
-          }}
-          culture="ko"
-        />
-      </div>
+    <>
+      <style>
+        {`.clean-calendar .rbc-month-view,
+          .clean-calendar .rbc-header,
+          .clean-calendar .rbc-month-row,
+          .clean-calendar .rbc-day-bg,
+          .clean-calendar .rbc-date-cell {
+            border: none !important;
+          }
+          .clean-calendar .rbc-header {
+            padding-bottom: 0.75rem;
+            font-weight: 500;
+          }
+          .clean-calendar .rbc-off-range-bg {
+            background: transparent !important;
+          }
+          .clean-calendar .rbc-row-content {
+            z-index: 5;
+            pointer-events: none;
+          }
+          .clean-calendar .rbc-date-cell {
+            pointer-events: auto !important;
+            padding: 0.25rem 0 0 0;
+            text-align: center;
+          }
+          .clean-calendar .rbc-date-cell button {
+            margin: 0 auto;
+          }
+          .clean-calendar .rbc-today button,
+          .clean-calendar .rbc-now button {
+            font-weight: normal !important;
+          }`}
+      </style>
+      <div className="bg-card border-border flex w-full flex-col gap-4 rounded-lg border p-6 shadow-sm">
+        <div className="h-102 w-full">
+          <Calendar
+            className="clean-calendar"
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: "100%", width: "100%" }}
+            views={["month"]}
+            view={currentView}
+            date={currentDate}
+            onView={handleViewChange}
+            onNavigate={handleNavigate}
+            onSelectSlot={() => {}}
+            selectable
+            components={components}
+            eventPropGetter={() => ({
+              style: {
+                backgroundColor: "transparent",
+                padding: 0,
+                outline: "none",
+              },
+            })}
+            dayPropGetter={() => ({
+              style: { backgroundColor: "transparent", cursor: "default" },
+            })}
+            formats={{
+              monthHeaderFormat: "YYYY년 M월",
+              weekdayFormat: "ddd",
+              dateFormat: "D",
+            }}
+            culture="ko"
+          />
+        </div>
 
-      <div className="border-border bg-secondary/30 flex w-full flex-col gap-3 rounded-lg border px-3 py-3">
-        <span className="text-muted-foreground text-sm leading-5 font-normal tracking-normal">
-          선택된 날짜
-        </span>
-        <span className="text-brand text-base leading-6 font-medium tracking-tight">
-          {selectedDate ? dayjs(selectedDate).format("YYYY년 M월 D일") : "날짜를 선택해주세요"}
-        </span>
+        <div className="border-border bg-secondary/30 flex w-full flex-col gap-3 rounded-lg border px-3 py-3">
+          <span className="text-muted-foreground text-sm leading-5 font-normal tracking-normal">
+            선택된 날짜
+          </span>
+          <span className="text-brand text-base leading-6 font-medium tracking-tight">
+            {selectedDate ? dayjs(selectedDate).format("YYYY년 M월 D일") : "날짜를 선택해주세요"}
+          </span>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
