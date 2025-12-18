@@ -56,10 +56,20 @@ export function SocialLoginButtons() {
     try {
       setIsLoading(true);
 
-      const response = await fetch(`/api/v1/auth?provider=${provider}`);
+      const response = await fetch(`/api/v1/auth?provider=${provider}`, {
+        credentials: "include",
+      });
 
       if (!response.ok) {
-        throw new Error("OAuth URL을 가져오는데 실패했습니다.");
+        if (response.status >= 500) {
+          throw new Error("서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        } else if (response.status === 404) {
+          throw new Error("로그인 서비스를 찾을 수 없습니다.");
+        } else if (response.status === 401 || response.status === 403) {
+          throw new Error("로그인 권한이 없습니다.");
+        } else {
+          throw new Error("로그인 요청 중 문제가 발생했습니다.");
+        }
       }
 
       const json = await response.json();
@@ -67,11 +77,19 @@ export function SocialLoginButtons() {
       if (json.data) {
         window.location.href = json.data;
       } else {
-        throw new Error("OAuth URL이 없습니다.");
+        throw new Error("로그인 URL을 받아오지 못했습니다. 다시 시도해주세요.");
       }
     } catch (error) {
       console.error(`${provider} 로그인 오류:`, error);
-      showToast.error("로그인 중 오류가 발생했습니다.");
+
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        showToast.error("네트워크 연결을 확인해주세요.");
+      } else if (error instanceof Error) {
+        showToast.error(error.message);
+      } else {
+        showToast.error("로그인 중 알 수 없는 오류가 발생했습니다.");
+      }
+
       setIsLoading(false);
     }
   };
