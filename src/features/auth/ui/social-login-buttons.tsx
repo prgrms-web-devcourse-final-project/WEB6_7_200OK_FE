@@ -72,10 +72,24 @@ export function SocialLoginButtons() {
         }
       }
 
-      const json = await response.json();
+      const json: unknown = await response.json();
 
-      if (json.data) {
-        window.location.href = json.data;
+      if (
+        typeof json === "object" &&
+        json !== null &&
+        typeof (json as { data?: unknown }).data === "string"
+      ) {
+        const url = (json as { data: string }).data;
+
+        try {
+          // Validate that the data is a syntactically valid URL
+          // This helps avoid redirecting to malformed or unsafe values.
+          new URL(url);
+        } catch {
+          throw new Error("유효하지 않은 OAuth URL입니다.");
+        }
+
+        window.location.href = url;
       } else {
         throw new Error("로그인 URL을 받아오지 못했습니다. 다시 시도해주세요.");
       }
