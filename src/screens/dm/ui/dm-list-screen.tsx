@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import type { ListFilter, Message } from "@/entities/dm";
 import { mockChats, mockMessages } from "@/entities/dm/api/mocks";
-import { ChatDetail } from "@/features/dm-detail/ui/dm-detail";
-import { ChatListSidebar } from "@/features/dm-list/ui/dm-list-sidebar";
+import { DmDetail } from "@/features/dm";
 import { cn } from "@/shared/lib/utils/utils";
+import { DmListSidebar } from "@/widgets/dm-list";
 
 export function DMListScreen() {
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export function DMListScreen() {
         "bg-background border-border mx-auto flex h-[calc(100vh-var(--header-h))] min-h-0 w-full max-w-7xl overflow-hidden"
       )}
     >
-      <ChatListSidebar
+      <DmListSidebar
         chats={mockChats}
         selectedChatId={selectedChatId}
         filter={filter}
@@ -48,7 +48,7 @@ export function DMListScreen() {
           selectedChatId ? "flex" : "hidden lg:flex"
         )}
       >
-        <ChatDetail
+        <DmDetail
           chat={selectedChat}
           messages={currentMessages}
           onSendMessage={handleSendMessage}

@@ -1,1 +1,1 @@
-export { DMScreen } from "./ui/dm-screen";
+export { DMListScreen } from "./ui/dm-list-screen";

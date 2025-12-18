@@ -4,11 +4,11 @@ import SonySvg from "@/shared/assets/images/dm-images/sony.svg";
 
 import type { Product } from "../model/types";
 
-interface ProductCardProps {
+interface DmItemCardProps {
   product: Product;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function DmItemCard({ product }: DmItemCardProps) {
   return (
     <div className="border-border rounded-md border p-4">
       <div className="flex gap-4">
