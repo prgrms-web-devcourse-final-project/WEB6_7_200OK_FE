@@ -1,7 +1,7 @@
 import type { AuctionType, AuctionStatusType } from "@/entities/auction/model/types";
 import type { ItemCategory } from "@/entities/item/model/category";
-import type { RecentPriceHistoryType } from "@/features/auction-log/model/types";
-import { SellerType } from "@/features/sale/model/types";
+import type { RecentPriceHistoryType } from "@/features/auction/auction-log";
+import { SellerType } from "@/features/auction/auction-sale";
 
 // TODO: 경매 태그 없음
 export interface AuctionDetailType extends Omit<AuctionType, "imageUrl"> {
