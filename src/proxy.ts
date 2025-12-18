@@ -38,7 +38,7 @@ async function checkAuth(request: NextRequest): Promise<boolean> {
   }
 }
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 로그인 페이지: 인증된 사용자는 홈으로
