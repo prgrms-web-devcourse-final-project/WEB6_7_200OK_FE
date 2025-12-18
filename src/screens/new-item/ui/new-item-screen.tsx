@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { ImagePlus, X, Info, Calendar } from "lucide-react";
 
-import { combineDateTime, formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
+import { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
 import { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
 import {
   DEFAULT_DROP_PERCENTAGE,
@@ -140,7 +140,7 @@ export function NewItemScreen() {
       return;
     }
 
-    const auctionStartDate = combineDateTime(selectedDate, selectedTime);
+    const auctionStartDate: Date = selectedDate;
 
     const submitData = {
       productName,

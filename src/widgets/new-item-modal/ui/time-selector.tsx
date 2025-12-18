@@ -4,13 +4,19 @@ import { useState } from "react";
 
 import { ChevronDown, Clock } from "lucide-react";
 
+import { type TimeSelection } from "@/entities/date-modal";
 import { TIME_SELECTOR_CLASSES } from "@/entities/date-modal/model/time-selector-constants";
 import { HOURS, MINUTES, TIMEZONES } from "@/entities/item/model/registration-constants";
 import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 
-export function TimeSelector() {
+interface TimeSelectorProps {
+  selectedTime: TimeSelection;
+  onTimeChange: (time: TimeSelection) => void;
+}
+
+export function TimeSelector({ selectedTime, onTimeChange }: TimeSelectorProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -25,7 +31,11 @@ export function TimeSelector() {
       >
         <div className="flex items-center gap-2">
           <Clock className="text-muted-foreground size-4" />
-          <span className="text-base">오전 09:00</span>
+          <span className="text-base">
+            <span>{selectedTime.timezone}&nbsp;</span>
+            <span>{String(selectedTime.hour).padStart(2, "0")}:</span>
+            <span>{String(selectedTime.minute).padStart(2, "0")}</span>
+          </span>
         </div>
         <ChevronDown
           className={cn(
@@ -54,7 +64,12 @@ export function TimeSelector() {
                   key={timezone}
                   type="button"
                   variant="ghost"
-                  className={TIME_SELECTOR_CLASSES.button}
+                  className={cn(
+                    TIME_SELECTOR_CLASSES.button,
+                    selectedTime.timezone === timezone &&
+                      "bg-brand text-accent dark:text-accent-foreground"
+                  )}
+                  onClick={() => onTimeChange({ ...selectedTime, timezone })}
                 >
                   {timezone}
                 </Button>
@@ -74,7 +89,12 @@ export function TimeSelector() {
                     key={hour}
                     type="button"
                     variant="ghost"
-                    className={TIME_SELECTOR_CLASSES.button}
+                    className={cn(
+                      TIME_SELECTOR_CLASSES.button,
+                      selectedTime.hour === hour &&
+                        "bg-brand text-accent dark:text-accent-foreground"
+                    )}
+                    onClick={() => onTimeChange({ ...selectedTime, hour })}
                   >
                     {hour}
                   </Button>
@@ -95,7 +115,12 @@ export function TimeSelector() {
                     key={minute}
                     type="button"
                     variant="ghost"
-                    className={TIME_SELECTOR_CLASSES.button}
+                    className={cn(
+                      TIME_SELECTOR_CLASSES.button,
+                      selectedTime.minute === minute &&
+                        "bg-brand text-accent dark:text-accent-foreground"
+                    )}
+                    onClick={() => onTimeChange({ ...selectedTime, minute })}
                   >
                     {String(minute).padStart(2, "0")}
                   </Button>
