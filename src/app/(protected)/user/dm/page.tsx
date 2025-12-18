@@ -1,5 +1,5 @@
-import { DMScreen } from "@/screens/dm/ui/dm-screen";
+import { DMListScreen } from "@/screens/dm/ui/dm-list-screen";
 
 export default function Page() {
-  return <DMScreen />;
+  return <DMListScreen />;
 }

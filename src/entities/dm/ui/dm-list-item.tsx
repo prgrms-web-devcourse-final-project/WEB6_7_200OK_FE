@@ -3,7 +3,7 @@ import Image from "next/image";
 import AvatarSvg from "@/shared/assets/images/dm-images/avatar.svg";
 import SonySvg from "@/shared/assets/images/dm-images/sony.svg";
 import { cn } from "@/shared/lib/utils/utils";
-import Button from "@/shared/ui/button/button";
+import { Button } from "@/shared/ui";
 
 import type { Chat } from "../model/types";
 

@@ -5,10 +5,9 @@ import { Package, ShoppingBag, type LucideIcon } from "lucide-react";
 import { DmListItem } from "@/entities/dm";
 import type { Chat, ListFilter } from "@/entities/dm";
 import { cn } from "@/shared/lib/utils/utils";
-import Button from "@/shared/ui/button/button";
-import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
+import { Button, ScrollArea } from "@/shared/ui";
 
-interface ChatListSidebarProps {
+interface DmListSidebarProps {
   chats: Chat[];
   selectedChatId: string | null;
   filter: ListFilter;
@@ -23,13 +22,13 @@ interface FilterOption {
   className: string;
 }
 
-export function ChatListSidebar({
+export function DmListSidebar({
   chats,
   selectedChatId,
   filter,
   onChatSelect,
   onFilterChange,
-}: ChatListSidebarProps) {
+}: DmListSidebarProps) {
   const filterOptions = useMemo<FilterOption[]>(
     () => [
       {

@@ -4,22 +4,19 @@ import Image from "next/image";
 
 import { ChevronLeft, Image as ImageIcon, MessageSquareOff, Send } from "lucide-react";
 
-import { ChatMessage, ProductCard } from "@/entities/dm";
+import { ChatMessage, DmItemCard } from "@/entities/dm";
 import type { Chat, Message } from "@/entities/dm";
 import AvatarSvg from "@/shared/assets/images/dm-images/avatar.svg";
-import Button from "@/shared/ui/button/button";
-import EmptyState from "@/shared/ui/empty/empty";
-import Input from "@/shared/ui/input/input";
-import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
+import { ScrollArea, Button, EmptyState, Input } from "@/shared/ui";
 
-interface DMDetailProps {
+interface DmDetailProps {
   chat: Chat | null;
   messages: Message[];
   onSendMessage: (message: string) => void;
   onBack: () => void;
 }
 
-export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailProps) {
+export function DmDetail({ chat, messages, onSendMessage, onBack }: DmDetailProps) {
   const [messageInput, setMessageInput] = useState("");
 
   const hasMessage = useMemo(() => messageInput.trim().length > 0, [messageInput]);
@@ -69,7 +66,7 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
       {/* 메시지 영역 */}
       <ScrollArea className="min-h-0 flex-1 p-4">
         <div className="flex flex-col gap-4">
-          {chat.product && <ProductCard product={chat.product} />}
+          {chat.product && <DmItemCard product={chat.product} />}
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
           ))}
