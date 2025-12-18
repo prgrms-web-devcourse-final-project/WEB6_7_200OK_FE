@@ -23,9 +23,7 @@ export function UserDashboard({ isOwn = false }: UserDashboardProps) {
 
   const currentTab = useMemo(() => DASHBOARD_TABS.find((t) => t.id === activeTab), [activeTab]);
 
-  const labelIndicator = currentTab ? (
-    <TabLabeHeader label={currentTab.label} icon={currentTab.icon} />
-  ) : null;
+  const labelIndicator = currentTab ? <TabLabeHeader label={currentTab.label} /> : null;
 
   const visibleTabs = useMemo(() => {
     if (isOwn) return DASHBOARD_TABS;
