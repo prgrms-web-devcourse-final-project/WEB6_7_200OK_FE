@@ -61,5 +61,5 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/auth/login"],
+  matcher: ["/auth/login", "/user/:path*"],
 };
