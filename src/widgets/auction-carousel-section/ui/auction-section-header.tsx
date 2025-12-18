@@ -10,10 +10,10 @@ interface AuctionSectionHeaderProps {
 
 export function AuctionSectionHeader({ title, description, href }: AuctionSectionHeaderProps) {
   return (
-    <header className="flex items-end justify-between select-none">
+    <header className="flex justify-between select-none">
       <div className="px-1.5">
         <h2 className="text-xl font-semibold">{title}</h2>
-        <p className="text-muted-foreground mt-1 text-sm">{description}</p>
+        <p className="text-muted-foreground mt-1 text-sm leading-snug">{description}</p>
       </div>
 
       <div>
@@ -23,7 +23,9 @@ export function AuctionSectionHeader({ title, description, href }: AuctionSectio
           aria-label={`${title} 더보기`}
         >
           더보기
-          <ChevronRight aria-hidden="true" className="size-3.5" />
+          <span aria-hidden>
+            <ChevronRight className="size-3.5" />
+          </span>
         </Link>
       </div>
     </header>
