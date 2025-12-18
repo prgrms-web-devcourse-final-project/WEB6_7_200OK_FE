@@ -1,4 +1,4 @@
-export default function LiveBadge() {
+export function LiveBadge() {
   return (
     <div
       aria-label="실시간 경매 진행 중"
