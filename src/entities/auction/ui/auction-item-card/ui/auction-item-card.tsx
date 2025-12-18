@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import LiveBadge from "@/entities/auction/ui/auction-badge/live-badge";
-import UpcomingBadge from "@/entities/auction/ui/auction-badge/upcoming-badge";
+import { LiveBadge } from "@/entities/auction/ui/auction-badge/live-badge";
+import { UpcomingBadge } from "@/entities/auction/ui/auction-badge/upcoming-badge";
 import { VARIANT_CONFIG } from "@/entities/auction/ui/auction-item-card/model/constants";
 import { AuctionCardVariantType } from "@/entities/auction/ui/auction-item-card/model/types";
 import AuctionPrice from "@/entities/auction/ui/auction-item-card/ui/auction-price";

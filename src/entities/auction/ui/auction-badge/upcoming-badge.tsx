@@ -1,6 +1,6 @@
 import { Calendar } from "lucide-react";
 
-export default function UpcomingBadge() {
+export function UpcomingBadge() {
   return (
     <div
       aria-label="경매 시작 예정 상품"
