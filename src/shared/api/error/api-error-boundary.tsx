@@ -2,7 +2,6 @@ import { Component, type ReactNode } from "react";
 
 import { TriangleAlert } from "lucide-react";
 
-import { ApiError } from "@/shared/api/error/api-error";
 import { EmptyState } from "@/shared/ui";
 
 interface Props {
@@ -18,6 +17,14 @@ interface State {
   shouldRethrow: boolean;
 }
 
+function isCodeError(
+  error: unknown
+): error is { code: string; message?: string; displayMessage?: string } {
+  return (
+    typeof error === "object" && error !== null && "code" in error && typeof error.code === "string"
+  );
+}
+
 export class ApiErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -29,27 +36,15 @@ export class ApiErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: unknown): Partial<State> {
-    if (!(error instanceof ApiError)) {
-      return {
-        error,
-        shouldHandleError: false,
-        shouldRethrow: true,
-      };
+    if (!isCodeError(error)) {
+      return { error, shouldHandleError: false, shouldRethrow: true };
     }
 
-    if (error.code === "UNNKOWN_ERROR") {
-      return {
-        error,
-        shouldHandleError: false,
-        shouldRethrow: true,
-      };
+    if (error.code === "UNKNOWN_ERROR") {
+      return { error, shouldHandleError: false, shouldRethrow: true };
     }
 
-    return {
-      error,
-      shouldHandleError: true,
-      shouldRethrow: false,
-    };
+    return { error, shouldHandleError: true, shouldRethrow: false };
   }
 
   componentDidCatch(error: unknown) {
@@ -61,19 +56,18 @@ export class ApiErrorBoundary extends Component<Props, State> {
     const { fallbackComponent, children, className } = this.props;
     const { shouldHandleError, shouldRethrow, error } = this.state;
 
-    if (shouldRethrow) {
-      throw error;
-    }
+    if (shouldRethrow) throw error;
+    if (!shouldHandleError) return children;
 
-    if (!shouldHandleError) {
-      return children;
-    }
+    const description = isCodeError(error)
+      ? (error.displayMessage ?? error.message ?? "잠시 후 다시 시도해 주세요.")
+      : "잠시 후 다시 시도해 주세요.";
 
     return (
       fallbackComponent ?? (
         <EmptyState
           title="문제가 발생했어요"
-          description={error instanceof ApiError ? error.message : "잠시 후 다시 시도해 주세요."}
+          description={description}
           className={className}
           Icon={TriangleAlert}
         />
