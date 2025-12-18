@@ -2,20 +2,19 @@ import { useId } from "react";
 
 import { Box, MessageSquareOff } from "lucide-react";
 
-import EmptyState from "@/shared/ui/empty/empty";
-import { Rating, RatingButton } from "@/shared/ui/rating/rating";
+import { Rating, RatingButton, EmptyState } from "@/shared/ui";
 
-export default function ProductReview() {
+export default function AuctionDetailReview() {
   return (
     <div className="flex flex-col gap-4">
-      <ProductReviewRating />
-      <ProductReviewList />
-      <ProductReviewRecommends />
+      <AuctionDetailReviewRating />
+      <AuctionDetailReviewList />
+      <AuctionDetailSellerSales />
     </div>
   );
 }
 
-function ProductReviewRating() {
+function AuctionDetailReviewRating() {
   const id = useId();
   const value = 3;
   const reviewsLength = 127;
@@ -35,7 +34,7 @@ function ProductReviewRating() {
   );
 }
 
-function ProductReviewList() {
+function AuctionDetailReviewList() {
   const reviews = [
     {
       id: 1,
@@ -66,7 +65,7 @@ function ProductReviewList() {
   );
 }
 
-function ProductReviewRecommends() {
+function AuctionDetailSellerSales() {
   const hasItem = false;
   if (!hasItem)
     return (
