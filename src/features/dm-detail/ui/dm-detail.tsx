@@ -7,7 +7,6 @@ import { ChevronLeft, Image as ImageIcon, MessageSquareOff, Send } from "lucide-
 import { ChatMessage, ProductCard } from "@/entities/dm";
 import type { Chat, Message } from "@/entities/dm";
 import AvatarSvg from "@/shared/assets/images/dm-images/avatar.svg";
-import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import EmptyState from "@/shared/ui/empty/empty";
 import Input from "@/shared/ui/input/input";
@@ -43,19 +42,15 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
   }
 
   return (
-    <div
-      className={cn(
-        "border-border flex h-full min-h-0 flex-col rounded-l-none rounded-r-md border"
-      )}
-    >
+    <div className="border-border flex h-full min-h-0 flex-col rounded-l-none rounded-r-md border">
       {/* 헤더 */}
-      <div className={cn("border-border flex shrink-0 items-center gap-3 border-b p-2")}>
+      <div className="border-border flex shrink-0 items-center gap-3 border-b p-2">
         <Button
           aria-label="뒤로가기"
           variant="ghost"
           size="icon"
           onClick={onBack}
-          className={cn("shrink-0")}
+          className="shrink-0"
         >
           <ChevronLeft className="size-5" />
         </Button>
@@ -64,16 +59,16 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
           alt={chat.name}
           width={40}
           height={40}
-          className={cn("size-10 shrink-0 rounded-md object-cover")}
+          className="size-10 shrink-0 rounded-md object-cover"
         />
-        <div className={cn("flex-1")}>
-          <p className={cn("text-lg font-semibold")}>{chat.name}</p>
+        <div className="flex-1">
+          <p className="text-lg font-semibold">{chat.name}</p>
         </div>
       </div>
 
       {/* 메시지 영역 */}
       <ScrollArea className="min-h-0 flex-1 p-4">
-        <div className={cn("flex flex-col gap-4")}>
+        <div className="flex flex-col gap-4">
           {chat.product && <ProductCard product={chat.product} />}
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
@@ -82,15 +77,15 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
       </ScrollArea>
 
       {/* 입력 영역 */}
-      <div className={cn("border-border shrink-0 border-t p-4")}>
-        <div className={cn("flex items-center gap-2")}>
+      <div className="border-border shrink-0 border-t p-4">
+        <div className="flex items-center gap-2">
           <Input
             type="text"
             placeholder="메시지 입력..."
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
             onKeyDown={() => {}}
-            className={cn("flex-1 rounded-full")}
+            className="flex-1 rounded-full"
           />
           <Button
             aria-label="이미지 첨부"
@@ -98,7 +93,7 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
             size="icon-lg"
             onClick={handleSend}
             disabled={!hasMessage}
-            className={cn("flex items-center justify-center rounded-full")}
+            className="flex items-center justify-center rounded-full"
           >
             <ImageIcon className="size-5" />
           </Button>
@@ -108,7 +103,7 @@ export function ChatDetail({ chat, messages, onSendMessage, onBack }: DMDetailPr
             size="icon-lg"
             onClick={handleSend}
             disabled={!hasMessage}
-            className={cn("flex items-center justify-center rounded-full")}
+            className="flex items-center justify-center rounded-full"
           >
             <Send className="size-5" />
           </Button>

@@ -17,14 +17,14 @@ export function ChatMessage({ message }: ChatMessageProps) {
             : "border-border text-foreground dark:bg-background border bg-white"
         )}
       >
-        <p className={cn("text-sm")}>{message.message}</p>
+        <p className="text-sm">{message.message}</p>
       </div>
-      <div className={cn("mt-1 flex flex-row items-center gap-1 px-1")}>
-        <span className={cn("text-xs opacity-70")}>{message.time}</span>
+      <div className="mt-1 flex flex-row items-center gap-1 px-1">
+        <span className="text-xs opacity-70">{message.time}</span>
         {message.isMine && (
           <>
-            <span className={cn("text-xs opacity-70")}>·</span>
-            <span className={cn("text-xs opacity-70")}>{message.isRead ? "읽음" : "안읽음"}</span>
+            <span className="text-xs opacity-70">·</span>
+            <span className="text-xs opacity-70">{message.isRead ? "읽음" : "안읽음"}</span>
           </>
         )}
       </div>

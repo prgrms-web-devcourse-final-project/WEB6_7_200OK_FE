@@ -7,13 +7,13 @@ import Button from "@/shared/ui/button/button";
 
 import type { Chat } from "../model/types";
 
-interface DMItemProps {
+interface DmListItemProps {
   chat: Chat;
   isSelected: boolean;
   onClick: () => void;
 }
 
-export function DMItem({ chat, isSelected, onClick }: DMItemProps) {
+export function DmListItem({ chat, isSelected, onClick }: DmListItemProps) {
   return (
     <Button
       type="button"
@@ -24,33 +24,27 @@ export function DMItem({ chat, isSelected, onClick }: DMItemProps) {
         isSelected && "bg-accent"
       )}
     >
-      <div className={cn("flex w-full flex-col")}>
-        <div className={cn("relative flex w-full items-start gap-3")}>
-          <div className={cn("relative shrink-0")}>
+      <div className="flex w-full flex-col">
+        <div className="relative flex w-full items-start gap-3">
+          <div className="relative shrink-0">
             <Image
               src={AvatarSvg}
               alt={chat.name}
               width={36}
               height={36}
-              className={cn("h-9 w-9 rounded-full object-cover")}
+              className="h-9 w-9 rounded-full object-cover"
             />
           </div>
-          <div className={cn("min-w-0 flex-1")}>
-            <div className={cn("flex items-center justify-between")}>
-              <span className={cn("text-sm font-semibold")}>{chat.name}</span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold">{chat.name}</span>
               {chat.unreadCount > 0 && (
-                <div
-                  className={cn(
-                    "bg-brand flex size-5 shrink-0 items-center justify-center rounded-full"
-                  )}
-                >
-                  <span className={cn("text-xs font-semibold text-white")}>{chat.unreadCount}</span>
+                <div className="bg-brand flex size-5 shrink-0 items-center justify-center rounded-full">
+                  <span className="text-xs font-semibold text-white">{chat.unreadCount}</span>
                 </div>
               )}
             </div>
-            <p className={cn("text-muted-foreground text-xs leading-relaxed")}>
-              {chat.lastMessage}
-            </p>
+            <p className="text-muted-foreground text-xs leading-relaxed">{chat.lastMessage}</p>
           </div>
         </div>
         {chat.product && (
@@ -69,9 +63,9 @@ export function DMItem({ chat, isSelected, onClick }: DMItemProps) {
               alt={chat.product.name}
               width={20}
               height={20}
-              className={cn("size-5 shrink-0 rounded-full object-cover")}
+              className="size-5 shrink-0 rounded-full object-cover"
             />
-            <span className={cn("text-muted-foreground text-xs")}>{chat.product.name}</span>
+            <span className="text-muted-foreground text-xs">{chat.product.name}</span>
           </div>
         )}
       </div>
