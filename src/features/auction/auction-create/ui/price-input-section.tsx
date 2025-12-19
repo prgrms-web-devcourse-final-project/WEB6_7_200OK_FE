@@ -1,5 +1,3 @@
-"use client";
-
 import { InfoAlert } from "@/shared/ui/info-alert/info-alert";
 
 import { PriceInput } from "./price-input";

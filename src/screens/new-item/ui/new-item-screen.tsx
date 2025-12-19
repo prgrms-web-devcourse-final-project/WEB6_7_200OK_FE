@@ -8,7 +8,7 @@ import {
   TagInputSection,
   useItemForm,
   usePriceValidation,
-} from "@/features/auction/auction-new";
+} from "@/features/auction/auction-create";
 import { FileInput } from "@/shared/ui";
 import Button from "@/shared/ui/button/button";
 import Input from "@/shared/ui/input/input";

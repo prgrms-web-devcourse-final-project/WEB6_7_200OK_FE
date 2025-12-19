@@ -1,5 +1,3 @@
-"use client";
-
 import { ComponentProps } from "react";
 
 import { cn } from "@/shared/lib/utils/utils";
@@ -9,6 +7,7 @@ interface Base64ImageProps extends Omit<ComponentProps<"img">, "src"> {
   alt: string;
   className?: string;
 }
+
 function isValidImageDataUri(src: string): boolean {
   return typeof src === "string" && src.startsWith("data:image/");
 }
