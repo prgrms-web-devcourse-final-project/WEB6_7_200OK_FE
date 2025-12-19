@@ -1,9 +1,6 @@
 import { useCallback } from "react";
 
-import {
-  DEFAULT_DROP_PERCENTAGE,
-  STOP_LOSS_PERCENTAGE,
-} from "@/entities/auction/model/registration-constants";
+import { DEFAULT_DROP_PERCENTAGE, STOP_LOSS_PERCENTAGE } from "@/entities/auction";
 import {
   startPriceSchema,
   validateDropPrice,
