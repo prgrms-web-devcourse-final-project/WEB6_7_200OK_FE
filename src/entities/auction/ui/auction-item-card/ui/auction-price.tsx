@@ -19,7 +19,7 @@ export default function AuctionPrice({
       <dt className="text-muted-foreground">현재가</dt>
       <dd className="text-right">
         <span className="mr-1 font-semibold text-red-500">{discountRate}%</span>
-        <strong className="text-brand dark:text-brand-text text-base font-bold">
+        <strong className="text-brand-text text-base font-bold">
           {currentPrice.toLocaleString()}원
         </strong>
       </dd>
