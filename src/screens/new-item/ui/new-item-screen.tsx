@@ -2,7 +2,7 @@
 
 import { Info, Calendar, ImagePlus } from "lucide-react";
 
-import { CategorySelector } from "@/entities/auction/ui/category-selector";
+import { CategorySelector } from "@/entities/auction";
 import {
   PriceInputSection,
   TagInputSection,

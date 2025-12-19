@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-import {
-  MIN_DROP_PERCENTAGE,
-  MIN_START_PRICE,
-  STOP_LOSS_PERCENTAGE,
-} from "@/entities/auction/model/registration-constants";
+import { MIN_DROP_PERCENTAGE, MIN_START_PRICE, STOP_LOSS_PERCENTAGE } from "@/entities/auction";
 
 // 개별 필드 검증용
 export const startPriceSchema = z
