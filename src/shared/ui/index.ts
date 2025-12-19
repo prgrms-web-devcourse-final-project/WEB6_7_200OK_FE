@@ -48,7 +48,7 @@ export { default as FileInput } from "./input/file-input";
 export { default as Input } from "./input/input";
 export { default as SearchInput } from "./input/search-input";
 
-export { DashboardListLayout } from "./layout/dashboard-list-layout";
+export { DashboardContentLayout } from "./layout/dashboard-content-layout";
 
 export { ConfirmDeleteModal } from "./modal/confirm-delete-modal";
 
