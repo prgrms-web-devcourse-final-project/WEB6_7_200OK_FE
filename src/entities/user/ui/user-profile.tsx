@@ -30,25 +30,10 @@ export function UserProfile({
   const [editedName, setEditedName] = useState(profile.name);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && onAvatarChange) {
-      onAvatarChange(file);
-    }
-  };
-
-  const handleNameEdit = () => {
-    setIsEditingName(true);
-    setEditedName(profile.name);
-  };
-
   const handleNameSave = () => {
-    if (editedName.trim() && editedName !== profile.name && onNameChange) {
-      onNameChange(editedName.trim());
+    const trimmedName = editedName.trim();
+    if (trimmedName && trimmedName !== profile.name) {
+      onNameChange?.(trimmedName);
     }
     setIsEditingName(false);
   };
@@ -57,13 +42,8 @@ export function UserProfile({
     if (e.key === "Enter") {
       handleNameSave();
     } else if (e.key === "Escape") {
-      setEditedName(profile.name);
       setIsEditingName(false);
     }
-  };
-
-  const handleBlur = () => {
-    handleNameSave();
   };
 
   return (
@@ -87,7 +67,7 @@ export function UserProfile({
             <>
               <button
                 type="button"
-                onClick={handleAvatarClick}
+                onClick={() => fileInputRef.current?.click()}
                 className="bg-brand absolute right-0 bottom-0 flex size-7 items-center justify-center rounded-full shadow-xs transition-transform hover:scale-105"
                 aria-label="프로필 사진 변경"
               >
@@ -97,7 +77,10 @@ export function UserProfile({
               <FileInput
                 ref={fileInputRef}
                 accept="image/*"
-                onChange={handleFileChange}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) onAvatarChange?.(file);
+                }}
                 className="hidden"
                 Icon={Camera}
               />
@@ -112,7 +95,7 @@ export function UserProfile({
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
                 onKeyDown={handleKeyDown}
-                onBlur={handleBlur}
+                onBlur={handleNameSave}
                 className="h-7 max-w-25 px-2 py-1 text-xl"
                 autoFocus
               />
@@ -124,7 +107,10 @@ export function UserProfile({
                   <Button
                     variant="ghost"
                     size="icon-sm"
-                    onClick={handleNameEdit}
+                    onClick={() => {
+                      setIsEditingName(true);
+                      setEditedName(profile.name);
+                    }}
                     className="text-muted-foreground size-5"
                     aria-label="이름 수정"
                   >
