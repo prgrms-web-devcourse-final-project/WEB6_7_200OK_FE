@@ -3,9 +3,8 @@
 import { useState } from "react";
 
 import { PurchaseItemType } from "@/entities/item";
+import { ReviewModalBase, ReviewModalActions } from "@/entities/review";
 import { ConfirmDeleteModal } from "@/shared/ui";
-
-import { ReviewModalBase, ReviewModalActions } from "./review-modal-base";
 
 interface ReviewWriteModalProps {
   open: boolean;
