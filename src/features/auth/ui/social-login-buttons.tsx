@@ -51,12 +51,12 @@ export function SocialButton({ provider, onClick, disabled }: SocialButtonProps)
 
 export function SocialLoginButtons() {
   const [isLoading, setIsLoading] = useState(false);
-
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
   const handleSocialLogin = async (provider: SocialProvider) => {
     try {
       setIsLoading(true);
 
-      const response = await fetch(`/api/v1/auth?provider=${provider}`, {
+      const response = await fetch(`${apiBaseUrl}/api/v1/auth?provider=${provider}`, {
         credentials: "include",
       });
 
