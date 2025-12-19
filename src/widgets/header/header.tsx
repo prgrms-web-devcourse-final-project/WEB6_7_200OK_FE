@@ -32,13 +32,13 @@ export function Header() {
         {/* TODO: 로그인 아닐 시 로그인 버튼 */}
         <div className="flex shrink-0 items-center gap-3">
           <Button asChild aria-label="경매 등록" size="icon-lg" className="lg:hidden">
-            <Link href="/auctions/new">
+            <Link href="/auctions/create">
               <Plus className="size-5" />
             </Link>
           </Button>
 
           <Button asChild aria-label="경매 등록" size="lg" className="hidden lg:flex">
-            <Link href="/auctions/new">
+            <Link href="/auctions/create">
               <Plus className="size-5" />
               <span>경매 등록</span>
             </Link>
