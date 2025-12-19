@@ -16,7 +16,7 @@ import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 import { Textarea } from "@/shared/ui/textarea/textarea";
 import { DateTimeModal } from "@/widgets/new-item-modal/index";
 
-export function NewItemScreen() {
+export function AuctionCreateScreen() {
   const form = useItemForm();
 
   const priceValidation = usePriceValidation({

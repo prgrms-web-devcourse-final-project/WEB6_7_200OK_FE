@@ -1,5 +1,5 @@
-import { NewItemScreen } from "@/screens/new-item";
+import { AuctionCreateScreen } from "@/screens/auction/acution-create";
 
 export default function Page() {
-  return <NewItemScreen />;
+  return <AuctionCreateScreen />;
 }
