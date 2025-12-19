@@ -1,6 +1,6 @@
 import { Dayjs } from "dayjs";
 
-import type { Hour, TimeZone } from "@/entities/item/model/registration-constants";
+import type { Hour, TimeZone } from "@/entities/auction/model/registration-constants";
 
 export interface TimeSelection {
   hour: Hour;

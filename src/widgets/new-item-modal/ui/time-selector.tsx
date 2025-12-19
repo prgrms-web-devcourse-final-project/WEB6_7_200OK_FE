@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import { ChevronDown, Clock } from "lucide-react";
 
+import { HOURS, MINUTES, TIMEZONES } from "@/entities/auction/model/registration-constants";
 import { type TimeSelection } from "@/entities/date-modal";
 import { TIME_SELECTOR_CLASSES } from "@/entities/date-modal/model/time-selector-constants";
-import { HOURS, MINUTES, TIMEZONES } from "@/entities/item/model/registration-constants";
 import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
