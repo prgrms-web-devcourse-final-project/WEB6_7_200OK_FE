@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 
+import type { ItemImage } from "@/entities/auction/model/image-from-file";
 import { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
-import type { ItemImage } from "@/entities/item/model/image-from-file";
 import { isFormValid } from "@/shared/lib/utils/validator/validators";
 
 import type { ItemFormSubmitData } from "./types";
