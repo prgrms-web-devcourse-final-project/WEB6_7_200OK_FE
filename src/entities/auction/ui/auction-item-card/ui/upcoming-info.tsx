@@ -17,7 +17,7 @@ export default function UpcomingInfo({ startedAt, startPrice }: UpcomingInfoProp
 
       <dt className="text-muted-foreground">시작 예정가</dt>
       <dd className="text-right">
-        <strong className="text-brand dark:text-brand-text text-base font-bold">
+        <strong className="text-brand-text text-base font-bold">
           {startPrice.toLocaleString()}원
         </strong>
       </dd>
