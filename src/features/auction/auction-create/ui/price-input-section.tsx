@@ -1,6 +1,5 @@
+import { PriceInput } from "@/entities/auction";
 import { InfoAlert } from "@/shared/ui/info-alert/info-alert";
-
-import { PriceInput } from "./price-input";
 
 interface PriceInputSectionProps {
   startPrice: number | null;

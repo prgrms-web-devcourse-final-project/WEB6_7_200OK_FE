@@ -12,13 +12,16 @@ export { AuctionProgress } from "@/entities/auction/ui/auction-progress";
 
 export { CategorySelector } from "@/entities/auction/ui/category-selector";
 
-export { validateTagInput, addTagValidation } from "@/entities/auction/model/tag-validate";
+export {
+  validateTagInput,
+  addTagValidation,
+} from "@/entities/auction/ui/auction-create-image/model/tag-validate";
 
 export {
   itemImageFromFile,
   type ItemImage,
   MAX_IMAGES,
-} from "@/entities/auction/model/image-from-file";
+} from "@/entities/auction/ui/auction-create-image/model/image-from-file";
 
 export {
   MIN_START_PRICE,
@@ -35,3 +38,11 @@ export { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal
 export { TIME_SELECTOR_CLASSES } from "@/entities/date-modal/model/time-selector-constants";
 
 export { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
+
+export { ImageAddButton } from "@/entities/auction/ui/auction-create-image/ui/image-add-button";
+
+export { ImagePreviewItem } from "@/entities/auction/ui/auction-create-image/ui/image-preview-item";
+
+export { ImageCarouselView } from "@/entities/auction/ui/auction-create-image/ui/image-carousel-view";
+
+export { PriceInput } from "@/entities/auction/ui/auction-create-image/ui/price-input";
