@@ -19,13 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@/app/*": ["./src/app/*"],
-      "@/screens/*": ["./src/screens/*"],
-      "@/widgets/*": ["./src/widgets/*"],
-      "@/features/*": ["./src/features/*"],
-      "@/entities/*": ["./src/entities/*"]
-      // "@/shared/*": ["./src/shared/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -36,5 +30,6 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "noUncheckedIndexedAccess": true
 }
