@@ -2,15 +2,14 @@
 
 import { Settings, BellRing } from "lucide-react";
 
-import { ItemBadge } from "@/entities/item/ui/item-badge";
-import { ItemCard } from "@/entities/item/ui/item-card";
+import { ItemBadge, ItemCard } from "@/entities/item";
 
-import { NotificationPreferenceItem } from "../model/types";
+import { NotificationPreferenceItemType } from "../model/types";
 
 interface NotificationPreferenceItemProps {
-  item: NotificationPreferenceItem;
-  onClick?: (item: NotificationPreferenceItem) => void;
-  onSettingClick?: (item: NotificationPreferenceItem) => void;
+  item: NotificationPreferenceItemType;
+  onClick?: (item: NotificationPreferenceItemType) => void;
+  onSettingClick?: (item: NotificationPreferenceItemType) => void;
 }
 
 export function NotificationPreferenceItemCard({

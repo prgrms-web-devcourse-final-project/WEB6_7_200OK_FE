@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 
-import { Review } from "@/entities/review/model/types";
-import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
+import { ReviewType } from "@/entities/review";
+import { ConfirmDeleteModal } from "@/shared/ui";
 
 import { ReviewModalBase, ReviewModalThreeActions } from "./review-modal-base";
 
 interface ReviewEditModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  review: Review | null;
+  review: ReviewType | null;
   onEdit?: (id: string, data: { rating: number; content: string }) => void;
   onDelete?: (id: string) => void;
 }

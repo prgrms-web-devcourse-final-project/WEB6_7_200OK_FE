@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-import { fetchUserBasicInfo } from "@/entities/user/api/user-api";
-import { UserProfile } from "@/entities/user/model/types";
-import { UserProfileWidget } from "@/widgets/user/ui/user-profile-widget";
+import { fetchUserBasicInfo, UserProfileType } from "@/entities/user";
+import { UserProfileWidget } from "@/widgets/user";
 
 import { UserDashboard } from "./user-dashboard";
 
 export function UserScreen() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,8 +60,8 @@ export function UserScreen() {
 // 목업 my page
 // "use client";
 
-// import { MOCK_OWN_PROFILE } from "@/entities/user/api/mocks";
-// import { UserProfileWidget } from "@/widgets/user/ui/user-profile-widget";
+// import { MOCK_OWN_PROFILE } from "@/entities/user";
+// import { UserProfileWidget } from "@/widgets/user";
 
 // import { UserDashboard } from "./user-dashboard";
 
@@ -78,8 +77,8 @@ export function UserScreen() {
 // 목업 타인 페이지
 // "use client";
 
-// import { MOCK_OTHER_PROFILE } from "@/entities/user/api/mocks";
-// import { UserProfileWidget } from "@/widgets/user/ui/user-profile-widget";
+// import { MOCK_OTHER_PROFILE } from "@/entities/user";
+// import { UserProfileWidget } from "@/widgets/user";
 
 // import { UserDashboard } from "./user-dashboard";
 

@@ -2,9 +2,9 @@
 
 import { type LucideIcon } from "lucide-react";
 
-import Button from "@/shared/ui/button/button";
+import { Button } from "@/shared/ui";
 
-export interface TabItem {
+export interface TabItemType {
   id: string;
   label: string;
   icon: LucideIcon;
@@ -13,7 +13,7 @@ export interface TabItem {
 interface ActivityTabsProps {
   activeTab: string;
   onTabChange: (id: string) => void;
-  tabs: TabItem[];
+  tabs: TabItemType[];
 }
 
 export function ActivityTabs({ activeTab, onTabChange, tabs }: ActivityTabsProps) {

@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 
-import { SocialLoginButtons } from "@/features/auth/ui/social-login-buttons";
+import { SocialLoginButtons } from "@/features/auth";
 import windfallIcon from "@/shared/assets/icons/windfall.svg";
-import Separator from "@/shared/ui/separator/separator";
+import { Separator } from "@/shared/ui";
 
 export function LoginScreen() {
   return (

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Bell } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
-import Button from "@/shared/ui/button/button";
+import { Button } from "@/shared/ui";
 
 export default function AuctionNotificationToggle() {
   const [isActive, setIsActive] = useState(false);

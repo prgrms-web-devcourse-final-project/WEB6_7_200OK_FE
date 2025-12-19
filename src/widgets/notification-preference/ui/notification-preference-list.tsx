@@ -2,28 +2,30 @@
 
 import { useState, useMemo, useCallback } from "react";
 
-import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
-import { MOCK_NOTIFICATIONS } from "@/features/notification-preference/api/mocks";
-import { NotificationPreferenceItem } from "@/features/notification-preference/model/types";
-import { NotificationPreferenceItemCard } from "@/features/notification-preference/ui/notification-preference-item-card";
-import { NotificationPreferenceSettingsModal } from "@/features/notification-preference/ui/notification-preference-settings-modal";
+import { ItemCardFilter } from "@/entities/item";
+import {
+  MOCK_NOTIFICATIONS,
+  NotificationPreferenceItemType,
+  NotificationPreferenceItemCard,
+  NotificationPreferenceSettingsModal,
+} from "@/features/notification-preference";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout } from "@/shared/ui/layout/dashboard-content-layout";
+import { DashboardContentLayout } from "@/shared/ui";
 
 const NOTI_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
 interface NotificationPreferenceListProps {
-  labelNode?: React.ReactNode;
+  label?: React.ReactNode;
 }
 
-export function NotificationPreferenceList({ labelNode }: NotificationPreferenceListProps) {
+export function NotificationPreferenceList({ label }: NotificationPreferenceListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
   const [selectedNotificationPreference, setSelectedNotificationPreference] =
-    useState<NotificationPreferenceItem | null>(null);
+    useState<NotificationPreferenceItemType | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const filterOptions = useMemo(() => generateFilterOptions(NOTI_STATUSES), []);
@@ -34,7 +36,7 @@ export function NotificationPreferenceList({ labelNode }: NotificationPreference
   );
 
   const handleNotificationPreferenceSettingClick = useCallback(
-    (item: NotificationPreferenceItem) => {
+    (item: NotificationPreferenceItemType) => {
       setSelectedNotificationPreference(item);
       setIsSettingsOpen(true);
     },
@@ -44,8 +46,8 @@ export function NotificationPreferenceList({ labelNode }: NotificationPreference
   return (
     <>
       <DashboardContentLayout
-        labelNode={labelNode}
-        filterNode={
+        label={label}
+        filters={
           <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
       >

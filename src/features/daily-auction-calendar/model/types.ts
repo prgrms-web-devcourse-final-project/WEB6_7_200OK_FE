@@ -1,10 +1,14 @@
 import dayjs from "dayjs";
 
-import { SellingItem, WishlistItem, RecentlyViewedItem } from "@/entities/item/model/types";
+import {
+  SellingItemType,
+  WishlistItemType,
+  RecentlyViewedItemType,
+} from "@/entities/item/model/types";
 
-export type DashboardItem = SellingItem | WishlistItem | RecentlyViewedItem;
+export type DashboardItemType = SellingItemType | WishlistItemType | RecentlyViewedItemType;
 
-export interface CalendarEvent {
+export interface CalendarEventType {
   id: string;
   title: string;
   start: Date;
@@ -13,7 +17,7 @@ export interface CalendarEvent {
   count: number;
 }
 
-export const transformItemsToCalendarEvents = (items: DashboardItem[]): CalendarEvent[] => {
+export const transformItemsToCalendarEvents = (items: DashboardItemType[]): CalendarEventType[] => {
   const eventMap = new Map<string, { progress: number; scheduled: number }>();
 
   items.forEach((item) => {
@@ -27,7 +31,7 @@ export const transformItemsToCalendarEvents = (items: DashboardItem[]): Calendar
     if (item.status === "경매 예정") counts.scheduled += 1;
   });
 
-  const events: CalendarEvent[] = [];
+  const events: CalendarEventType[] = [];
   eventMap.forEach((counts, dateStr) => {
     const date = dayjs(dateStr).toDate();
 

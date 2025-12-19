@@ -7,18 +7,23 @@ import Image from "next/image";
 import { Package, BellRing } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
-import Button from "@/shared/ui/button/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/ui/dialog/dialog";
-import Input from "@/shared/ui/input/input";
-import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
-import { Switch } from "@/shared/ui/switch/switch";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  ConfirmDeleteModal,
+  Switch,
+} from "@/shared/ui";
 
-import { NotificationPreferenceItem } from "../model/types";
+import { NotificationPreferenceItemType } from "../model/types";
 
 interface NotificationPreferenceSettingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  item: NotificationPreferenceItem | null;
+  item: NotificationPreferenceItemType | null;
 }
 
 export function NotificationPreferenceSettingsModal({

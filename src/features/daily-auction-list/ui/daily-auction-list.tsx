@@ -5,17 +5,15 @@ import { useState, useMemo } from "react";
 import dayjs from "dayjs";
 import { PackageOpen } from "lucide-react";
 
-import { ItemBadge } from "@/entities/item/ui/item-badge";
-import { ItemCard } from "@/entities/item/ui/item-card";
+import { ItemBadge, ItemCard } from "@/entities/item";
 import { filterItemsByStatus } from "@/shared/lib/utils/filter/user-page-item-filter";
 import { cn } from "@/shared/lib/utils/utils";
-import Button from "@/shared/ui/button/button";
-import EmptyState from "@/shared/ui/empty/empty";
+import { Button, EmptyState } from "@/shared/ui";
 
-import { DashboardItem } from "../model/types";
+import { DashboardItemType } from "../model/types";
 
 interface DailyAuctionListProps {
-  items: DashboardItem[];
+  items: DashboardItemType[];
   selectedDate: Date | null;
 }
 

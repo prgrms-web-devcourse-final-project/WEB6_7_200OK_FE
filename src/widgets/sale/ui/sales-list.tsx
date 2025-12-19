@@ -2,31 +2,28 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "react";
 
-import { MOCK_SELLING_ITEMS } from "@/entities/item/api/mocks";
-import { SellingItem } from "@/entities/item/model/types";
-import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
-import { SellingItemCard } from "@/features/sale/ui/selling-item-card";
+import { MOCK_SELLING_ITEMS, SellingItemType, ItemCardFilter } from "@/entities/item";
+import { SellingItemCard } from "@/features/sale";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout } from "@/shared/ui/layout/dashboard-content-layout";
-import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
+import { DashboardContentLayout, ConfirmDeleteModal } from "@/shared/ui";
 
 const SALES_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
 interface SalesListProps {
   isOwn?: boolean;
-  labelNode?: ReactNode;
+  label?: ReactNode;
 }
 
-export function SalesList({ isOwn = false, labelNode }: SalesListProps) {
+export function SalesList({ isOwn = false, label }: SalesListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
-  const [deleteItem, setDeleteItem] = useState<SellingItem | null>(null);
+  const [deleteItem, setDeleteItem] = useState<SellingItemType | null>(null);
 
-  const deleteItemRef = useRef<SellingItem | null>(null);
+  const deleteItemRef = useRef<SellingItemType | null>(null);
 
   useEffect(() => {
     deleteItemRef.current = deleteItem;
@@ -52,8 +49,8 @@ export function SalesList({ isOwn = false, labelNode }: SalesListProps) {
   return (
     <>
       <DashboardContentLayout
-        labelNode={labelNode}
-        filterNode={
+        label={label}
+        filters={
           <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
       >

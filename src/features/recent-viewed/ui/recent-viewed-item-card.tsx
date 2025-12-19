@@ -2,14 +2,12 @@
 
 import { X } from "lucide-react";
 
-import { RecentlyViewedItem } from "@/entities/item/model/types";
-import { ItemBadge } from "@/entities/item/ui/item-badge";
-import { ItemCard } from "@/entities/item/ui/item-card";
+import { ItemBadge, ItemCard, RecentlyViewedItemType } from "@/entities/item";
 
 interface RecentViewedItemCardProps {
-  item: RecentlyViewedItem;
-  onClick?: (item: RecentlyViewedItem) => void;
-  onRemove?: (item: RecentlyViewedItem) => void;
+  item: RecentlyViewedItemType;
+  onClick?: (item: RecentlyViewedItemType) => void;
+  onRemove?: (item: RecentlyViewedItemType) => void;
 }
 
 export function RecentViewedItemCard({ item, onClick, onRemove }: RecentViewedItemCardProps) {

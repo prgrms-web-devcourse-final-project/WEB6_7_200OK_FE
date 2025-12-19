@@ -2,13 +2,7 @@
 
 import { SlidersHorizontal } from "lucide-react";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/ui/select/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui";
 
 interface ItemCardFilterProps {
   value: string;

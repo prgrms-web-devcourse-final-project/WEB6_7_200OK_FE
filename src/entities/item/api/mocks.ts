@@ -1,6 +1,11 @@
-import { SellingItem, PurchaseItem, WishlistItem, RecentlyViewedItem } from "../model/types";
+import {
+  SellingItemType,
+  PurchaseItemType,
+  WishlistItemType,
+  RecentlyViewedItemType,
+} from "../model/types";
 
-export const MOCK_SELLING_ITEMS: SellingItem[] = [
+export const MOCK_SELLING_ITEMS: SellingItemType[] = [
   {
     id: "s1",
     status: "판매중",
@@ -57,7 +62,7 @@ export const MOCK_SELLING_ITEMS: SellingItem[] = [
   },
 ];
 
-export const MOCK_PURCHASES: PurchaseItem[] = [
+export const MOCK_PURCHASES: PurchaseItemType[] = [
   {
     id: "p1",
     status: "구매 확정",
@@ -126,7 +131,7 @@ export const MOCK_PURCHASES: PurchaseItem[] = [
   },
 ];
 
-export const MOCK_WISHLIST_ITEMS: WishlistItem[] = [
+export const MOCK_WISHLIST_ITEMS: WishlistItemType[] = [
   {
     id: "w1",
     status: "판매 완료",
@@ -181,7 +186,7 @@ export const MOCK_WISHLIST_ITEMS: WishlistItem[] = [
   },
 ];
 
-export const MOCK_RECENT_ITEMS: RecentlyViewedItem[] = [
+export const MOCK_RECENT_ITEMS: RecentlyViewedItemType[] = [
   {
     id: "rc1",
     status: "경매 예정",

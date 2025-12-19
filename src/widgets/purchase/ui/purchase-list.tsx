@@ -2,37 +2,32 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
-import { MOCK_PURCHASES } from "@/entities/item/api/mocks";
-import { PurchaseItem } from "@/entities/item/model/types";
-import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
-import { MOCK_REVIEWS } from "@/entities/review/api/mocks";
-import { Review } from "@/entities/review/model/types";
-import { PurchasedItemCard } from "@/features/purchase/ui/purchased-item-card";
-import { ReviewEditModal } from "@/features/review/ui/review-edit-modal";
-import { ReviewWriteModal } from "@/features/review/ui/review-write-modal";
+import { MOCK_PURCHASES, PurchaseItemType, ItemCardFilter } from "@/entities/item";
+import { MOCK_REVIEWS, ReviewType } from "@/entities/review";
+import { PurchasedItemCard } from "@/features/purchase";
+import { ReviewEditModal, ReviewWriteModal } from "@/features/review";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout } from "@/shared/ui/layout/dashboard-content-layout";
-import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
+import { DashboardContentLayout, ConfirmDeleteModal } from "@/shared/ui";
 
 const PURCHASE_STATUSES = ["구매 완료", "구매 확정"];
 
 interface PurchaseListProps {
-  labelNode?: React.ReactNode;
+  label?: React.ReactNode;
 }
 
-export function PurchaseList({ labelNode }: PurchaseListProps) {
+export function PurchaseList({ label }: PurchaseListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
-  const [writeModalItem, setWriteModalItem] = useState<PurchaseItem | null>(null);
-  const [editModalReview, setEditModalReview] = useState<Review | null>(null);
+  const [writeModalItem, setWriteModalItem] = useState<PurchaseItemType | null>(null);
+  const [editModalReview, setEditModalReview] = useState<ReviewType | null>(null);
 
-  const [confirmItem, setConfirmItem] = useState<PurchaseItem | null>(null);
+  const [confirmItem, setConfirmItem] = useState<PurchaseItemType | null>(null);
 
-  const confirmItemRef = useRef<PurchaseItem | null>(null);
+  const confirmItemRef = useRef<PurchaseItemType | null>(null);
 
   useEffect(() => {
     confirmItemRef.current = confirmItem;
@@ -45,7 +40,7 @@ export function PurchaseList({ labelNode }: PurchaseListProps) {
     [filterStatus]
   );
 
-  const handleReviewBtnClick = useCallback((item: PurchaseItem) => {
+  const handleReviewBtnClick = useCallback((item: PurchaseItemType) => {
     if (item.hasReview) {
       // TODO: API 연동 - 리뷰 데이터 조회
       const targetReview =
@@ -84,8 +79,8 @@ export function PurchaseList({ labelNode }: PurchaseListProps) {
   return (
     <>
       <DashboardContentLayout
-        labelNode={labelNode}
-        filterNode={
+        label={label}
+        filters={
           <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
       >

@@ -2,14 +2,12 @@
 
 import { X } from "lucide-react";
 
-import { WishlistItem } from "@/entities/item/model/types";
-import { ItemBadge } from "@/entities/item/ui/item-badge";
-import { ItemCard } from "@/entities/item/ui/item-card";
+import { ItemBadge, ItemCard, WishlistItemType } from "@/entities/item";
 
 interface WishlistItemCardProps {
-  item: WishlistItem;
-  onClick?: (item: WishlistItem) => void;
-  onRemove?: (item: WishlistItem) => void;
+  item: WishlistItemType;
+  onClick?: (item: WishlistItemType) => void;
+  onRemove?: (item: WishlistItemType) => void;
 }
 
 export function WishlistItemCard({ item, onClick, onRemove }: WishlistItemCardProps) {

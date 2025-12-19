@@ -1,4 +1,4 @@
-export interface UserProfile {
+export interface UserProfileType {
   name: string;
   email: string;
   avatarUrl?: string;
@@ -6,7 +6,7 @@ export interface UserProfile {
   reviewCount: number;
 }
 
-export interface UserBasicInfoResponse {
+export interface UserBasicInfoResponseType {
   status: string;
   message: string;
   data: {

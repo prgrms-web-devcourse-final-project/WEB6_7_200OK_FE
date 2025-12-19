@@ -1,4 +1,4 @@
-export interface NotificationPreferenceItem {
+export interface NotificationPreferenceItemType {
   id: string;
   status: "판매중" | "판매 완료" | "경매 예정" | "경매 종료";
   name: string;

@@ -2,30 +2,27 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
-import { MOCK_RECENT_ITEMS } from "@/entities/item/api/mocks";
-import { RecentlyViewedItem } from "@/entities/item/model/types";
-import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
-import { RecentViewedItemCard } from "@/features/recent-viewed/ui/recent-viewed-item-card";
+import { MOCK_RECENT_ITEMS, RecentlyViewedItemType, ItemCardFilter } from "@/entities/item";
+import { RecentViewedItemCard } from "@/features/recent-viewed";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout } from "@/shared/ui/layout/dashboard-content-layout";
-import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
+import { DashboardContentLayout, ConfirmDeleteModal } from "@/shared/ui";
 
 const RECENT_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
 interface RecentlyViewedListProps {
-  labelNode?: React.ReactNode;
+  label?: React.ReactNode;
 }
 
-export function RecentViewedList({ labelNode }: RecentlyViewedListProps) {
+export function RecentViewedList({ label }: RecentlyViewedListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
-  const [deleteItem, setDeleteItem] = useState<RecentlyViewedItem | null>(null);
+  const [deleteItem, setDeleteItem] = useState<RecentlyViewedItemType | null>(null);
 
-  const deleteItemRef = useRef<RecentlyViewedItem | null>(null);
+  const deleteItemRef = useRef<RecentlyViewedItemType | null>(null);
 
   useEffect(() => {
     deleteItemRef.current = deleteItem;
@@ -51,8 +48,8 @@ export function RecentViewedList({ labelNode }: RecentlyViewedListProps) {
   return (
     <>
       <DashboardContentLayout
-        labelNode={labelNode}
-        filterNode={
+        label={label}
+        filters={
           <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
       >
