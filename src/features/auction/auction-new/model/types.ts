@@ -15,7 +15,7 @@ export interface ItemFormState {
   category: string;
   description: string;
   // 이미지
-  images: import("@/entities/item/model/image-from-file").ItemImage[];
+  images: import("@/entities/auction/model/image-from-file").ItemImage[];
   // 태그
   tags: string[];
   // 가격
