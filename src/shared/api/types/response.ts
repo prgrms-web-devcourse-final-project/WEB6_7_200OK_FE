@@ -1,9 +1,7 @@
-import type { ErrorCodeType, ErrorStatusType } from "@/shared/api/types/error";
-
-export type ApiStatusType = `${ErrorCodeType} ${ErrorStatusType}`;
+import type { HttpStatusType } from "@/shared/api/types/status";
 
 export interface ApiResponseType<T> {
-  status: ApiStatusType;
+  status: HttpStatusType;
   message: string;
   data: T;
 }
