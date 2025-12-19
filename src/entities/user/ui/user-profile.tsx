@@ -72,7 +72,12 @@ export function UserProfile({
         <div className="relative size-20 shrink-0">
           <div className="bg-secondary flex h-full w-full items-center justify-center overflow-hidden rounded-full">
             {profile.avatarUrl ? (
-              <Image src={profile.avatarUrl} alt={profile.name} fill className="object-cover" />
+              <Image
+                src={profile.avatarUrl}
+                alt={profile.name}
+                fill
+                className="rounded-full object-cover"
+              />
             ) : (
               <User className="text-foreground size-10" />
             )}

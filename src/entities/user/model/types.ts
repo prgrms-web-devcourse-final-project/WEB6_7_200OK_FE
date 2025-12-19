@@ -5,3 +5,13 @@ export interface UserProfile {
   rating: number;
   reviewCount: number;
 }
+
+export interface UserBasicInfoResponse {
+  status: string;
+  message: string;
+  data: {
+    userEmail: string;
+    username: string;
+    userProfileUrl: string;
+  };
+}
