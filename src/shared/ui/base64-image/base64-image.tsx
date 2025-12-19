@@ -12,7 +12,7 @@ function isValidImageDataUri(src: string): boolean {
   return typeof src === "string" && src.startsWith("data:image/");
 }
 
-export function Base64Image({ src, alt, className, ...props }: Base64ImageProps) {
+export default function Base64Image({ src, alt, className, ...props }: Base64ImageProps) {
   const safeSrc = isValidImageDataUri(src) ? src : "";
 
   return (

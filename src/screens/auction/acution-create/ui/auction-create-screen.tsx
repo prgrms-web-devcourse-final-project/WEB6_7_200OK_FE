@@ -1,6 +1,6 @@
 "use client";
 
-import { Info, Calendar, ImagePlus } from "lucide-react";
+import { Info, Calendar } from "lucide-react";
 
 import { CategorySelector } from "@/entities/auction";
 import {
@@ -8,8 +8,8 @@ import {
   TagInputSection,
   useItemForm,
   usePriceValidation,
+  ImageUploadSection,
 } from "@/features/auction/auction-create";
-import { FileInput } from "@/shared/ui";
 import Button from "@/shared/ui/button/button";
 import Input from "@/shared/ui/input/input";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
@@ -46,9 +46,8 @@ export function AuctionCreateScreen() {
           <p className="mb-6 text-left text-2xl font-bold">판매 물품 등록</p>
           <div className="space-y-6">
             {/* 이미지 업로드 */}
-            <div>
-              <FileInput Icon={ImagePlus} value="이미지" placeholder="이미지를 선택하세요" />
-            </div>
+            <ImageUploadSection images={form.images} onImagesChange={form.setImages} />
+
             {/* 상품명 */}
             <div>
               <label htmlFor="product-name" className="mb-2 block text-sm font-medium">
