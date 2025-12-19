@@ -28,10 +28,10 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
 
   const processImageFiles = useCallback(
     async (files: FileList, currentImages: ItemImage[]) => {
-      const checkSlots = MAX_IMAGES - currentImages.length;
-      if (checkSlots <= 0) return;
+      const availableSlots = MAX_IMAGES - currentImages.length;
+      if (availableSlots <= 0) return;
 
-      const filesToAdd = Array.from(files).slice(0, checkSlots);
+      const filesToAdd = Array.from(files).slice(0, availableSlots);
 
       // 이미지 추가 시 검증
       try {
@@ -85,7 +85,7 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
           {/* 모바일 캐러셀 뷰 (md hidden 적용) */}
           <ImageCarouselView
             images={images}
-            canAddMore={checkCanAdd}
+            checkCanAdd={checkCanAdd}
             imageCount={imageCount}
             onImageSelect={handleImageSelect}
             onRemoveImage={handleRemoveImage}
@@ -98,7 +98,6 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
                 id="image-upload-desktop"
                 imageCount={imageCount}
                 onChange={handleImageSelect}
-                disabled={!checkCanAdd}
               />
             )}
             {images.map((image, index) => (
