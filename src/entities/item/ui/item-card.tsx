@@ -93,7 +93,7 @@ export function ItemCard({
                       <span
                         className={cn(
                           "text-sm",
-                          isPriceGray ? "text-muted-foreground" : "text-brand"
+                          isPriceGray ? "text-muted-foreground" : "text-brand-text"
                         )}
                       >
                         {price.toLocaleString()}원
@@ -104,7 +104,7 @@ export function ItemCard({
                   <p
                     className={cn(
                       "text-md mt-2 leading-5 tracking-tight",
-                      isPriceGray ? "text-muted-foreground" : "text-brand"
+                      isPriceGray ? "text-muted-foreground" : "text-brand-text"
                     )}
                   >
                     {price.toLocaleString()}원
