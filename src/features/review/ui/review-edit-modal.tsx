@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-import { ReviewType } from "@/entities/review";
+import { ReviewType, ReviewModalBase, ReviewModalThreeActions } from "@/entities/review";
 import { ConfirmDeleteModal } from "@/shared/ui";
-
-import { ReviewModalBase, ReviewModalThreeActions } from "./review-modal-base";
 
 interface ReviewEditModalProps {
   open: boolean;
