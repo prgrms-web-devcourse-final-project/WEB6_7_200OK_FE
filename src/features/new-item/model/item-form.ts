@@ -4,6 +4,8 @@ import { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal
 import type { ItemImage } from "@/entities/item/model/image-from-file";
 import { isFormValid } from "@/shared/lib/utils/validator/validators";
 
+import type { ItemFormSubmitData } from "./types";
+
 export function useItemForm() {
   // 기본 정보
   const [productName, setProductName] = useState<string>("");
@@ -11,12 +13,13 @@ export function useItemForm() {
   const [description, setDescription] = useState<string>("");
 
   // 이미지
+  // TODO: 이미지 업로드 기능 구현 시, images 제출 로직 추가 필요
   const [images, setImages] = useState<ItemImage[]>([]);
 
   // 태그
   const [tags, setTags] = useState<string[]>([]);
 
-  // 판매 시작가, 최저가, 가격 하락 단위
+  // 가격
   const [startPrice, setStartPrice] = useState<number | null>(null);
   const [stopLossPrice, setStopLossPrice] = useState<number | null>(null);
   const [dropPrice, setDropPrice] = useState<number | null>(null);
@@ -75,8 +78,15 @@ export function useItemForm() {
   }, [selectedDate, selectedTime]);
 
   // 폼 제출 데이터 생성
-  const getSubmitData = useCallback(() => {
-    if (!formValid || !selectedDate || !selectedTime) {
+  const getSubmitData = useCallback((): ItemFormSubmitData | null => {
+    if (
+      !formValid ||
+      !selectedDate ||
+      !selectedTime ||
+      startPrice === null ||
+      stopLossPrice === null ||
+      dropPrice === null
+    ) {
       return null;
     }
 
@@ -85,11 +95,11 @@ export function useItemForm() {
       category,
       description,
       tags,
-      startPrice: startPrice!,
-      stopLossPrice: stopLossPrice!,
-      dropPrice: dropPrice!,
+      startPrice,
+      stopLossPrice,
+      dropPrice,
       auctionStartDate: selectedDate,
-    } as Record<string, string | number | string[] | Date>;
+    };
   }, [
     formValid,
     selectedDate,
