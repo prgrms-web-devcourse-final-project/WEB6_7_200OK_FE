@@ -1,6 +1,4 @@
-"use client";
-
-import { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/auction/model/category";
+import { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
 import {
   Select,
   SelectContent,
