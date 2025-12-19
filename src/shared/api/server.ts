@@ -1,5 +1,7 @@
 import { cookies } from "next/headers";
 
+import type { ApiResponseType } from "@/shared/api/types/response";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
 interface StrictRequestInit<TRequest> extends Omit<RequestInit, "body"> {
@@ -9,7 +11,7 @@ interface StrictRequestInit<TRequest> extends Omit<RequestInit, "body"> {
 export async function fetch<TResponse, TRequest = unknown>(
   path: string,
   init?: StrictRequestInit<TRequest>
-): Promise<TResponse> {
+): Promise<ApiResponseType<TResponse>> {
   const cookieStore = await cookies();
   const cookieHeader = cookieStore
     .getAll()
@@ -27,5 +29,5 @@ export async function fetch<TResponse, TRequest = unknown>(
     cache: "no-store",
   });
 
-  return res.json() as Promise<TResponse>;
+  return res.json() as Promise<ApiResponseType<TResponse>>;
 }
