@@ -7,10 +7,16 @@ import Image from "next/image";
 import { Package, Star, User } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
-import Button from "@/shared/ui/button/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/ui/dialog/dialog";
-import { Rating, RatingButton } from "@/shared/ui/rating/rating";
-import { Textarea } from "@/shared/ui/textarea/textarea";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  Rating,
+  RatingButton,
+  Textarea,
+} from "@/shared/ui";
 
 interface ProductInfo {
   imageUrl?: string;

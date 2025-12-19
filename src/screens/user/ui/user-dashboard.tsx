@@ -2,24 +2,23 @@
 
 import { useState, useMemo, useEffect } from "react";
 
-import { ActivityTabs } from "@/features/user/ui/activity-tabs";
-import { TabLabelHeader } from "@/features/user/ui/tab-label-header";
+import { ActivityTabs, TabLabelHeader } from "@/features/user";
 import { NotificationPreferenceList } from "@/widgets/notification-preference";
 import { PurchaseList } from "@/widgets/purchase";
 import { RecentViewedList } from "@/widgets/recent-viewed";
 import { ReviewList } from "@/widgets/review";
 import { SalesList } from "@/widgets/sale";
+import { UserDashboardCalendar } from "@/widgets/user-dashboard-calendar";
 import { Wishlist } from "@/widgets/wishlist";
 
-import { UserDashboardCalendar } from "./user-dashboard-calendar";
-import { DASHBOARD_TABS, TabId } from "../model/dashboard-tabs.config";
+import { DASHBOARD_TABS, TabIdType } from "../model/dashboard-tabs.config";
 
 interface UserDashboardProps {
   isOwn?: boolean;
 }
 
 export function UserDashboard({ isOwn = false }: UserDashboardProps) {
-  const [activeTab, setActiveTab] = useState<TabId>(isOwn ? "calendar" : "sales");
+  const [activeTab, setActiveTab] = useState<TabIdType>(isOwn ? "calendar" : "sales");
 
   const currentTab = useMemo(() => DASHBOARD_TABS.find((t) => t.id === activeTab), [activeTab]);
 
@@ -40,19 +39,19 @@ export function UserDashboard({ isOwn = false }: UserDashboardProps) {
   const renderActiveComponent = () => {
     switch (activeTab) {
       case "calendar":
-        return <UserDashboardCalendar labelNode={labelIndicator} />;
+        return <UserDashboardCalendar label={labelIndicator} />;
       case "sales":
-        return <SalesList isOwn={isOwn} labelNode={labelIndicator} />;
+        return <SalesList isOwn={isOwn} label={labelIndicator} />;
       case "purchases":
-        return <PurchaseList labelNode={labelIndicator} />;
+        return <PurchaseList label={labelIndicator} />;
       case "wishlist":
-        return <Wishlist labelNode={labelIndicator} />;
+        return <Wishlist label={labelIndicator} />;
       case "notifications":
-        return <NotificationPreferenceList labelNode={labelIndicator} />;
+        return <NotificationPreferenceList label={labelIndicator} />;
       case "recent":
-        return <RecentViewedList labelNode={labelIndicator} />;
+        return <RecentViewedList label={labelIndicator} />;
       case "reviews":
-        return <ReviewList labelNode={labelIndicator} />;
+        return <ReviewList label={labelIndicator} />;
       default:
         return null;
     }
@@ -62,7 +61,7 @@ export function UserDashboard({ isOwn = false }: UserDashboardProps) {
     <>
       <ActivityTabs
         activeTab={activeTab}
-        onTabChange={(id) => setActiveTab(id as TabId)}
+        onTabChange={(id) => setActiveTab(id as TabIdType)}
         tabs={visibleTabs}
       />
 

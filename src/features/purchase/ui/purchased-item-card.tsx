@@ -2,16 +2,14 @@
 
 import { MessageCircle, Check, Star } from "lucide-react";
 
-import { PurchaseItem } from "@/entities/item/model/types";
-import { ItemBadge } from "@/entities/item/ui/item-badge";
-import { ItemCard } from "@/entities/item/ui/item-card";
-import Button from "@/shared/ui/button/button";
+import { ItemBadge, ItemCard, PurchaseItemType } from "@/entities/item";
+import { Button } from "@/shared/ui";
 
 interface PurchasedItemCardProps {
-  item: PurchaseItem;
-  onReviewClick?: (item: PurchaseItem) => void;
-  onConfirm?: (item: PurchaseItem) => void;
-  onChatClick?: (item: PurchaseItem) => void;
+  item: PurchaseItemType;
+  onReviewClick?: (item: PurchaseItemType) => void;
+  onConfirm?: (item: PurchaseItemType) => void;
+  onChatClick?: (item: PurchaseItemType) => void;
 }
 
 export function PurchasedItemCard({

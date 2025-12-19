@@ -16,15 +16,15 @@ import {
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { cn } from "@/shared/lib/utils/utils";
-import Button from "@/shared/ui/button/button";
+import { Button } from "@/shared/ui";
 
-import { CalendarEvent } from "../model/types";
+import { CalendarEventType } from "../model/types";
 
 dayjs.locale("ko");
 const localizer = dayjsLocalizer(dayjs);
 
-interface AuctionCalendarProps {
-  events: CalendarEvent[];
+interface DailyAuctionCalendarProps {
+  events: CalendarEventType[];
   onSelectDate: (date: Date) => void;
   selectedDate: Date | null;
 }
@@ -40,7 +40,7 @@ const createDateHeaderWrapper =
     />
   );
 
-const CustomToolbar = ({ date, onNavigate }: ToolbarProps<CalendarEvent>) => (
+const CustomToolbar = ({ date, onNavigate }: ToolbarProps<CalendarEventType>) => (
   <div className="flex h-7 w-full items-center justify-between px-0.5 pb-6">
     <h3 className="text-foreground text-sm leading-5 font-semibold tracking-tight">
       {dayjs(date).format("YYYY년 M월")}
@@ -125,7 +125,7 @@ const CustomDateHeader = ({
   );
 };
 
-const CustomEvent = ({ event }: EventProps<CalendarEvent>) => {
+const CustomEvent = ({ event }: EventProps<CalendarEventType>) => {
   const isProgress = event.type === "progress";
   return (
     <div
@@ -146,7 +146,11 @@ const CustomEvent = ({ event }: EventProps<CalendarEvent>) => {
   );
 };
 
-export function AuctionCalendar({ events, onSelectDate, selectedDate }: AuctionCalendarProps) {
+export function DailyAuctionCalendar({
+  events,
+  onSelectDate,
+  selectedDate,
+}: DailyAuctionCalendarProps) {
   const [currentDate, setCurrentDate] = useState(selectedDate || new Date());
   const [currentView, setCurrentView] = useState<View>("month");
 

@@ -12,6 +12,17 @@ export {
   AlertDialogCancel,
 } from "./alert-dialog/alert-dialog";
 
+export {
+  Dialog,
+  DialogTrigger,
+  DialogPortal,
+  DialogClose,
+  DialogOverlay,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./dialog/dialog";
+
 export { Avatar, AvatarImage, AvatarFallback } from "./avatar/avatar";
 
 export { default as Button, buttonVariants } from "./button/button";

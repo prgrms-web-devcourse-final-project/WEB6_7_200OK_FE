@@ -9,7 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export type TabId =
+export type TabIdType =
   | "calendar"
   | "sales"
   | "purchases"
@@ -19,7 +19,7 @@ export type TabId =
   | "reviews";
 
 export interface TabConfig {
-  id: TabId;
+  id: TabIdType;
   label: string;
   icon: LucideIcon;
 }

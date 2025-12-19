@@ -1,7 +1,6 @@
 "use client";
 
-import { UserProfile as UserProfileType } from "@/entities/user/model/types";
-import { UserProfile } from "@/entities/user/ui/user-profile";
+import { UserProfile, UserProfileType } from "@/entities/user";
 
 interface UserProfileWidgetProps {
   profile: UserProfileType;

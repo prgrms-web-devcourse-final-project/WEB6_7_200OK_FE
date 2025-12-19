@@ -1,6 +1,6 @@
-import { UserBasicInfoResponse, UserProfile } from "../model/types";
+import { UserBasicInfoResponseType, UserProfileType } from "../model/types";
 
-export async function fetchUserBasicInfo(): Promise<UserProfile> {
+export async function fetchUserBasicInfo(): Promise<UserProfileType> {
   const response = await fetch("/api/v1/auth/basic", {
     method: "GET",
     headers: {
@@ -13,7 +13,7 @@ export async function fetchUserBasicInfo(): Promise<UserProfile> {
     throw new Error(`Failed to fetch user info: ${response.status}`);
   }
 
-  const result: UserBasicInfoResponse = await response.json();
+  const result: UserBasicInfoResponseType = await response.json();
 
   return {
     name: result.data.username,

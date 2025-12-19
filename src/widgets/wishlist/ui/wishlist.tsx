@@ -2,30 +2,27 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "react";
 
-import { MOCK_WISHLIST_ITEMS } from "@/entities/item/api/mocks";
-import { WishlistItem } from "@/entities/item/model/types";
-import { ItemCardFilter } from "@/entities/item/ui/item-card-filter";
-import { WishlistItemCard } from "@/features/wishlist/ui/wishlist-item-card";
+import { MOCK_WISHLIST_ITEMS, WishlistItemType, ItemCardFilter } from "@/entities/item";
+import { WishlistItemCard } from "@/features/wishlist";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout } from "@/shared/ui/layout/dashboard-content-layout";
-import { ConfirmDeleteModal } from "@/shared/ui/modal/confirm-delete-modal";
+import { DashboardContentLayout, ConfirmDeleteModal } from "@/shared/ui";
 
 const WISHLIST_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
 interface WishlistProps {
-  labelNode?: ReactNode;
+  label?: ReactNode;
 }
 
-export function Wishlist({ labelNode }: WishlistProps) {
+export function Wishlist({ label }: WishlistProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
-  const [deleteItem, setDeleteItem] = useState<WishlistItem | null>(null);
+  const [deleteItem, setDeleteItem] = useState<WishlistItemType | null>(null);
 
-  const deleteItemRef = useRef<WishlistItem | null>(null);
+  const deleteItemRef = useRef<WishlistItemType | null>(null);
 
   useEffect(() => {
     deleteItemRef.current = deleteItem;
@@ -51,8 +48,8 @@ export function Wishlist({ labelNode }: WishlistProps) {
   return (
     <>
       <DashboardContentLayout
-        labelNode={labelNode}
-        filterNode={
+        label={label}
+        filters={
           <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
         }
       >

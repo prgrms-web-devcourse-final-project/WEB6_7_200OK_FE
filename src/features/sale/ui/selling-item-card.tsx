@@ -2,16 +2,14 @@
 
 import { MessageCircle, X } from "lucide-react";
 
-import { SellingItem } from "@/entities/item/model/types";
-import { ItemBadge } from "@/entities/item/ui/item-badge";
-import { ItemCard } from "@/entities/item/ui/item-card";
-import Button from "@/shared/ui/button/button";
+import { ItemBadge, ItemCard, SellingItemType } from "@/entities/item";
+import { Button } from "@/shared/ui";
 
 interface SellingItemCardProps {
-  item: SellingItem;
-  onClick?: (item: SellingItem) => void;
-  onDelete?: (item: SellingItem) => void;
-  onChatClick?: (item: SellingItem) => void;
+  item: SellingItemType;
+  onClick?: (item: SellingItemType) => void;
+  onDelete?: (item: SellingItemType) => void;
+  onChatClick?: (item: SellingItemType) => void;
   isOwn?: boolean;
 }
 

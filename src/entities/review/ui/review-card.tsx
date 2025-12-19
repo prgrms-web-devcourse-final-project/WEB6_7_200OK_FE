@@ -4,12 +4,12 @@ import Image from "next/image";
 
 import { User } from "lucide-react";
 
-import { Rating, RatingButton } from "@/shared/ui/rating/rating";
+import { Rating, RatingButton } from "@/shared/ui";
 
-import { Review } from "../model/types";
+import { ReviewType } from "../model/types";
 
 interface ReviewCardProps {
-  review: Review;
+  review: ReviewType;
 }
 
 export function ReviewCard({ review }: ReviewCardProps) {

@@ -6,12 +6,9 @@ import Image from "next/image";
 
 import { Camera, User, PenLine } from "lucide-react";
 
-import Button from "@/shared/ui/button/button";
-import FileInput from "@/shared/ui/input/file-input";
-import Input from "@/shared/ui/input/input";
-import { Rating, RatingButton } from "@/shared/ui/rating/rating";
+import { Button, Input, FileInput, Rating, RatingButton } from "@/shared/ui";
 
-import { UserProfile as UserProfileType } from "../model/types";
+import { UserProfileType } from "../model/types";
 
 interface UserProfileProps {
   profile: UserProfileType;
