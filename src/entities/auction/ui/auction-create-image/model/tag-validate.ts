@@ -1,4 +1,4 @@
-import { MAX_TAGS } from "./registration-constants";
+import { MAX_TAGS } from "../../../model/registration-constants";
 
 export { MAX_TAGS };
 

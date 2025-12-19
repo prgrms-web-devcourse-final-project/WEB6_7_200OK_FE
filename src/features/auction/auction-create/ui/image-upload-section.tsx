@@ -1,19 +1,15 @@
-"use client";
+import { useCallback, useMemo } from "react";
 
-import { useCallback } from "react";
+import { ImagePlus } from "lucide-react";
 
-import { ImagePlus, X } from "lucide-react";
-
-import { MAX_IMAGES, itemImageFromFile, type ItemImage } from "@/entities/auction";
-import Base64Image from "@/shared/ui/base64-image/base64-image";
-import Button from "@/shared/ui/button/button";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/shared/ui/carousel/carousel";
+  MAX_IMAGES,
+  itemImageFromFile,
+  type ItemImage,
+  ImageAddButton,
+  ImagePreviewItem,
+  ImageCarouselView,
+} from "@/entities/auction";
 import FileInput from "@/shared/ui/input/file-input";
 
 interface ImageUploadSectionProps {
@@ -21,99 +17,58 @@ interface ImageUploadSectionProps {
   onImagesChange: (images: ItemImage[]) => void;
 }
 
-interface ImageAddButtonProps {
-  id: string;
-  imageCount: number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  disabled: boolean;
-}
-
-function ImageAddButton({ id, imageCount, onChange, disabled }: ImageAddButtonProps) {
-  return (
-    <label
-      htmlFor={id}
-      className="hover:bg-accent border-input dark:bg-input/30 relative flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-md border bg-transparent transition-colors"
-    >
-      <input
-        id={id}
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={onChange}
-        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-        disabled={disabled}
-      />
-      <ImagePlus className="text-muted-foreground size-6" />
-      <p className="text-muted-foreground text-xs">
-        {imageCount}/{MAX_IMAGES}
-      </p>
-    </label>
-  );
-}
-
-interface ImagePreviewItemProps {
-  image: ItemImage;
-  index: number;
-  onRemove: (id: string) => void;
-}
-
-function ImagePreviewItem({ image, index, onRemove }: ImagePreviewItemProps) {
-  return (
-    <div className="border-input dark:bg-input/30 group relative aspect-square overflow-hidden rounded-md border bg-transparent">
-      <Base64Image src={image.url} alt={`이미지 ${index + 1}`} />
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon-sm"
-        onClick={() => onRemove(image.id)}
-        className="bg-accent text-accent-foreground absolute top-1 right-1 h-6 w-6 rounded-full opacity-100 transition-opacity"
-        aria-label="이미지 삭제"
-      >
-        <X className="size-4" />
-      </Button>
-    </div>
-  );
-}
-
 export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectionProps) {
+  const { checkCanAdd, imageCount } = useMemo(
+    () => ({
+      checkCanAdd: images.length < MAX_IMAGES,
+      imageCount: images.length,
+    }),
+    [images.length]
+  );
+
+  const processImageFiles = useCallback(
+    async (files: FileList, currentImages: ItemImage[]) => {
+      const checkSlots = MAX_IMAGES - currentImages.length;
+      if (checkSlots <= 0) return;
+
+      const filesToAdd = Array.from(files).slice(0, checkSlots);
+
+      // 이미지 추가 시 검증
+      try {
+        const newImages = await Promise.all(filesToAdd.map(itemImageFromFile));
+        onImagesChange([...currentImages, ...newImages]);
+      } catch (error) {
+        // TODO: 사용자에게 에러 알림 (toast 등)
+        console.error("Failed to load images:", error);
+      }
+    },
+    [onImagesChange]
+  );
+
   const handleImageSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { files } = e.target;
       if (!files || files.length === 0) return;
 
-      const remainingSlots = MAX_IMAGES - images.length;
-      if (remainingSlots <= 0) return;
-
-      const filesToAdd = Array.from(files).slice(0, remainingSlots);
-
-      Promise.all(filesToAdd.map(itemImageFromFile))
-        .then((newImages) => {
-          onImagesChange([...images, ...newImages]);
-        })
-        .catch((error) => {
-          console.error("Failed to load images:", error);
-        });
-
+      processImageFiles(files, images);
       e.target.value = "";
     },
-    [images, onImagesChange]
+    [images, processImageFiles]
   );
 
   const handleRemoveImage = useCallback(
-    (idToRemove: string) => {
-      onImagesChange(images.filter((image) => image.id !== idToRemove));
+    (removeImageId: string) => {
+      onImagesChange(images.filter((image) => image.id !== removeImageId));
     },
     [images, onImagesChange]
   );
-
-  const canAddMore = images.length < MAX_IMAGES;
-  const imageCount = images.length;
 
   return (
     <>
       <label htmlFor="image-upload" className="mb-2 block text-sm font-medium">
         이미지
       </label>
+      {/* 이미지 한장도 없는 경우 */}
       {imageCount === 0 ? (
         <FileInput
           id="image-upload"
@@ -125,42 +80,25 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
           onChange={handleImageSelect}
         />
       ) : (
+        // 이미지가 있는 경우
         <>
-          {/* 모바일: Carousel (768px 미만) */}
-          <Carousel className="block w-full md:hidden">
-            <CarouselContent className="-ml-2">
-              {canAddMore && (
-                <CarouselItem className="basis-[30%] pl-2">
-                  <ImageAddButton
-                    id="image-upload-mobile"
-                    imageCount={imageCount}
-                    onChange={handleImageSelect}
-                    disabled={!canAddMore}
-                  />
-                </CarouselItem>
-              )}
-              {images.map((image, index) => (
-                <CarouselItem key={image.id} className="basis-[30%] pl-2">
-                  <ImagePreviewItem image={image} index={index} onRemove={handleRemoveImage} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            {imageCount > 0 && (
-              <>
-                <CarouselPrevious className="left-2" />
-                <CarouselNext className="right-2" />
-              </>
-            )}
-          </Carousel>
-
-          {/* 데스크톱: Grid (768px 이상) */}
+          {/* 모바일 캐러셀 뷰 (md hidden 적용) */}
+          <ImageCarouselView
+            images={images}
+            canAddMore={checkCanAdd}
+            imageCount={imageCount}
+            onImageSelect={handleImageSelect}
+            onRemoveImage={handleRemoveImage}
+          />
+          {/* 데스크톱 뷰 (md 이상 표시) */}
           <div className="hidden grid-cols-5 gap-2 md:grid">
-            {canAddMore && (
+            {/* 이미지가 추가 가능한 경우 */}
+            {checkCanAdd && (
               <ImageAddButton
                 id="image-upload-desktop"
                 imageCount={imageCount}
                 onChange={handleImageSelect}
-                disabled={!canAddMore}
+                disabled={!checkCanAdd}
               />
             )}
             {images.map((image, index) => (
