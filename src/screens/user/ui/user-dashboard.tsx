@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 
 import { ActivityTabs } from "@/features/user/ui/activity-tabs";
-import { TabLabeHeader } from "@/features/user/ui/tab-label-header";
+import { TabLabelHeader } from "@/features/user/ui/tab-label-header";
 import { NotificationPreferenceList } from "@/widgets/notification-preference";
 import { PurchaseList } from "@/widgets/purchase";
 import { RecentViewedList } from "@/widgets/recent-viewed";
@@ -23,7 +23,7 @@ export function UserDashboard({ isOwn = false }: UserDashboardProps) {
 
   const currentTab = useMemo(() => DASHBOARD_TABS.find((t) => t.id === activeTab), [activeTab]);
 
-  const labelIndicator = currentTab ? <TabLabeHeader label={currentTab.label} /> : null;
+  const labelIndicator = currentTab ? <TabLabelHeader label={currentTab.label} /> : null;
 
   const visibleTabs = useMemo(() => {
     if (isOwn) return DASHBOARD_TABS;
