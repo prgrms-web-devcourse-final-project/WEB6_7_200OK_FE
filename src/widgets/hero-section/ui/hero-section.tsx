@@ -7,7 +7,7 @@ import { Button } from "@/shared/ui";
 
 export function HeroSection() {
   return (
-    <section className="from-brand to-brand-secondary mx-auto flex h-85 w-full items-center justify-center bg-linear-to-b whitespace-nowrap">
+    <section className="from-brand to-brand-secondary mx-auto flex h-85 w-full items-center justify-center bg-linear-to-b whitespace-nowrap select-none">
       <div className="flex w-fit max-w-7xl min-w-115 items-center gap-1 md:gap-15 xl:gap-30">
         <div className="flex flex-col gap-14">
           <div className="flex flex-col gap-5">
@@ -31,7 +31,13 @@ export function HeroSection() {
         </div>
 
         <div className="relative hidden h-67 w-67 shrink-0 md:block">
-          <Image src={HeroAuction} alt="경매 일러스트레이션" fill className="object-cover" />
+          <Image
+            src={HeroAuction}
+            alt="경매 일러스트레이션"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
       </div>
     </section>
