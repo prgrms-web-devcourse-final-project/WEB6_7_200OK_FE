@@ -1259,10 +1259,10 @@ export interface components {
       parent?: components["schemas"]["ApplicationContext"];
       id?: string;
       displayName?: string;
-      autowireCapableBeanFactory?: components["schemas"]["AutowireCapableBeanFactory"];
+      applicationName?: string;
       /** Format: int64 */
       startupDate?: number;
-      applicationName?: string;
+      autowireCapableBeanFactory?: components["schemas"]["AutowireCapableBeanFactory"];
       environment?: components["schemas"]["Environment"];
       /** Format: int32 */
       beanDefinitionCount?: number;
@@ -1385,23 +1385,23 @@ export interface components {
       is3xxRedirection?: boolean;
     };
     JspConfigDescriptor: {
-      taglibs?: components["schemas"]["TaglibDescriptor"][];
       jspPropertyGroups?: components["schemas"]["JspPropertyGroupDescriptor"][];
+      taglibs?: components["schemas"]["TaglibDescriptor"][];
     };
     JspPropertyGroupDescriptor: {
       buffer?: string;
-      trimDirectiveWhitespaces?: string;
-      errorOnUndeclaredNamespace?: string;
-      deferredSyntaxAllowedAsLiteral?: string;
-      elIgnored?: string;
-      isXml?: string;
-      urlPatterns?: string[];
-      defaultContentType?: string;
       errorOnELNotFound?: string;
       pageEncoding?: string;
       scriptingInvalid?: string;
       includePreludes?: string[];
       includeCodas?: string[];
+      defaultContentType?: string;
+      elIgnored?: string;
+      isXml?: string;
+      urlPatterns?: string[];
+      deferredSyntaxAllowedAsLiteral?: string;
+      trimDirectiveWhitespaces?: string;
+      errorOnUndeclaredNamespace?: string;
     };
     RedirectView: {
       applicationContext?: components["schemas"]["ApplicationContext"];
@@ -1422,11 +1422,11 @@ export interface components {
       expandUriTemplateVariables?: boolean;
       propagateQueryParams?: boolean;
       hosts?: string[];
-      propagateQueryProperties?: boolean;
       redirectView?: boolean;
+      propagateQueryProperties?: boolean;
       attributes?: Record<string, string>;
-      attributesMap?: Record<string, Record<string, never>>;
       attributesCSV?: string;
+      attributesMap?: Record<string, Record<string, never>>;
     };
     ServletContext: {
       classLoader?: {
@@ -1450,6 +1450,18 @@ export interface components {
       majorVersion?: number;
       /** Format: int32 */
       minorVersion?: number;
+      initParameterNames?: Record<string, never>;
+      servletContextName?: string;
+      filterRegistrations?: Record<string, components["schemas"]["FilterRegistration"]>;
+      sessionCookieConfig?: components["schemas"]["SessionCookieConfig"];
+      jspConfigDescriptor?: components["schemas"]["JspConfigDescriptor"];
+      virtualServerName?: string;
+      /** Format: int32 */
+      sessionTimeout?: number;
+      attributeNames?: Record<string, never>;
+      contextPath?: string;
+      serverInfo?: string;
+      effectiveSessionTrackingModes?: ("COOKIE" | "URL" | "SSL")[];
       /** Format: int32 */
       effectiveMajorVersion?: number;
       /** Format: int32 */
@@ -1459,22 +1471,10 @@ export interface components {
       defaultSessionTrackingModes?: ("COOKIE" | "URL" | "SSL")[];
       requestCharacterEncoding?: string;
       responseCharacterEncoding?: string;
-      effectiveSessionTrackingModes?: ("COOKIE" | "URL" | "SSL")[];
-      serverInfo?: string;
-      contextPath?: string;
-      attributeNames?: Record<string, never>;
-      initParameterNames?: Record<string, never>;
-      servletContextName?: string;
-      filterRegistrations?: Record<string, components["schemas"]["FilterRegistration"]>;
-      sessionCookieConfig?: components["schemas"]["SessionCookieConfig"];
-      jspConfigDescriptor?: components["schemas"]["JspConfigDescriptor"];
-      virtualServerName?: string;
-      /** Format: int32 */
-      sessionTimeout?: number;
     };
     ServletRegistration: {
-      mappings?: string[];
       runAsRole?: string;
+      mappings?: string[];
       name?: string;
       className?: string;
       initParameters?: Record<string, string>;
@@ -1492,8 +1492,8 @@ export interface components {
       httpOnly?: boolean;
     };
     TaglibDescriptor: {
-      taglibURI?: string;
       taglibLocation?: string;
+      taglibURI?: string;
     };
     ApiResponseAuctionListReadResponse: {
       /** Format: int32 */
@@ -2165,7 +2165,7 @@ export interface operations {
           "application/json": components["schemas"]["ApiResponseVoid"];
         };
       };
-      "403 FORBIDDEN": {
+      "400 BAD_REQUEST": {
         headers: Record<string, unknown>;
         content: {
           "application/json": unknown;
@@ -2177,7 +2177,7 @@ export interface operations {
           "application/json": unknown;
         };
       };
-      "400 BAD_REQUEST": {
+      "403 FORBIDDEN": {
         headers: Record<string, unknown>;
         content: {
           "application/json": unknown;
@@ -2243,7 +2243,7 @@ export interface operations {
           "application/json": components["schemas"]["ApiResponseVoid"];
         };
       };
-      "403 FORBIDDEN": {
+      "409 CONFLICT": {
         headers: Record<string, unknown>;
         content: {
           "application/json": unknown;
@@ -2255,7 +2255,7 @@ export interface operations {
           "application/json": unknown;
         };
       };
-      "409 CONFLICT": {
+      "403 FORBIDDEN": {
         headers: Record<string, unknown>;
         content: {
           "application/json": unknown;
@@ -2291,7 +2291,7 @@ export interface operations {
           "application/json": components["schemas"]["ApiResponseAuctionCancelResponse"];
         };
       };
-      "403 FORBIDDEN": {
+      "409 CONFLICT": {
         headers: Record<string, unknown>;
         content: {
           "application/json": unknown;
@@ -2303,7 +2303,7 @@ export interface operations {
           "application/json": unknown;
         };
       };
-      "409 CONFLICT": {
+      "403 FORBIDDEN": {
         headers: Record<string, unknown>;
         content: {
           "application/json": unknown;
