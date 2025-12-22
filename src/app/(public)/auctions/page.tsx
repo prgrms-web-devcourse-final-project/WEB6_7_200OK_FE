@@ -1,3 +1,5 @@
+import AuctionList from "@/screens/auction/auction-list";
+
 export default function Page() {
-  return <h1>Page</h1>;
+  return <AuctionList />;
 }
