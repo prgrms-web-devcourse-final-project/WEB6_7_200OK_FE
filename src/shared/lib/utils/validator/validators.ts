@@ -30,59 +30,69 @@ export const validateStopLossPrice = (
   stop: number | null,
   setStopLossError: (error: string) => void
 ) => {
+  // 시작가가 있는데 최저가가 없으면 에러
   if (start && !stop) {
     setStopLossError("최저가를 입력 해주세요.");
     return;
   }
 
+  // 시작가나 최저가가 없으면 에러 초기화
   if (!start || !stop) {
     setStopLossError("");
     return;
   }
 
+  // Zod 스키마 검증
   const stopLossResult = stopLossPriceSchema.safeParse(stop);
   if (!stopLossResult.success) {
     setStopLossError(stopLossResult.error.issues[0]?.message || "");
     return;
   }
 
-  if (stop > start * STOP_LOSS_PERCENTAGE) {
-    setStopLossError("판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다.");
-  } else {
-    setStopLossError("");
-  }
+  // 최저가가 시작가의 90%를 초과하면 에러
+  const maxStopLoss = start * STOP_LOSS_PERCENTAGE;
+  setStopLossError(
+    stop > maxStopLoss ? "판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다." : ""
+  );
 };
 
 // 가격 하락 단위 검증
 export const validateDropPrice = (
   start: number | null,
-  drop: number | null,
   stopLoss: number | null,
+  drop: number | null,
   setDropPriceError: (error: string) => void
 ) => {
+  // 시작가가 있는데 하락단위가 없으면 에러
   if (start && !drop) {
     setDropPriceError("하락단위를 입력 해주세요.");
     return;
   }
 
+  // 시작가나 하락단위가 없으면 에러 초기화
   if (!start || !drop) {
     setDropPriceError("");
     return;
   }
 
+  // Zod 스키마 검증
   const dropPriceResult = dropPriceSchema.safeParse(drop);
   if (!dropPriceResult.success) {
     setDropPriceError(dropPriceResult.error.issues[0]?.message || "");
     return;
   }
 
+  // 검증 규칙 적용
+  const minDropPrice = start * MIN_DROP_PERCENTAGE;
+  const maxDropPrice = stopLoss ? start - stopLoss : start;
+
   if (drop >= start) {
     setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
-  } else if (stopLoss && drop > start - stopLoss) {
+  } else if (drop > maxDropPrice) {
     setDropPriceError(
       "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
     );
-  } else if (drop < start * MIN_DROP_PERCENTAGE) {
+  } else if (drop < minDropPrice) {
     setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
   } else {
     setDropPriceError("");
