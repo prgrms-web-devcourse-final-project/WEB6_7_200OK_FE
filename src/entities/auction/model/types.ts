@@ -13,6 +13,7 @@ export interface AuctionItemType {
   title: string;
   isLiked: boolean;
   startedAt: string;
+  status?: AuctionStatusType;
 }
 
 export interface AuctionPriceType {
