@@ -1,46 +1,39 @@
 import { TrendingDown } from "lucide-react";
 
+import type { RecentPriceHistoryType } from "@/features/auction/auction-log/model/types";
+import { calcPrevPriceFromDiscountRate, calcDiscountRate } from "@/shared/lib/utils/price/calc";
+import { formatPriceKRW } from "@/shared/lib/utils/price/formatPriceKRW";
+import { formatAgo } from "@/shared/lib/utils/time/format";
 import { cn } from "@/shared/lib/utils/utils";
 import { EmptyState } from "@/shared/ui";
 
-export default function AuctionLogList({ isSheet = false }: { isSheet?: boolean }) {
-  const MOCK = [
-    {
-      prev: "76800",
-      now: "75000",
-      time: "50분전",
-    },
-    {
-      prev: "76800",
-      now: "74000",
-      time: "50분전",
-    },
-    {
-      prev: "76800",
-      now: "73000",
-      time: "50분전",
-    },
-    {
-      prev: "76800",
-      now: "72000",
-      time: "50분전",
-    },
-    {
-      prev: "76800",
-      now: "71000",
-      time: "50분전",
-    },
-  ];
+interface AuctionLogListProps {
+  recentPriceHistory: RecentPriceHistoryType[];
+  startPrice: number;
+  discountRate: number;
+  isSheet?: boolean;
+}
 
+export default function AuctionLogList({
+  recentPriceHistory,
+  startPrice,
+  discountRate,
+  isSheet = false,
+}: AuctionLogListProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
         <h3 className={cn(isSheet ? "text-base" : "text-2xl", "font-medium")}>
-          하락 {MOCK.length !== 0 ? MOCK.length : ""}
+          하락 {recentPriceHistory.length !== 0 ? recentPriceHistory.length : ""}
         </h3>
-        {MOCK.length !== 0 && <span className="text-base text-red-400">▼ 40,000(-5.0%)</span>}
+        {recentPriceHistory.length !== 0 && (
+          <span className="text-base text-red-400">
+            ▼ {formatPriceKRW(recentPriceHistory[0].currentPrice)} (-
+            {calcDiscountRate(startPrice, recentPriceHistory[0].currentPrice, 1)}%)
+          </span>
+        )}
       </div>
-      {MOCK.length === 0 ? (
+      {recentPriceHistory.length === 0 ? (
         <EmptyState
           Icon={TrendingDown}
           title="아직 가격 하락 기록이 없어요"
@@ -49,8 +42,13 @@ export default function AuctionLogList({ isSheet = false }: { isSheet?: boolean 
         />
       ) : (
         <ul className={cn("flex flex-col", isSheet ? "gap-3" : "gap-2")}>
-          {MOCK.map((item) => (
-            <ProductLogListItem key={item.now} prev={item.prev} now={item.now} time={item.time} />
+          {recentPriceHistory.map((history) => (
+            <ProductLogListItem
+              key={history.historyId}
+              prevPrice={calcPrevPriceFromDiscountRate(history.currentPrice, discountRate)}
+              currentPrice={history.currentPrice}
+              time={history.createdAt}
+            />
           ))}
         </ul>
       )}
@@ -58,15 +56,23 @@ export default function AuctionLogList({ isSheet = false }: { isSheet?: boolean 
   );
 }
 
-function ProductLogListItem({ prev, now, time }: { prev: string; now: string; time: string }) {
+function ProductLogListItem({
+  prevPrice,
+  currentPrice,
+  time,
+}: {
+  prevPrice: number;
+  currentPrice: number;
+  time: string;
+}) {
   return (
     <li className="flex justify-between text-base">
       <div className="flex gap-1 font-medium">
-        <span className="text-red-400 line-through">{prev}</span>
+        <span className="text-red-400 line-through">{formatPriceKRW(prevPrice)}</span>
         <span>→</span>
-        <span>{now}</span>
+        <span>{formatPriceKRW(currentPrice)}</span>
       </div>
-      <time className="text-muted-foreground">{time}</time>
+      <time className="text-muted-foreground">{formatAgo(time)}</time>
     </li>
   );
 }

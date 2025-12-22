@@ -3,11 +3,21 @@ import {
   AuctionLogChart,
   AuctionLogList,
 } from "@/features/auction/auction-log";
+import type { RecentPriceHistoryType } from "@/features/auction/auction-log";
 import { Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui";
 
-export default function AuctionDetailLogSheet() {
-  const isEmpty = false;
-  if (isEmpty) {
+interface AuctionDetailLogSheetProps {
+  recentPriceHistory: RecentPriceHistoryType[];
+  startPrice: number;
+  discountRate: number;
+}
+
+export default function AuctionDetailLogSheet({
+  recentPriceHistory,
+  startPrice,
+  discountRate,
+}: AuctionDetailLogSheetProps) {
+  if (recentPriceHistory.length === 0) {
     return null;
   }
   return (
@@ -22,7 +32,12 @@ export default function AuctionDetailLogSheet() {
         <div className="flex flex-col gap-8 px-4">
           <AuctionDetailThumbnail />
           <AuctionLogChart />
-          <AuctionLogList isSheet />
+          <AuctionLogList
+            isSheet
+            recentPriceHistory={recentPriceHistory}
+            startPrice={startPrice}
+            discountRate={discountRate}
+          />
         </div>
       </SheetContent>
     </Sheet>
