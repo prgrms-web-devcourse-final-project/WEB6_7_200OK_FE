@@ -60,7 +60,7 @@ export function usePriceValidation({
 
   const handleStopLossPriceBlur = useCallback(() => {
     if (!stopLossPrice) {
-      setStopLossError("");
+      setStopLossError("판매 최저가를 입력해주세요.");
       return;
     }
 
@@ -69,13 +69,13 @@ export function usePriceValidation({
   }, [startPrice, stopLossPrice, setStopLossError]);
 
   const handleDropPriceBlur = useCallback(() => {
-    if (!dropPrice) {
-      setDropPriceError("");
+    if (dropPrice === null) {
+      setDropPriceError("가격 하락 단위를 입력해주세요.");
       return;
     }
 
     // 하락 단위만 검증 수행
-    validateDropPrice(startPrice, dropPrice, stopLossPrice, setDropPriceError);
+    validateDropPrice(startPrice, stopLossPrice, dropPrice, setDropPriceError);
   }, [startPrice, dropPrice, stopLossPrice, setDropPriceError]);
 
   return {

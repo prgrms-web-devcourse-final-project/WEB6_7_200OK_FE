@@ -29,54 +29,41 @@ export function useItemForm() {
     },
   });
 
-  const { control, watch, setValue } = form;
+  const { control, watch, setValue, formState } = form;
 
-  // React Hook Form에서 가격 값 구독
-  const startPrice = watch("startPrice");
-  const stopLossPrice = watch("stopLossPrice");
-  const dropPrice = watch("dropPrice");
-
-  // 기본 정보 (React Hook Form과 별도로 관리)
-  const [productName, setProductName] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  // React Hook Form에서 모든 필드 값 구독
+  const formValues = watch();
+  const {
+    productName,
+    category,
+    description,
+    tags,
+    startPrice,
+    stopLossPrice,
+    dropPrice,
+    selectedDate,
+    selectedTime,
+  } = formValues;
 
   // 이미지
   // TODO: 이미지 업로드 기능 구현 시, images 제출 로직 추가 필요
   const [images, setImages] = useState<ItemImage[]>([]);
 
-  // 태그
-  const [tags, setTags] = useState<string[]>([]);
-
-  // 에러 메시지 관리
+  // 에러 메시지 관리 (가격 필드만 별도 관리)
   const [startPriceError, setStartPriceError] = useState<string>("");
   const [stopLossError, setStopLossError] = useState<string>("");
   const [dropPriceError, setDropPriceError] = useState<string>("");
 
-  // 날짜/시간
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<TimeSelection | null>(null);
+  // 날짜/시간 모달 상태
   const [isDateTimeModalOpen, setIsDateTimeModalOpen] = useState<boolean>(false);
 
   // 폼 유효성 검증
-  const formValid = useMemo(
-    () =>
-      isFormValid({
-        productName,
-        category,
-        description,
-        startPrice,
-        stopLossPrice,
-        dropPrice,
-        selectedDate,
-        startPriceError,
-        stopLossError,
-        dropPriceError,
-      }),
-    [
-      productName,
-      category,
-      description,
+  const formValid = useMemo(() => {
+    const hasFormErrors = Object.keys(formState.errors).length > 0;
+    const customValidation = isFormValid({
+      productName: productName || "",
+      category: category || "",
+      description: description || "",
       startPrice,
       stopLossPrice,
       dropPrice,
@@ -84,15 +71,31 @@ export function useItemForm() {
       startPriceError,
       stopLossError,
       dropPriceError,
-    ]
-  );
+    });
+    return !hasFormErrors && customValidation;
+  }, [
+    formState.errors,
+    productName,
+    category,
+    description,
+    startPrice,
+    stopLossPrice,
+    dropPrice,
+    selectedDate,
+    startPriceError,
+    stopLossError,
+    dropPriceError,
+  ]);
 
   // 날짜/시간 선택 핸들러
-  const handleDateTimeConfirm = useCallback((date: Date, time: TimeSelection) => {
-    setSelectedDate(date);
-    setSelectedTime(time);
-    setIsDateTimeModalOpen(false);
-  }, []);
+  const handleDateTimeConfirm = useCallback(
+    (date: Date, time: TimeSelection) => {
+      setValue("selectedDate", date);
+      setValue("selectedTime", time);
+      setIsDateTimeModalOpen(false);
+    },
+    [setValue]
+  );
 
   const getDisplayText = useCallback((): string => {
     if (!selectedDate) {
@@ -115,10 +118,10 @@ export function useItemForm() {
     }
 
     return {
-      productName,
-      category,
-      description,
-      tags,
+      productName: productName || "",
+      category: category || "",
+      description: description || "",
+      tags: tags || [],
       startPrice,
       stopLossPrice,
       dropPrice,
@@ -143,36 +146,26 @@ export function useItemForm() {
     setValue,
 
     // State
-    productName,
-    category,
-    description,
+    ...formValues,
     images,
-    tags,
-    startPrice,
-    stopLossPrice,
-    dropPrice,
     startPriceError,
     stopLossError,
     dropPriceError,
-    selectedDate,
-    selectedTime,
     isDateTimeModalOpen,
     formValid,
 
     // Setters
-    setProductName,
-    setCategory,
-    setDescription,
+    setProductName: (value: string) => setValue("productName", value),
+    setCategory: (value: string) => setValue("category", value),
+    setDescription: (value: string) => setValue("description", value),
     setImages,
-    setTags,
+    setTags: (value: string[]) => setValue("tags", value),
     setStartPrice: (value: number | null) => setValue("startPrice", value),
     setStopLossPrice: (value: number | null) => setValue("stopLossPrice", value),
     setDropPrice: (value: number | null) => setValue("dropPrice", value),
     setStartPriceError,
     setStopLossError,
     setDropPriceError,
-    setSelectedDate,
-    setSelectedTime,
     setIsDateTimeModalOpen,
 
     // Handlers

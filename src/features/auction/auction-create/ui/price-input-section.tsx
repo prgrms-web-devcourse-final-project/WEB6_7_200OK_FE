@@ -7,22 +7,22 @@ import type { ItemFormValues } from "../model/schema";
 
 interface PriceInputSectionProps {
   control: Control<ItemFormValues>;
-  onStartPriceBlur: () => void;
-  onStopLossPriceBlur: () => void;
-  onDropPriceBlur: () => void;
   startPriceError: string;
   stopLossError: string;
   dropPriceError: string;
+  onStartPriceBlur: () => void;
+  onStopLossPriceBlur: () => void;
+  onDropPriceBlur: () => void;
 }
 
 export function PriceInputSection({
   control,
-  onStartPriceBlur,
-  onStopLossPriceBlur,
-  onDropPriceBlur,
   startPriceError,
   stopLossError,
   dropPriceError,
+  onStartPriceBlur,
+  onStopLossPriceBlur,
+  onDropPriceBlur,
 }: PriceInputSectionProps) {
   const handlePriceChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -47,6 +47,7 @@ export function PriceInputSection({
       <Controller
         name="startPrice"
         control={control}
+        rules={{ validate: () => true }}
         render={({ field }) => (
           <div>
             <label htmlFor="start-price" className="mb-2 block text-sm font-medium">
@@ -58,6 +59,7 @@ export function PriceInputSection({
               value={field.value ?? ""}
               onChange={(e) => handlePriceChange(e, field.onChange)}
               onBlur={() => {
+                field.onBlur();
                 onStartPriceBlur();
               }}
               error={startPriceError}
@@ -70,6 +72,7 @@ export function PriceInputSection({
       <Controller
         name="stopLossPrice"
         control={control}
+        rules={{ validate: () => true }}
         render={({ field }) => (
           <div>
             <label htmlFor="stop-loss-price" className="mb-2 block text-sm font-medium">
@@ -80,7 +83,10 @@ export function PriceInputSection({
               placeholder="시작가의 90% 이하 가격을 설정해주세요."
               value={field.value ?? ""}
               onChange={(e) => handlePriceChange(e, field.onChange)}
-              onBlur={onStopLossPriceBlur}
+              onBlur={() => {
+                field.onBlur();
+                onStopLossPriceBlur();
+              }}
               error={stopLossError}
             />
             <InfoAlert
@@ -95,6 +101,7 @@ export function PriceInputSection({
       <Controller
         name="dropPrice"
         control={control}
+        rules={{ validate: () => true }}
         render={({ field }) => (
           <div>
             <label htmlFor="drop-price" className="mb-2 block text-sm font-medium">
@@ -105,7 +112,10 @@ export function PriceInputSection({
               placeholder="시작가의 0.5% 이상 가격을 설정해주세요."
               value={field.value ?? ""}
               onChange={(e) => handlePriceChange(e, field.onChange)}
-              onBlur={onDropPriceBlur}
+              onBlur={() => {
+                field.onBlur();
+                onDropPriceBlur();
+              }}
               error={dropPriceError}
             />
             <InfoAlert

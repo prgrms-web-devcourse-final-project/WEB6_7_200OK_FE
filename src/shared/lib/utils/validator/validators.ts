@@ -63,15 +63,15 @@ export const validateDropPrice = (
   drop: number | null,
   setDropPriceError: (error: string) => void
 ) => {
-  // 시작가가 있는데 하락단위가 없으면 에러
-  if (start && !drop) {
-    setDropPriceError("하락단위를 입력 해주세요.");
+  // 시작가가 없거나 하락단위가 null인 경우
+  if (!start || drop === null) {
+    setDropPriceError("");
     return;
   }
 
-  // 시작가나 하락단위가 없으면 에러 초기화
-  if (!start || !drop) {
-    setDropPriceError("");
+  // 하락단위가 0인 경우
+  if (drop === 0) {
+    setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
     return;
   }
 
@@ -82,21 +82,30 @@ export const validateDropPrice = (
     return;
   }
 
-  // 검증 규칙 적용
+  // 검증 규칙 계산
   const minDropPrice = start * MIN_DROP_PERCENTAGE;
   const maxDropPrice = stopLoss ? start - stopLoss : start;
 
-  if (drop >= start) {
-    setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
-  } else if (drop > maxDropPrice) {
+  // 검증 순서: 최소값 → 최대값 → 시작가
+  if (drop < minDropPrice) {
+    setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
+    return;
+  }
+
+  if (drop > maxDropPrice) {
     setDropPriceError(
       "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
     );
-  } else if (drop < minDropPrice) {
-    setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
-  } else {
-    setDropPriceError("");
+    return;
   }
+
+  if (drop >= start) {
+    setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
+    return;
+  }
+
+  // 모든 검증 통과
+  setDropPriceError("");
 };
 
 // 전체 폼 유효성 검증
