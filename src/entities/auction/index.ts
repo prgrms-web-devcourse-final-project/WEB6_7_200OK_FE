@@ -1,5 +1,4 @@
 export { LiveBadge } from "@/entities/auction/ui/auction-badge/live-badge";
-
 export { UpcomingBadge } from "@/entities/auction/ui/auction-badge/upcoming-badge";
 export {
   AuctionItemCard,
@@ -28,8 +27,9 @@ export {
   MIN_DROP_PERCENTAGE,
   STOP_LOSS_PERCENTAGE,
   DEFAULT_DROP_PERCENTAGE,
-  MAX_TAGS,
 } from "@/entities/auction/model/registration-constants";
+
+export { MAX_TAGS } from "@/entities/auction/model/registration-constants";
 
 export { HOURS, MINUTES, TIMEZONES } from "@/entities/auction/model/registration-constants";
 
