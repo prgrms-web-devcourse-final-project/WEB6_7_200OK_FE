@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { AuctionType } from "@/entities/auction/model/types";
 import { LiveBadge } from "@/entities/auction/ui/auction-badge/live-badge";
 import { UpcomingBadge } from "@/entities/auction/ui/auction-badge/upcoming-badge";
 import { VARIANT_CONFIG } from "@/entities/auction/ui/auction-item-card/model/constants";
@@ -12,18 +13,11 @@ import LikeButton from "@/entities/auction/ui/auction-item-card/ui/like-button";
 import RankingBadge from "@/entities/auction/ui/auction-item-card/ui/ranking-badge";
 import UpcomingInfo from "@/entities/auction/ui/auction-item-card/ui/upcoming-info";
 
-export interface AuctionItemCardProps {
+export interface AuctionItemCardProps extends AuctionType {
   variant: AuctionCardVariantType;
-  auctionId: number;
-  imageUrl: string;
-  title: string;
-  startPrice: number;
-  currentPrice?: number;
-  discountRate?: number;
-  isLiked: boolean;
-  startedAt: string;
   rank?: number;
 }
+
 export function AuctionItemCard({
   variant,
   auctionId,
