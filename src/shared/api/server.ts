@@ -26,9 +26,9 @@ export async function fetch<TResponse, TRequest = unknown>(
     ...init,
 
     headers: {
-      ...(init?.headers ?? {}),
-      ...(hasBody ? { "Content-Type": "application/json" } : {}),
       Cookie: cookieHeader,
+      ...(hasBody ? { "Content-Type": "application/json" } : {}),
+      ...(init?.headers ?? {}),
     },
 
     body: hasBody ? JSON.stringify(init.body) : undefined,
