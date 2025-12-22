@@ -5,7 +5,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@/shared/ui/carousel/ca
 
 interface ImageCarouselViewProps {
   images: ItemImage[];
-  checkCanAdd: boolean;
+  canCheckAdd: boolean;
   imageCount: number;
   onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: (id: string) => void;
@@ -13,7 +13,7 @@ interface ImageCarouselViewProps {
 
 export function ImageCarouselView({
   images,
-  checkCanAdd,
+  canCheckAdd,
   imageCount,
   onImageSelect,
   onRemoveImage,
@@ -21,7 +21,7 @@ export function ImageCarouselView({
   return (
     <Carousel className="block w-full md:hidden">
       <CarouselContent className="-ml-2">
-        {checkCanAdd && (
+        {canCheckAdd && (
           <CarouselItem className="basis-[30%] pl-2">
             <ImageAddButton
               id="image-upload-mobile"

@@ -18,9 +18,9 @@ interface ImageUploadSectionProps {
 }
 
 export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectionProps) {
-  const { checkCanAdd, imageCount } = useMemo(
+  const { canCheckAdd, imageCount } = useMemo(
     () => ({
-      checkCanAdd: images.length < MAX_IMAGES,
+      canCheckAdd: images.length < MAX_IMAGES,
       imageCount: images.length,
     }),
     [images.length]
@@ -85,7 +85,7 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
           {/* 모바일 캐러셀 뷰 (md hidden 적용) */}
           <ImageCarouselView
             images={images}
-            checkCanAdd={checkCanAdd}
+            canCheckAdd={canCheckAdd}
             imageCount={imageCount}
             onImageSelect={handleImageSelect}
             onRemoveImage={handleRemoveImage}
@@ -93,7 +93,7 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
           {/* 데스크톱 뷰 (md 이상 표시) */}
           <div className="hidden grid-cols-5 gap-2 md:grid">
             {/* 이미지가 추가 가능한 경우 */}
-            {checkCanAdd && (
+            {canCheckAdd && (
               <ImageAddButton
                 id="image-upload-desktop"
                 imageCount={imageCount}
