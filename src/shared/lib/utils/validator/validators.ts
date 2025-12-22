@@ -31,13 +31,12 @@ export const validateStopLossPrice = (
   setStopLossError: (error: string) => void
 ) => {
   // 시작가가 있는데 최저가가 없으면 에러
-  if (start && !stop) {
+  if (start !== null && stop === null) {
     setStopLossError("최저가를 입력 해주세요.");
     return;
   }
-
   // 시작가나 최저가가 없으면 에러 초기화
-  if (!start || !stop) {
+  if (start === null || stop === null) {
     setStopLossError("");
     return;
   }
