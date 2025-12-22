@@ -1,7 +1,8 @@
 import { UserBasicInfoResponseType, UserProfileType } from "../model/types";
 
 export async function fetchUserBasicInfo(): Promise<UserProfileType> {
-  const response = await fetch("/api/v1/auth/basic", {
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const response = await fetch(`${apiBaseUrl}/api/v1/auth/basic`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
