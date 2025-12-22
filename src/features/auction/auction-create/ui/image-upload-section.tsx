@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
 import { ImagePlus } from "lucide-react";
 
@@ -18,13 +18,8 @@ interface ImageUploadSectionProps {
 }
 
 export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectionProps) {
-  const { canCheckAdd, imageCount } = useMemo(
-    () => ({
-      canCheckAdd: images.length < MAX_IMAGES,
-      imageCount: images.length,
-    }),
-    [images.length]
-  );
+  const canCheckAdd = images.length < MAX_IMAGES;
+  const imageCount = images.length;
 
   const processImageFiles = useCallback(
     async (files: FileList, currentImages: ItemImage[]) => {
