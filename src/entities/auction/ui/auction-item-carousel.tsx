@@ -1,4 +1,6 @@
-import { AuctionItemCard, AuctionItemCardProps } from "@/entities/auction/ui/auction-item-card";
+import { AuctionType } from "@/entities/auction/model/types";
+import { AuctionItemCard } from "@/entities/auction/ui/auction-item-card";
+import { AuctionCardVariantType } from "@/entities/auction/ui/auction-item-card/model/types";
 import {
   Carousel,
   CarouselContent,
@@ -7,7 +9,12 @@ import {
   CarouselPrevious,
 } from "@/shared/ui/carousel/carousel";
 
-export function AuctionItemCarousel({ items }: { items: AuctionItemCardProps[] }) {
+interface AuctionItemCarouselProps {
+  items: AuctionType[];
+  variant: AuctionCardVariantType;
+}
+
+export function AuctionItemCarousel({ items, variant }: AuctionItemCarouselProps) {
   return (
     <Carousel
       opts={{
@@ -17,12 +24,16 @@ export function AuctionItemCarousel({ items }: { items: AuctionItemCardProps[] }
       className="w-full"
     >
       <CarouselContent>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <CarouselItem
             key={item.auctionId}
             className="sm:basis-1/2 md:basis-2/5 lg:basis-1/3 xl:basis-1/4"
           >
-            <AuctionItemCard {...item} />
+            <AuctionItemCard
+              {...item}
+              variant={variant}
+              rank={variant === "ranking" ? index + 1 : undefined}
+            />
           </CarouselItem>
         ))}
       </CarouselContent>
