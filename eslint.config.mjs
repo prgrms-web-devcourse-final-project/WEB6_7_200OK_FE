@@ -97,6 +97,14 @@ const configFilesConfig = {
   },
 };
 
+// OpenAPI TypeScript
+const openApiGeneratedConfig = {
+  files: ["src/shared/api/schema.d.ts"],
+  rules: {
+    "@typescript-eslint/naming-convention": "off",
+  },
+};
+
 // Custom Rules Configuration
 const customConfig = {
   files: ["**/*.{ts,tsx}"],
@@ -219,6 +227,9 @@ export default [
   // Custom Rules
   customConfig,
   // Next.js Specific Configs
+
+  openApiGeneratedConfig,
+
   appRouterConfig,
   pagesRouterConfig,
   configFilesConfig,
