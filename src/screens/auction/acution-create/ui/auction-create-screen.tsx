@@ -23,8 +23,7 @@ export function AuctionCreateScreen() {
     startPrice: form.startPrice,
     stopLossPrice: form.stopLossPrice,
     dropPrice: form.dropPrice,
-    setStopLossPrice: form.setStopLossPrice,
-    setDropPrice: form.setDropPrice,
+    setValue: form.setValue,
     setStartPriceError: form.setStartPriceError,
     setStopLossError: form.setStopLossError,
     setDropPriceError: form.setDropPriceError,
@@ -92,15 +91,10 @@ export function AuctionCreateScreen() {
 
             {/* 가격 입력 */}
             <PriceInputSection
-              startPrice={form.startPrice}
-              stopLossPrice={form.stopLossPrice}
-              dropPrice={form.dropPrice}
+              control={form.control}
               startPriceError={form.startPriceError}
               stopLossError={form.stopLossError}
               dropPriceError={form.dropPriceError}
-              onStartPriceChange={form.setStartPrice}
-              onStopLossPriceChange={form.setStopLossPrice}
-              onDropPriceChange={form.setDropPrice}
               onStartPriceBlur={priceValidation.handleStartPriceBlur}
               onStopLossPriceBlur={priceValidation.handleStopLossPriceBlur}
               onDropPriceBlur={priceValidation.handleDropPriceBlur}

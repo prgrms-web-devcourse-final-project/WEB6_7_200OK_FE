@@ -1,13 +1,42 @@
 import { useCallback, useMemo, useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
 import type { ItemImage } from "@/entities/auction";
 import { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
 import { isFormValid } from "@/shared/lib/utils/validator/validators";
 
+import { itemFormSchema, type ItemFormValues } from "./schema";
+
 import type { ItemFormSubmitData } from "./types";
 
 export function useItemForm() {
-  // 기본 정보
+  // React Hook Form 설정
+  const form = useForm<ItemFormValues>({
+    resolver: zodResolver(itemFormSchema),
+    mode: "onBlur",
+    defaultValues: {
+      productName: "",
+      category: "",
+      description: "",
+      tags: [],
+      startPrice: null,
+      stopLossPrice: null,
+      dropPrice: null,
+      selectedDate: null,
+      selectedTime: null,
+    },
+  });
+
+  const { control, watch, setValue } = form;
+
+  // React Hook Form에서 가격 값 구독
+  const startPrice = watch("startPrice");
+  const stopLossPrice = watch("stopLossPrice");
+  const dropPrice = watch("dropPrice");
+
+  // 기본 정보 (React Hook Form과 별도로 관리)
   const [productName, setProductName] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -18,11 +47,6 @@ export function useItemForm() {
 
   // 태그
   const [tags, setTags] = useState<string[]>([]);
-
-  // 가격
-  const [startPrice, setStartPrice] = useState<number | null>(null);
-  const [stopLossPrice, setStopLossPrice] = useState<number | null>(null);
-  const [dropPrice, setDropPrice] = useState<number | null>(null);
 
   // 에러 메시지 관리
   const [startPriceError, setStartPriceError] = useState<string>("");
@@ -114,6 +138,10 @@ export function useItemForm() {
   ]);
 
   return {
+    // React Hook Form
+    control,
+    setValue,
+
     // State
     productName,
     category,
@@ -137,9 +165,9 @@ export function useItemForm() {
     setDescription,
     setImages,
     setTags,
-    setStartPrice,
-    setStopLossPrice,
-    setDropPrice,
+    setStartPrice: (value: number | null) => setValue("startPrice", value),
+    setStopLossPrice: (value: number | null) => setValue("stopLossPrice", value),
+    setDropPrice: (value: number | null) => setValue("dropPrice", value),
     setStartPriceError,
     setStopLossError,
     setDropPriceError,
