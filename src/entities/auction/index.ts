@@ -27,11 +27,13 @@ export {
   MIN_DROP_PERCENTAGE,
   STOP_LOSS_PERCENTAGE,
   DEFAULT_DROP_PERCENTAGE,
+  MAX_TAGS,
+  HOURS,
+  MINUTES,
+  TIMEZONES,
+  type Hour,
+  type TimeZone,
 } from "@/entities/auction/model/registration-constants";
-
-export { MAX_TAGS } from "@/entities/auction/model/registration-constants";
-
-export { HOURS, MINUTES, TIMEZONES } from "@/entities/auction/model/registration-constants";
 
 export { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
 
