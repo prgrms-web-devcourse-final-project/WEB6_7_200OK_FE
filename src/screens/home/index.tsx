@@ -1,9 +1,8 @@
-import { HomeAuctionsData } from "@/screens/home/model/types";
+import { getHomeAuctions } from "@/screens/home/api/getHomeActions";
 import HomeMain from "@/screens/home/ui/home-main";
-import { fetch } from "@/shared/api/server";
 
 export default async function HomeScreen() {
-  const response = await fetch<HomeAuctionsData>("/api/v1/auctions");
+  const data = await getHomeAuctions();
 
-  return <HomeMain data={response.data} />;
+  return <HomeMain data={data} />;
 }
