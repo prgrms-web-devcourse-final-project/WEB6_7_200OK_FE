@@ -33,7 +33,7 @@ export function AuctionItemCard({
   const config = VARIANT_CONFIG[variant];
 
   return (
-    <article className="bg-card h-fit w-full overflow-hidden rounded-xl border shadow-sm select-none">
+    <article className="bg-card h-fit w-full overflow-hidden rounded-xl border select-none">
       <Link href={`/auctions/${auctionId}`}>
         <div className="relative aspect-square">
           <Image src={imageUrl} alt={title} fill className="object-cover" />
