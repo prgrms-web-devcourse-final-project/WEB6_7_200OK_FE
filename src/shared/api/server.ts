@@ -18,16 +18,22 @@ export async function fetch<TResponse, TRequest = unknown>(
     .map((cookie) => `${cookie.name}=${cookie.value}`)
     .join("; ");
 
-  const res = await globalThis.fetch(`${API_URL}${path}`, {
+  const url = new URL(path, API_URL);
+
+  const hasBody = init?.body !== undefined;
+
+  const response = await globalThis.fetch(url, {
     ...init,
+
     headers: {
-      "Content-Type": "application/json",
+      ...(init?.headers ?? {}),
+      ...(hasBody ? { "Content-Type": "application/json" } : {}),
       Cookie: cookieHeader,
-      ...(init?.headers || {}),
     },
-    body: init?.body ? JSON.stringify(init.body) : undefined,
+
+    body: hasBody ? JSON.stringify(init.body) : undefined,
     cache: init?.cache ?? "no-store",
   });
 
-  return res.json() as Promise<ApiResponseType<TResponse>>;
+  return response.json() as Promise<ApiResponseType<TResponse>>;
 }
