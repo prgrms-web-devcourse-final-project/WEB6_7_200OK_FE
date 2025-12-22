@@ -82,11 +82,9 @@ export const validateDropPrice = (
     return;
   }
 
-  // 검증 규칙 계산
   const minDropPrice = start * MIN_DROP_PERCENTAGE;
   const maxDropPrice = stopLoss ? start - stopLoss : start;
 
-  // 검증 순서: 최소값 → 최대값 → 시작가
   if (drop < minDropPrice) {
     setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
     return;
@@ -104,7 +102,6 @@ export const validateDropPrice = (
     return;
   }
 
-  // 모든 검증 통과
   setDropPriceError("");
 };
 
