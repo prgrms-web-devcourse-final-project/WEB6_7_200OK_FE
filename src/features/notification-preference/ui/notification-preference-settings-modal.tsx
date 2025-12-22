@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import { Package, BellRing } from "lucide-react";
 
+import { NotificationPreferenceItemType } from "@/entities/notification-preference";
 import { cn } from "@/shared/lib/utils/utils";
 import {
   Button,
@@ -17,8 +18,6 @@ import {
   ConfirmDeleteModal,
   Switch,
 } from "@/shared/ui";
-
-import { NotificationPreferenceItemType } from "../model/types";
 
 interface NotificationPreferenceSettingsModalProps {
   open: boolean;

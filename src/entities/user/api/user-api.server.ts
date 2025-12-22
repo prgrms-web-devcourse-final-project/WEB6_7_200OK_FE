@@ -1,13 +1,13 @@
-import { fetchClient } from "@/shared/api/client";
+import { fetch as serverFetch } from "@/shared/api/server";
 
 import { UserBasicInfoResponseType, UserProfileType } from "../model/types";
 
-export async function fetchUserBasicInfo(): Promise<UserProfileType> {
-  const response = await fetchClient<UserBasicInfoResponseType["data"]>("/api/v1/auth/basic", {
+export async function fetchUserBasicInfoServer(): Promise<UserProfileType> {
+  const response = await serverFetch<UserBasicInfoResponseType["data"]>("/api/v1/auth/basic", {
     method: "GET",
   });
 
-  if (!response.data) {
+  if (response.code !== 200 || !response.data) {
     throw new Error("사용자 정보를 불러올 수 없습니다.");
   }
 

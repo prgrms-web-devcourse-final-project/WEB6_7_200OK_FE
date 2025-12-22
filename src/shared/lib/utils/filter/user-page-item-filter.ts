@@ -26,6 +26,6 @@ export function sortItemsByDateAndName<T extends { date: string; name: string }>
       return dateB - dateA;
     }
 
-    return a.name.localeCompare(b.name);
+    return a.name.localeCompare(b.name, "ko");
   });
 }

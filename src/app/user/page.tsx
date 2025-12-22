@@ -1,5 +1,6 @@
-import { UserScreen } from "@/screens/user/ui/user-screen";
+import { redirect } from "next/navigation";
 
 export default function UserPage() {
-  return <UserScreen />;
+  // user page 접속 시 캘린더 탭으로 이동
+  redirect("/user/calendar");
 }

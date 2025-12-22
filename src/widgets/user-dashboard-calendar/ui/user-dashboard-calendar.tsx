@@ -2,12 +2,13 @@
 
 import { useState, useMemo } from "react";
 
-import { MOCK_SELLING_ITEMS, MOCK_WISHLIST_ITEMS } from "@/entities/item";
 import {
   DailyAuctionCalendar,
   transformItemsToCalendarEvents,
 } from "@/features/daily-auction-calendar";
 import { DailyAuctionList } from "@/features/daily-auction-list";
+import { useSalesList } from "@/features/sale/api/use-sales";
+import { useWishlist } from "@/features/wishlist/api/use-wishlist";
 import { DashboardContentLayout } from "@/shared/ui";
 
 interface UserDashboardCalendarProps {
@@ -17,7 +18,10 @@ interface UserDashboardCalendarProps {
 export function UserDashboardCalendar({ label }: UserDashboardCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const allItems = useMemo(() => [...MOCK_SELLING_ITEMS, ...MOCK_WISHLIST_ITEMS], []);
+  const { data: sales = [] } = useSalesList();
+  const { data: wishlist = [] } = useWishlist();
+
+  const allItems = useMemo(() => [...sales, ...wishlist], [sales, wishlist]);
 
   const calendarEvents = useMemo(() => transformItemsToCalendarEvents(allItems), [allItems]);
 

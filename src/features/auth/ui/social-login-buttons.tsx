@@ -5,9 +5,11 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { cva } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
+import { getSocialLoginUrl } from "../api/auth-api";
 import { SOCIAL_MAPS, type SocialProvider } from "../model/social-maps";
 
 const socialButtonVariants = cva(
@@ -31,9 +33,10 @@ interface SocialButtonProps {
   provider: SocialProvider;
   onClick: () => void;
   disabled?: boolean;
+  isLoading?: boolean;
 }
 
-export function SocialButton({ provider, onClick, disabled }: SocialButtonProps) {
+export function SocialButton({ provider, onClick, disabled, isLoading }: SocialButtonProps) {
   const { icon, label } = SOCIAL_MAPS[provider];
 
   return (
@@ -41,89 +44,55 @@ export function SocialButton({ provider, onClick, disabled }: SocialButtonProps)
       type="button"
       className={socialButtonVariants({ provider })}
       onClick={onClick}
-      disabled={disabled}
+      disabled={disabled || isLoading}
     >
-      <Image src={icon} alt={`${label} 로그인`} width={20} height={20} />
+      {isLoading ? (
+        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+      ) : (
+        <Image src={icon} alt={`${label} 로그인`} width={20} height={20} />
+      )}
       {label}
     </button>
   );
 }
 
 export function SocialLoginButtons() {
-  const [isLoading, setIsLoading] = useState(false);
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const [loadingProvider, setLoadingProvider] = useState<SocialProvider | null>(null);
+
   const handleSocialLogin = async (provider: SocialProvider) => {
     try {
-      setIsLoading(true);
+      setLoadingProvider(provider);
 
-      const response = await fetch(`${apiBaseUrl}/api/v1/auth?provider=${provider}`, {
-        credentials: "include",
-      });
+      const url = await getSocialLoginUrl(provider);
 
-      if (!response.ok) {
-        if (response.status >= 500) {
-          throw new Error("서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
-        } else if (response.status === 404) {
-          throw new Error("로그인 서비스를 찾을 수 없습니다.");
-        } else if (response.status === 401 || response.status === 403) {
-          throw new Error("로그인 권한이 없습니다.");
-        } else {
-          throw new Error("로그인 요청 중 문제가 발생했습니다.");
-        }
-      }
+      // URL 유효성 확인 (선택 사항)
+      // const validatedUrl = new URL(url);
 
-      const json: unknown = await response.json();
-
-      if (
-        typeof json === "object" &&
-        json !== null &&
-        typeof (json as { data?: unknown }).data === "string"
-      ) {
-        const url = (json as { data: string }).data;
-
-        try {
-          // Validate and normalize the URL
-          // This helps avoid redirecting to malformed or unsafe values.
-          const validatedUrl = new URL(url);
-          window.location.href = validatedUrl.href;
-        } catch {
-          throw new Error("유효하지 않은 OAuth URL입니다.");
-        }
-      } else {
-        throw new Error("로그인 URL을 받아오지 못했습니다. 다시 시도해주세요.");
-      }
+      window.location.href = url;
     } catch (error) {
       console.error(`${provider} 로그인 오류:`, error);
 
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        showToast.error("네트워크 연결을 확인해주세요.");
-      } else if (error instanceof Error) {
-        showToast.error(error.message);
-      } else {
-        showToast.error("로그인 중 알 수 없는 오류가 발생했습니다.");
-      }
+      const message =
+        error instanceof Error ? error.message : "로그인 중 알 수 없는 오류가 발생했습니다.";
+      showToast.error(message);
 
-      setIsLoading(false);
+      setLoadingProvider(null);
     }
   };
 
+  const providers: SocialProvider[] = ["google", "naver", "kakao"];
+
   return (
     <div className="flex w-full flex-col gap-3">
-      <SocialButton
-        provider="google"
-        onClick={() => handleSocialLogin("google")}
-        disabled={isLoading}
-      />
-      <SocialButton
-        provider="naver"
-        onClick={() => handleSocialLogin("naver")}
-        disabled={isLoading}
-      />
-      <SocialButton
-        provider="kakao"
-        onClick={() => handleSocialLogin("kakao")}
-        disabled={isLoading}
-      />
+      {providers.map((provider) => (
+        <SocialButton
+          key={provider}
+          provider={provider}
+          onClick={() => handleSocialLogin(provider)}
+          disabled={loadingProvider !== null} // 하나라도 로딩 중이면 전체 비활성화
+          isLoading={loadingProvider === provider} // 해당 버튼에만 로딩 표시
+        />
+      ))}
     </div>
   );
 }

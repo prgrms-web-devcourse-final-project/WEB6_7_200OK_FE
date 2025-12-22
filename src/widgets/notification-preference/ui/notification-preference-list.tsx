@@ -6,6 +6,8 @@ import { ItemCardFilter } from "@/entities/item";
 import {
   MOCK_NOTIFICATIONS,
   NotificationPreferenceItemType,
+} from "@/entities/notification-preference";
+import {
   NotificationPreferenceItemCard,
   NotificationPreferenceSettingsModal,
 } from "@/features/notification-preference";

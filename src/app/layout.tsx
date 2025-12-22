@@ -9,6 +9,8 @@ import { ToastRegistry } from "@/shared/ui/toast/toast-registry";
 import { BottomNav } from "@/widgets/bottom-nav";
 import { Header } from "@/widgets/header/header";
 
+import Providers from "./providers";
+
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -27,17 +29,19 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          {children}
-          <ToastRegistry />
-          <BottomNav />
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            {children}
+            <ToastRegistry />
+            <BottomNav />
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

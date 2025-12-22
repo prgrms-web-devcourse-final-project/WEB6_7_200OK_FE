@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { SlidersHorizontal } from "lucide-react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui";
@@ -12,6 +14,25 @@ interface ItemCardFilterProps {
 }
 
 export function ItemCardFilter({ value, options, onChange, className }: ItemCardFilterProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className={className}>
+        <div className="border-border text-muted-foreground flex h-9 w-auto items-center justify-center gap-1 rounded-lg border px-3 text-sm">
+          <div className="flex items-center gap-1">
+            <SlidersHorizontal className="size-4" />
+            <span>필터</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
       <Select value={value} onValueChange={onChange}>
