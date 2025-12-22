@@ -14,7 +14,7 @@ export const itemFormSchema = z.object({
   selectedDate: z.date().nullable(),
   selectedTime: z
     .object({
-      hour: z.custom<Hour>((val) => typeof val === "number" && val >= 0 && val <= 12),
+      hour: z.custom<Hour>((val) => typeof val === "number" && val >= 1 && val <= 12),
       minute: z.number(),
       timezone: z.enum(["오전", "오후"] as [TimeZone, ...TimeZone[]]),
     })

@@ -55,11 +55,11 @@ export function usePriceValidation({
     // 가격 하락 단위 자동 계산 (시작가의 1%)
     const calculatedDropPrice = Math.floor(startPrice * DEFAULT_DROP_PERCENTAGE);
     setValue("dropPrice", calculatedDropPrice, { shouldValidate: false, shouldDirty: false });
-    validateDropPrice(startPrice, calculatedDropPrice, calculatedStopLoss, setDropPriceError);
+    validateDropPrice(startPrice, calculatedStopLoss, calculatedDropPrice, setDropPriceError);
   }, [startPrice, setValue, setStartPriceError, setStopLossError, setDropPriceError]);
 
   const handleStopLossPriceBlur = useCallback(() => {
-    if (!stopLossPrice) {
+    if (stopLossPrice === null) {
       setStopLossError("판매 최저가를 입력해주세요.");
       return;
     }
