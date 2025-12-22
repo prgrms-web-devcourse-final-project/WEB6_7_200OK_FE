@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 
 import { X } from "lucide-react";
 
-import { MAX_TAGS, addTagValidation, validateTagInput } from "@/entities/auction";
+import { addTagValidation, validateTagInput, MAX_TAGS } from "@/entities/auction";
 import Button from "@/shared/ui/button/button";
 import Input from "@/shared/ui/input/input";
 
