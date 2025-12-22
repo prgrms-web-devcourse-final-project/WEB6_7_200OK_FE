@@ -12,6 +12,7 @@ export interface AuctionDetailType extends Omit<AuctionType, "imageUrl"> {
   description: string;
   likeCount: number;
   viewerCount: number;
+  tags: string[];
   // extends Type
   status: AuctionStatusType;
   category: ItemCategory;
