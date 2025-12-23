@@ -27,6 +27,7 @@ export async function httpClient<TResponse, TRequest = unknown>(
 
   const response = await fetch(url.toString(), {
     ...init,
+    credentials: "include",
     headers: {
       ...(hasBody ? { "Content-Type": "application/json" } : {}),
       ...(init?.headers ?? {}),
