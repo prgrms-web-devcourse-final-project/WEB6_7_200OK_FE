@@ -13,11 +13,11 @@ export type AuctionPriceStoreApi = ReturnType<typeof createAuctionPriceStore>;
 
 export const AuctionPriceStoreContext = createContext<AuctionPriceStoreApi | undefined>(undefined);
 
-export interface CounterStoreProviderProps {
+export interface AuctionPriceStoreProviderProps {
   children: ReactNode;
 }
 
-export const useCounterStore = <T,>(selector: (store: AuctionPriceState) => T): T => {
+export const useAuctionPriceStore = <T,>(selector: (store: AuctionPriceState) => T): T => {
   const auctionPriceStoreContext = useContext(AuctionPriceStoreContext);
   if (!auctionPriceStoreContext) {
     throw new Error(`useCounterStore must be used within CounterStoreProvider`);
@@ -26,7 +26,7 @@ export const useCounterStore = <T,>(selector: (store: AuctionPriceState) => T): 
   return useStore(auctionPriceStoreContext, selector);
 };
 
-export const AuctionPriceStoreProvider = ({ children }: CounterStoreProviderProps) => {
+export const AuctionPriceStoreProvider = ({ children }: AuctionPriceStoreProviderProps) => {
   const [store] = useState(() => createAuctionPriceStore());
   return (
     <AuctionPriceStoreContext.Provider value={store}>{children}</AuctionPriceStoreContext.Provider>
