@@ -90,7 +90,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
 
       // 토큰이 만료되었거나 문제가 있다면 삭제
       if (!refreshRes.ok) {
-        console.error("❌ Refresh token failed or expired.");
+        console.error("Refresh token failed or expired.");
 
         const response = NextResponse.json(
           { error: "Session expired. Please login again." },
@@ -115,7 +115,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       });
 
       if (backendRes.status === 401) {
-        console.error("❌ Request failed even after token refresh.");
+        console.error("Request failed even after token refresh.");
         const response = NextResponse.json({ error: "Authentication failed" }, { status: 401 });
         clearAuthCookies(response);
         return response;
@@ -137,7 +137,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       headers: backendRes.headers,
     });
   } catch (error) {
-    console.error("🔥 Proxy Error:", error);
+    console.error("Proxy Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
