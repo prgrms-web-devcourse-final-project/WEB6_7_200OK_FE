@@ -33,19 +33,12 @@ export function useItemForm() {
 
   const { errors: formErrors } = useFormState({ control });
 
-  // React Hook Form에서 모든 필드 값 구독
-  const formValues = watch();
-  const {
-    productName,
-    category,
-    tags,
-    description,
-    startPrice,
-    stopLossPrice,
-    dropPrice,
-    selectedDate,
-    selectedTime,
-  } = formValues;
+  // 검증이 필요한 필드와 화면 표시에 필요한 필드만 구독 (리렌더링 최적화)
+  const startPrice = watch("startPrice");
+  const stopLossPrice = watch("stopLossPrice");
+  const dropPrice = watch("dropPrice");
+  const selectedDate = watch("selectedDate");
+  const selectedTime = watch("selectedTime");
 
   // 이미지
   // TODO: 이미지 업로드 기능 구현 시, images 제출 로직 추가 필요
@@ -61,9 +54,9 @@ export function useItemForm() {
   const dropPriceError = formErrors.dropPrice?.message || "";
 
   const customValidation = isFormValid({
-    productName: productName || "",
-    category: category || "",
-    description: description || "",
+    productName: getValues("productName") || "",
+    category: getValues("category") || "",
+    description: getValues("description") || "",
     startPrice,
     stopLossPrice,
     dropPrice,
@@ -105,11 +98,12 @@ export function useItemForm() {
       return null;
     }
 
+    const values = getValues();
     return {
-      productName: productName || "",
-      category: category || "",
-      description: description || "",
-      tags: tags || [],
+      productName: values.productName || "",
+      category: values.category || "",
+      description: values.description || "",
+      tags: values.tags || [],
       startPrice,
       stopLossPrice,
       dropPrice,
@@ -121,11 +115,15 @@ export function useItemForm() {
     // React Hook Form
     control,
     setValue,
-    formState: { errors: formErrors },
     getValues,
+    watch,
 
     // State
-    ...formValues,
+    startPrice,
+    stopLossPrice,
+    dropPrice,
+    selectedDate,
+    selectedTime,
     images,
     startPriceError,
     stopLossError,
@@ -139,9 +137,6 @@ export function useItemForm() {
     setDescription: (value: string) => setValue("description", value),
     setImages,
     setTags: (value: string[]) => setValue("tags", value),
-    setStartPrice: (value: number | null) => setValue("startPrice", value),
-    setStopLossPrice: (value: number | null) => setValue("stopLossPrice", value),
-    setDropPrice: (value: number | null) => setValue("dropPrice", value),
     setError,
     clearErrors,
     setIsDateTimeModalOpen,
