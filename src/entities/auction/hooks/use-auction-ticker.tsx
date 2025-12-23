@@ -47,15 +47,9 @@ export function AuctionTickerProvider({
     })();
 
     return () => {
-      (async () => {
-        try {
-          await tickerRef.current?.stop();
-        } finally {
-          workerRef.current?.terminate();
-          workerRef.current = null;
-          tickerRef.current = null;
-        }
-      })();
+      workerRef.current?.terminate();
+      workerRef.current = null;
+      tickerRef.current = null;
     };
   }, [duration]);
 
