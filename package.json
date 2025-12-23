@@ -46,7 +46,12 @@
     "recharts": "2.15.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
+<<<<<<< HEAD
     "zod": "^4.1.13"
+=======
+    "zod": "^4.1.13",
+    "zustand": "^5.0.9"
+>>>>>>> 55640d3 (chore(package): zustand 패키지 추가)
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
