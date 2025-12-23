@@ -8,6 +8,7 @@ import { cva } from "class-variance-authority";
 
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
+import { fetchSocialLoginUrl } from "../api/auth-api";
 import { SOCIAL_MAPS, type SocialProvider } from "../model/social-maps";
 
 const socialButtonVariants = cva(
@@ -51,46 +52,18 @@ export function SocialButton({ provider, onClick, disabled }: SocialButtonProps)
 
 export function SocialLoginButtons() {
   const [isLoading, setIsLoading] = useState(false);
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
+
   const handleSocialLogin = async (provider: SocialProvider) => {
     try {
       setIsLoading(true);
 
-      const response = await fetch(`${apiBaseUrl}/api/v1/auth?provider=${provider}`, {
-        credentials: "include",
-      });
+      const url = await fetchSocialLoginUrl(provider);
 
-      if (!response.ok) {
-        if (response.status >= 500) {
-          throw new Error("서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
-        } else if (response.status === 404) {
-          throw new Error("로그인 서비스를 찾을 수 없습니다.");
-        } else if (response.status === 401 || response.status === 403) {
-          throw new Error("로그인 권한이 없습니다.");
-        } else {
-          throw new Error("로그인 요청 중 문제가 발생했습니다.");
-        }
-      }
-
-      const json: unknown = await response.json();
-
-      if (
-        typeof json === "object" &&
-        json !== null &&
-        typeof (json as { data?: unknown }).data === "string"
-      ) {
-        const url = (json as { data: string }).data;
-
-        try {
-          // Validate and normalize the URL
-          // This helps avoid redirecting to malformed or unsafe values.
-          const validatedUrl = new URL(url);
-          window.location.href = validatedUrl.href;
-        } catch {
-          throw new Error("유효하지 않은 OAuth URL입니다.");
-        }
-      } else {
-        throw new Error("로그인 URL을 받아오지 못했습니다. 다시 시도해주세요.");
+      try {
+        const validatedUrl = new URL(url);
+        window.location.href = validatedUrl.href;
+      } catch {
+        throw new Error("유효하지 않은 OAuth URL입니다.");
       }
     } catch (error) {
       console.error(`${provider} 로그인 오류:`, error);
@@ -102,7 +75,7 @@ export function SocialLoginButtons() {
       } else {
         showToast.error("로그인 중 알 수 없는 오류가 발생했습니다.");
       }
-
+    } finally {
       setIsLoading(false);
     }
   };
