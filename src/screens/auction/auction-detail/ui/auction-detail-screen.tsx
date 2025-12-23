@@ -1,4 +1,5 @@
 import { AuctionProgress } from "@/entities/auction";
+import { AuctionTickerProvider } from "@/entities/auction/hooks/use-auction-ticker";
 import { AuctionLogList } from "@/features/auction/auction-log";
 import { AuctionDetailReview } from "@/features/auction/auction-review";
 import type { AuctionDetailType } from "@/screens/auction/auction-detail/model/types";
@@ -36,11 +37,13 @@ export default function AuctionDetailScreen({ data }: { data: AuctionDetailType 
         <div className="overflow-y-auto lg:sticky lg:top-0 lg:max-h-[calc(100vh-120px)] lg:min-w-131 lg:shrink-0 lg:grow-0 lg:basis-131">
           <div className="flex flex-col gap-8 p-4">
             <AuctionDetailCategory category={data.category} />
-            <AuctionDetailPrice startPrice={data.startPrice} currentPrice={data.currentPrice} />
-            <AuctionDetailTitle title={data.title} />
-            <AuctionDetailTags tags={data.tags} />
-            <AuctionDetailSeller seller={data.seller} />
-            <AuctionProgress />
+            <AuctionTickerProvider>
+              <AuctionDetailPrice startPrice={data.startPrice} currentPrice={data.currentPrice} />
+              <AuctionDetailTitle title={data.title} />
+              <AuctionDetailTags tags={data.tags} />
+              <AuctionDetailSeller seller={data.seller} />
+              <AuctionProgress />
+            </AuctionTickerProvider>
             <AuctionDetailUserActions />
             <div className="flex flex-col gap-3">
               <AuctionLogList
