@@ -15,6 +15,7 @@ import {
   AuctionDetailUserActions,
   // ImageCarousel,
 } from "@/widgets/auction/auction-detail";
+import { AuctionPriceStoreProvider } from "@/widgets/auction/auction-detail/hooks/auction-price-store-provider";
 
 export default function AuctionDetailScreen({ data }: { data: AuctionDetailType }) {
   if (!data) {
@@ -44,13 +45,15 @@ export default function AuctionDetailScreen({ data }: { data: AuctionDetailType 
         <div className="overflow-y-auto lg:sticky lg:top-0 lg:max-h-[calc(100vh-120px)] lg:min-w-131 lg:shrink-0 lg:grow-0 lg:basis-131">
           <div className="flex flex-col gap-8 p-4">
             <AuctionDetailCategory category={data.category} />
-            <AuctionTickerProvider>
-              <AuctionDetailPrice startPrice={data.startPrice} currentPrice={data.currentPrice} />
-              <AuctionDetailTitle title={data.title} />
-              <AuctionDetailTags tags={data.tags} />
-              <AuctionDetailSeller seller={data.seller} />
-              <AuctionProgress />
-            </AuctionTickerProvider>
+            <AuctionPriceStoreProvider price={data.currentPrice} stopLoss={data.stopLoss}>
+              <AuctionTickerProvider>
+                <AuctionDetailPrice startPrice={data.startPrice} currentPrice={data.currentPrice} />
+                <AuctionDetailTitle title={data.title} />
+                <AuctionDetailTags tags={data.tags} />
+                <AuctionDetailSeller seller={data.seller} />
+                <AuctionProgress />
+              </AuctionTickerProvider>
+            </AuctionPriceStoreProvider>
             <AuctionDetailUserActions />
             <div className="flex flex-col gap-3">
               <AuctionLogList
