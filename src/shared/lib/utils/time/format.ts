@@ -18,7 +18,7 @@ export function formatAgo(input: string | Date | number): string {
 }
 
 export function formatMs(ms: number) {
-  const totalSec = Math.ceil(ms / 1000);
+  const totalSec = Math.floor(ms / 1000);
   const mm = Math.floor(totalSec / 60);
   const ss = totalSec % 60;
   return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
