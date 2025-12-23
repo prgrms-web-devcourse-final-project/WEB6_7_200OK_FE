@@ -13,10 +13,6 @@ export type AuctionPriceStoreApi = ReturnType<typeof createAuctionPriceStore>;
 
 export const AuctionPriceStoreContext = createContext<AuctionPriceStoreApi | undefined>(undefined);
 
-export interface AuctionPriceStoreProviderProps {
-  children: ReactNode;
-}
-
 export const useAuctionPriceStore = <T,>(selector: (store: AuctionPriceState) => T): T => {
   const auctionPriceStoreContext = useContext(AuctionPriceStoreContext);
   if (!auctionPriceStoreContext) {
@@ -25,9 +21,18 @@ export const useAuctionPriceStore = <T,>(selector: (store: AuctionPriceState) =>
 
   return useStore(auctionPriceStoreContext, selector);
 };
+export interface AuctionPriceStoreProviderProps {
+  children: ReactNode;
+  price: number;
+  stopLoss: number;
+}
 
-export const AuctionPriceStoreProvider = ({ children }: AuctionPriceStoreProviderProps) => {
-  const [store] = useState(() => createAuctionPriceStore());
+export const AuctionPriceStoreProvider = ({
+  children,
+  price,
+  stopLoss,
+}: AuctionPriceStoreProviderProps) => {
+  const [store] = useState(() => createAuctionPriceStore({ price, stopLoss }));
   return (
     <AuctionPriceStoreContext.Provider value={store}>{children}</AuctionPriceStoreContext.Provider>
   );
