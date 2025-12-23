@@ -1,13 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import type { ItemImage } from "@/entities/auction";
 import { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
-import { isFormValid } from "@/shared/lib/utils/validator/validators";
 
 import { itemFormSchema, type ItemFormValues } from "./schema";
+import { isFormValid } from "./validators";
 
 import type { ItemFormSubmitData } from "./types";
 
@@ -36,8 +36,8 @@ export function useItemForm() {
   const {
     productName,
     category,
-    description,
     tags,
+    description,
     startPrice,
     stopLossPrice,
     dropPrice,
@@ -58,26 +58,11 @@ export function useItemForm() {
   const [isDateTimeModalOpen, setIsDateTimeModalOpen] = useState<boolean>(false);
 
   // 폼 유효성 검증
-  const formValid = useMemo(() => {
-    const hasFormErrors = Object.keys(formState.errors).length > 0;
-    const customValidation = isFormValid({
-      productName: productName || "",
-      category: category || "",
-      description: description || "",
-      startPrice,
-      stopLossPrice,
-      dropPrice,
-      selectedDate,
-      startPriceError,
-      stopLossError,
-      dropPriceError,
-    });
-    return !hasFormErrors && customValidation;
-  }, [
-    formState.errors,
-    productName,
-    category,
-    description,
+  const hasFormErrors = Object.keys(formState.errors).length > 0;
+  const customValidation = isFormValid({
+    productName: productName || "",
+    category: category || "",
+    description: description || "",
     startPrice,
     stopLossPrice,
     dropPrice,
@@ -85,7 +70,8 @@ export function useItemForm() {
     startPriceError,
     stopLossError,
     dropPriceError,
-  ]);
+  });
+  const formValid = !hasFormErrors && customValidation;
 
   // 날짜/시간 선택 핸들러
   const handleDateTimeConfirm = useCallback(
@@ -97,15 +83,15 @@ export function useItemForm() {
     [setValue]
   );
 
-  const getDisplayText = useCallback((): string => {
+  const getDisplayText = (): string => {
     if (!selectedDate) {
       return "날짜 및 시간을 선택해주세요";
     }
     return formatDateTimeDisplay(selectedDate, selectedTime);
-  }, [selectedDate, selectedTime]);
+  };
 
   // 폼 제출 데이터 생성
-  const getSubmitData = useCallback((): ItemFormSubmitData | null => {
+  const getSubmitData = (): ItemFormSubmitData | null => {
     if (
       !formValid ||
       !selectedDate ||
@@ -127,18 +113,7 @@ export function useItemForm() {
       dropPrice,
       auctionStartDate: selectedDate,
     };
-  }, [
-    formValid,
-    selectedDate,
-    selectedTime,
-    productName,
-    category,
-    description,
-    tags,
-    startPrice,
-    stopLossPrice,
-    dropPrice,
-  ]);
+  };
 
   return {
     // React Hook Form

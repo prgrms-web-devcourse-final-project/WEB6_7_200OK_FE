@@ -1,3 +1,5 @@
+import { ItemImage, TimeSelection } from "@/entities/auction";
+
 export interface ItemFormSubmitData {
   productName: string;
   category: string;
@@ -15,7 +17,7 @@ export interface ItemFormState {
   category: string;
   description: string;
   // 이미지
-  images: import("@/entities/auction").ItemImage[];
+  images: ItemImage[];
   // 태그
   tags: string[];
   // 가격
@@ -28,7 +30,7 @@ export interface ItemFormState {
   dropPriceError: string;
   // 날짜/시간
   selectedDate: Date | null;
-  selectedTime: import("@/entities/date-modal").TimeSelection | null;
+  selectedTime: TimeSelection | null;
   isDateTimeModalOpen: boolean;
   formValid: boolean;
 }
