@@ -28,31 +28,29 @@ export interface FormValidationParams {
 export const validateStopLossPrice = (
   start: number | null,
   stop: number | null,
-  setStopLossError: (error: string) => void
+  setError: (error: string | null) => void
 ) => {
   // 시작가가 있는데 최저가가 없으면 에러
   if (start !== null && stop === null) {
-    setStopLossError("최저가를 입력 해주세요.");
+    setError("최저가를 입력 해주세요.");
     return;
   }
   // 시작가나 최저가가 없으면 에러 초기화
   if (start === null || stop === null) {
-    setStopLossError("");
+    setError("");
     return;
   }
 
   // Zod 스키마 검증
   const stopLossResult = stopLossPriceSchema.safeParse(stop);
   if (!stopLossResult.success) {
-    setStopLossError(stopLossResult.error.issues[0]?.message || "");
+    setError(stopLossResult.error.issues[0]?.message || "");
     return;
   }
 
   // 최저가가 시작가의 90%를 초과하면 에러
   const maxStopLoss = start * STOP_LOSS_PERCENTAGE;
-  setStopLossError(
-    stop > maxStopLoss ? "판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다." : ""
-  );
+  setError(stop > maxStopLoss ? "판매 최저가는 판매 시작가의 90%를 초과할 수 없습니다." : null);
 };
 
 // 가격 하락 단위 검증
@@ -60,24 +58,24 @@ export const validateDropPrice = (
   start: number | null,
   stopLoss: number | null,
   drop: number | null,
-  setDropPriceError: (error: string) => void
+  setError: (error: string | null) => void
 ) => {
   // 시작가가 없거나 하락단위가 null인 경우
   if (!start || drop === null) {
-    setDropPriceError("");
+    setError("");
     return;
   }
 
   // 하락단위가 0인 경우
   if (drop === 0) {
-    setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
+    setError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
     return;
   }
 
   // Zod 스키마 검증
   const dropPriceResult = dropPriceSchema.safeParse(drop);
   if (!dropPriceResult.success) {
-    setDropPriceError(dropPriceResult.error.issues[0]?.message || "");
+    setError(dropPriceResult.error.issues[0]?.message || "");
     return;
   }
 
@@ -85,23 +83,21 @@ export const validateDropPrice = (
   const maxDropPrice = stopLoss ? start - stopLoss : start;
 
   if (drop < minDropPrice) {
-    setDropPriceError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
+    setError("가격 하락 단위는 판매 시작가의 0.5% 미만일 수 없습니다.");
     return;
   }
 
   if (drop > maxDropPrice) {
-    setDropPriceError(
-      "가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다."
-    );
+    setError("가격 하락 단위가 너무 큽니다. 단위는 (판매 시작가 - 판매 최저가)보다 작아야 합니다.");
     return;
   }
 
   if (drop >= start) {
-    setDropPriceError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
+    setError("가격 하락 단위는 판매 시작가보다 같거나 높을 수 없습니다.");
     return;
   }
 
-  setDropPriceError("");
+  setError("");
 };
 
 // 전체 폼 유효성 검증

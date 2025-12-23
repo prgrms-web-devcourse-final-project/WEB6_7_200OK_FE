@@ -20,13 +20,10 @@ export function AuctionCreateScreen() {
   const form = useItemForm();
 
   const priceValidation = usePriceValidation({
-    startPrice: form.startPrice,
-    stopLossPrice: form.stopLossPrice,
-    dropPrice: form.dropPrice,
     setValue: form.setValue,
-    setStartPriceError: form.setStartPriceError,
-    setStopLossError: form.setStopLossError,
-    setDropPriceError: form.setDropPriceError,
+    setError: form.setError,
+    clearErrors: form.clearErrors,
+    getValues: form.getValues,
   });
 
   const handleSubmit = async () => {

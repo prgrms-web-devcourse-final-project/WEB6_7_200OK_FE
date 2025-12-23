@@ -5,80 +5,114 @@ import { DEFAULT_DROP_PERCENTAGE, STOP_LOSS_PERCENTAGE } from "@/entities/auctio
 import { startPriceSchema, validateDropPrice, validateStopLossPrice } from "./validators";
 
 import type { ItemFormValues } from "./schema";
-import type { UseFormSetValue } from "react-hook-form";
+import type {
+  UseFormSetValue,
+  UseFormSetError,
+  UseFormClearErrors,
+  UseFormGetValues,
+} from "react-hook-form";
 
 interface PriceValidationProps {
-  startPrice: number | null;
-  stopLossPrice: number | null;
-  dropPrice: number | null;
   setValue: UseFormSetValue<ItemFormValues>;
-  setStartPriceError: (error: string) => void;
-  setStopLossError: (error: string) => void;
-  setDropPriceError: (error: string) => void;
+  setError: UseFormSetError<ItemFormValues>;
+  clearErrors: UseFormClearErrors<ItemFormValues>;
+  getValues: UseFormGetValues<ItemFormValues>;
 }
 
 export function usePriceValidation({
-  startPrice,
-  stopLossPrice,
-  dropPrice,
   setValue,
-  setStartPriceError,
-  setStopLossError,
-  setDropPriceError,
+  setError,
+  clearErrors,
+  getValues,
 }: PriceValidationProps) {
   const handleStartPriceBlur = useCallback(() => {
-    if (startPrice === null || startPrice === 0) {
-      setStartPriceError("판매 시작가를 입력해주세요.");
+    // blur 시점의 최신 값을 가져옴
+    const currentStartPrice = getValues("startPrice");
+
+    if (currentStartPrice === null || currentStartPrice === 0) {
+      setError("startPrice", { type: "manual", message: "판매 시작가를 입력해주세요." });
       return;
     }
 
-    if (!startPrice) {
+    if (!currentStartPrice) {
       setValue("stopLossPrice", null, { shouldValidate: false, shouldDirty: false });
       setValue("dropPrice", null, { shouldValidate: false, shouldDirty: false });
-      setStartPriceError("");
-      setStopLossError("");
-      setDropPriceError("");
+      clearErrors(["startPrice", "stopLossPrice", "dropPrice"]);
       return;
     }
 
     // 시작가 검증
-    const startPriceResult = startPriceSchema.safeParse(startPrice);
+    const startPriceResult = startPriceSchema.safeParse(currentStartPrice);
     if (!startPriceResult.success) {
-      setStartPriceError(startPriceResult.error.issues[0]?.message || "");
+      setError("startPrice", {
+        type: "manual",
+        message: startPriceResult.error.issues[0]?.message || "",
+      });
       return;
     }
-    setStartPriceError("");
+    clearErrors("startPrice");
 
     // 스탑로스 자동 계산 (시작가의 90%)
-    const calculatedStopLoss = Math.floor(startPrice * STOP_LOSS_PERCENTAGE);
+    const calculatedStopLoss = Math.floor(currentStartPrice * STOP_LOSS_PERCENTAGE);
     setValue("stopLossPrice", calculatedStopLoss, { shouldValidate: false, shouldDirty: false });
-    validateStopLossPrice(startPrice, calculatedStopLoss, setStopLossError);
+    validateStopLossPrice(currentStartPrice, calculatedStopLoss, (error) => {
+      if (error) {
+        setError("stopLossPrice", { type: "manual", message: error });
+      } else {
+        clearErrors("stopLossPrice");
+      }
+    });
 
     // 가격 하락 단위 자동 계산 (시작가의 1%)
-    const calculatedDropPrice = Math.floor(startPrice * DEFAULT_DROP_PERCENTAGE);
+    const calculatedDropPrice = Math.floor(currentStartPrice * DEFAULT_DROP_PERCENTAGE);
     setValue("dropPrice", calculatedDropPrice, { shouldValidate: false, shouldDirty: false });
-    validateDropPrice(startPrice, calculatedStopLoss, calculatedDropPrice, setDropPriceError);
-  }, [startPrice, setValue, setStartPriceError, setStopLossError, setDropPriceError]);
+    validateDropPrice(currentStartPrice, calculatedStopLoss, calculatedDropPrice, (error) => {
+      if (error) {
+        setError("dropPrice", { type: "manual", message: error });
+      } else {
+        clearErrors("dropPrice");
+      }
+    });
+  }, [getValues, setValue, setError, clearErrors]);
 
   const handleStopLossPriceBlur = useCallback(() => {
-    if (stopLossPrice === null) {
-      setStopLossError("판매 최저가를 입력해주세요.");
+    const currentStartPrice = getValues("startPrice");
+    const currentStopLossPrice = getValues("stopLossPrice");
+
+    if (currentStopLossPrice === null || currentStopLossPrice === 0) {
+      setError("stopLossPrice", { type: "manual", message: "판매 최저가를 입력해주세요." });
       return;
     }
 
     // 최저가 검증만 수행
-    validateStopLossPrice(startPrice, stopLossPrice, setStopLossError);
-  }, [startPrice, stopLossPrice, setStopLossError]);
+    validateStopLossPrice(currentStartPrice, currentStopLossPrice, (error) => {
+      if (error) {
+        setError("stopLossPrice", { type: "manual", message: error });
+      } else {
+        clearErrors("stopLossPrice");
+      }
+    });
+  }, [getValues, setError, clearErrors]);
 
   const handleDropPriceBlur = useCallback(() => {
-    if (dropPrice === null) {
-      setDropPriceError("가격 하락 단위를 입력해주세요.");
+    const currentStartPrice = getValues("startPrice");
+    const currentStopLossPrice = getValues("stopLossPrice");
+    const currentDropPrice = getValues("dropPrice");
+
+    if (currentDropPrice === null || currentDropPrice === 0) {
+      setError("dropPrice", { type: "manual", message: "가격 하락 단위를 입력해주세요." });
       return;
     }
 
     // 하락 단위만 검증 수행
-    validateDropPrice(startPrice, stopLossPrice, dropPrice, setDropPriceError);
-  }, [startPrice, dropPrice, stopLossPrice, setDropPriceError]);
+    validateDropPrice(currentStartPrice, currentStopLossPrice, currentDropPrice, (error) => {
+      if (error) {
+        setError("dropPrice", { type: "manual", message: error });
+      } else {
+        clearErrors("dropPrice");
+      }
+    });
+  }, [getValues, setError, clearErrors]);
 
   return {
     handleStartPriceBlur,
