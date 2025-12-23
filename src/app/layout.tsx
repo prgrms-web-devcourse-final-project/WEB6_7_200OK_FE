@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 
 import { ThemeProvider } from "next-themes";
 
+import { ApiProvider } from "@/shared/api/providers";
 import "@/shared/styles/globals.css";
 import { ToastRegistry } from "@/shared/ui/toast/toast-registry";
 import { BottomNav } from "@/widgets/bottom-nav";
@@ -27,17 +28,19 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          {children}
-          <ToastRegistry />
-          <BottomNav />
-        </ThemeProvider>
+        <ApiProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            {children}
+            <ToastRegistry />
+            <BottomNav />
+          </ThemeProvider>
+        </ApiProvider>
       </body>
     </html>
   );
