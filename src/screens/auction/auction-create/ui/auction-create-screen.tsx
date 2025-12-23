@@ -19,6 +19,11 @@ import { DateTimeModal } from "@/widgets/new-item-modal/index";
 export function AuctionCreateScreen() {
   const form = useItemForm();
 
+  const productName = form.watch("productName");
+  const category = form.watch("category");
+  const tags = form.watch("tags");
+  const description = form.watch("description");
+
   const priceValidation = usePriceValidation({
     setValue: form.setValue,
     setError: form.setError,
@@ -53,7 +58,7 @@ export function AuctionCreateScreen() {
                 id="product-name"
                 type="text"
                 placeholder="상품명을 입력해주세요"
-                value={form.productName}
+                value={productName}
                 onChange={(e) => form.setProductName(e.target.value)}
               />
             </div>
@@ -64,13 +69,13 @@ export function AuctionCreateScreen() {
                 카테고리
               </label>
               <CategorySelector
-                value={form.category}
+                value={category}
                 onValueChange={(value) => form.setCategory(value)}
               />
             </div>
 
             {/* 태그 */}
-            <TagInputSection tags={form.tags} onTagsChange={form.setTags} />
+            <TagInputSection tags={tags} onTagsChange={form.setTags} />
 
             {/* 상세 정보 */}
             <div>
@@ -81,7 +86,7 @@ export function AuctionCreateScreen() {
                 id="description"
                 placeholder="상품에 대한 상세한 설명을 입력해주세요."
                 className="min-h-34 resize-none"
-                value={form.description}
+                value={description}
                 onChange={(e) => form.setDescription(e.target.value)}
               />
             </div>
