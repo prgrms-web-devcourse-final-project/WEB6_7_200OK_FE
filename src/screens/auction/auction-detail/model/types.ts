@@ -3,11 +3,12 @@ import type { ItemCategory } from "@/entities/item/model/category";
 import type { RecentPriceHistoryType } from "@/features/auction/auction-log";
 import { SellerType } from "@/features/auction/auction-sale";
 
-// TODO: 경매 태그 없음
 export interface AuctionDetailType extends Omit<AuctionType, "imageUrl"> {
-  // Overloading Type
+  // Overriding Type
   imageUrls: string[];
   stopLoss: number;
+  currentPrice: number;
+  discountRate: number;
   // detail only Type
   description: string;
   likeCount: number;
