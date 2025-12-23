@@ -1,11 +1,8 @@
 import { useCallback } from "react";
 
 import { DEFAULT_DROP_PERCENTAGE, STOP_LOSS_PERCENTAGE } from "@/entities/auction";
-import {
-  startPriceSchema,
-  validateDropPrice,
-  validateStopLossPrice,
-} from "@/shared/lib/utils/validator/validators";
+
+import { startPriceSchema, validateDropPrice, validateStopLossPrice } from "./validators";
 
 import type { ItemFormValues } from "./schema";
 import type { UseFormSetValue } from "react-hook-form";
@@ -30,6 +27,11 @@ export function usePriceValidation({
   setDropPriceError,
 }: PriceValidationProps) {
   const handleStartPriceBlur = useCallback(() => {
+    if (startPrice === null || startPrice === 0) {
+      setStartPriceError("판매 시작가를 입력해주세요.");
+      return;
+    }
+
     if (!startPrice) {
       setValue("stopLossPrice", null, { shouldValidate: false, shouldDirty: false });
       setValue("dropPrice", null, { shouldValidate: false, shouldDirty: false });
