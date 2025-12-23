@@ -14,13 +14,13 @@ export default function AuctionDetailLikeToggle() {
       variant="ghost"
       className={cn(
         "h-auto w-12 flex-col gap-2 py-2 text-xs",
-        isActive ? "text-muted-foreground" : "text-primary"
+        !isActive ? "text-muted-foreground" : "text-primary"
       )}
       size="sm"
       onClick={() => setIsActive((prev) => !prev)}
     >
       <Heart
-        className={cn(isActive ? "text-zinc-800 dark:text-zinc-300" : "fill-red-500 text-red-500")}
+        className={cn(!isActive ? "text-zinc-800 dark:text-zinc-300" : "fill-red-500 text-red-500")}
       />
       1.1
     </Button>
