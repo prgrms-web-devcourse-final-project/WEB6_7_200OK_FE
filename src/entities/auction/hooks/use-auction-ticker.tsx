@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useMemo, useRef, useState 
 
 import * as Comlink from "comlink";
 
-import type { AuctionTicker } from "@/entities/auction/model/auction-ticker.ts";
+import type { AuctionTicker } from "@/entities/auction/model/auction-ticker";
 
 interface AuctionTickerValue {
   remainMs: number;
@@ -32,10 +32,9 @@ export function AuctionTickerProvider({
   const [remainMs, setRemainMs] = useState(duration);
 
   useEffect(() => {
-    const worker = new Worker(
-      new URL("@/entities/auction/model/auction-ticker.ts", import.meta.url),
-      { type: "module" }
-    );
+    const worker = new Worker(new URL("@/entities/auction/model/auction-ticker", import.meta.url), {
+      type: "module",
+    });
     workerRef.current = worker;
 
     const ticker = Comlink.wrap<AuctionTicker>(worker);
