@@ -46,3 +46,37 @@ export const combineDateTime = (date: Date, time: TimeSelection): Date => {
 
   return dateDayjs.hour(hourValue).minute(minute).second(0).millisecond(0).toDate();
 };
+
+export const isValidDateTime = (date: Date | null, time: TimeSelection | null): boolean => {
+  if (!date || !time) {
+    return false;
+  }
+
+  const combinedDateTime = dayjs(combineDateTime(date, time));
+  const now = dayjs();
+  const minDateTime = now.add(1, "day");
+  const maxDateTime = now.add(7, "days");
+
+  // 날짜 필터링 (+1 ~ +7일)
+  return (
+    (combinedDateTime.isAfter(minDateTime) || combinedDateTime.isSame(minDateTime)) &&
+    (combinedDateTime.isBefore(maxDateTime) || combinedDateTime.isSame(maxDateTime))
+  );
+};
+
+// 특정 날짜+시간 조합이 유효한지 체크하는 함수 반환
+export const getIsTimeDisabled =
+  (selectedDate: Date | null) =>
+  (hour: number, minute: number, timezone: string): boolean => {
+    if (!selectedDate) {
+      return false;
+    }
+
+    const timeSelection: TimeSelection = {
+      hour: hour as TimeSelection["hour"],
+      minute,
+      timezone: timezone as TimeSelection["timezone"],
+    };
+
+    return !isValidDateTime(selectedDate, timeSelection);
+  };

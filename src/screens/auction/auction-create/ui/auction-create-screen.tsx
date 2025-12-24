@@ -32,12 +32,12 @@ export function AuctionCreateScreen() {
   });
 
   const handleSubmit = async () => {
-    const submitData = form.getSubmitData();
-    if (!submitData) {
-      return;
-    }
-
-    console.warn("submitData preview:", submitData);
+    // TODO: 상품 등록 API 연결
+    // const submitData = form.getSubmitData();
+    // if (!submitData) {
+    //   return;
+    // }
+    // console.warn("submitData preview:", submitData);
   };
 
   return (
