@@ -128,11 +128,10 @@ export function AuctionCreateScreen() {
                 className="h-10 w-full justify-between font-normal"
               >
                 <span
-                  className={
-                    form.selectedDate
-                      ? "text-foreground text-base md:text-sm"
-                      : "text-muted-foreground text-base md:text-sm"
-                  }
+                  className={cn(
+                    "text-base md:text-sm",
+                    form.selectedDate ? "text-foreground" : "text-muted-foreground"
+                  )}
                 >
                   {form.getDisplayText()}
                 </span>

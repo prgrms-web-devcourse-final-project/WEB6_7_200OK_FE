@@ -21,7 +21,7 @@ export function CategorySelector({
 }: CategorySelectorProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className="h-10! w-full rounded-lg border bg-transparent px-3 text-base md:text-sm">
+      <SelectTrigger className="!h-10 w-full rounded-lg border bg-transparent px-3 text-base md:text-sm">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
