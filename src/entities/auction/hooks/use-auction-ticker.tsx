@@ -1,10 +1,19 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import * as Comlink from "comlink";
 
 import type { AuctionTicker } from "@/entities/auction/model/auction-ticker";
+import { useAuctionPriceStore } from "@/widgets/auction/auction-detail/hooks/auction-price-store-provider";
 
 interface AuctionTickerValue {
   remainMs: number;
@@ -22,14 +31,21 @@ export function useAuctionTicker() {
 export function AuctionTickerProvider({
   children,
   duration = 5 * 60 * 1000,
+  rate,
 }: {
   children: React.ReactNode;
   duration?: number;
+  rate: number;
 }) {
   const workerRef = useRef<Worker | null>(null);
   const tickerRef = useRef<Comlink.Remote<AuctionTicker> | null>(null);
 
   const [remainMs, setRemainMs] = useState(duration);
+  const handleDropPriceByRate = useAuctionPriceStore((state) => state.handleDropPriceByRate);
+
+  const handleOnExpiry = useCallback(() => {
+    handleDropPriceByRate(rate);
+  }, [handleDropPriceByRate, rate]);
 
   useEffect(() => {
     const worker = new Worker(new URL("@/entities/auction/model/auction-ticker", import.meta.url), {
@@ -39,9 +55,11 @@ export function AuctionTickerProvider({
 
     const ticker = Comlink.wrap<AuctionTicker>(worker);
     tickerRef.current = ticker;
+
     (async () => {
       await ticker.start(
         Comlink.proxy((ms: number) => setRemainMs(ms)),
+        Comlink.proxy(handleOnExpiry),
         duration
       );
     })();
@@ -51,7 +69,7 @@ export function AuctionTickerProvider({
       workerRef.current = null;
       tickerRef.current = null;
     };
-  }, [duration]);
+  }, [duration, handleOnExpiry]);
 
   const value = useMemo(() => ({ remainMs, duration }), [remainMs, duration]);
 
