@@ -1,5 +1,5 @@
-import { UserScreen } from "@/screens/user/ui/user-screen";
+import { redirect } from "next/navigation";
 
 export default function UserPage() {
-  return <UserScreen />;
+  redirect("/user/calendar");
 }
