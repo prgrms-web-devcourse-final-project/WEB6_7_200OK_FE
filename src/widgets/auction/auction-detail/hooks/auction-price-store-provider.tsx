@@ -5,7 +5,7 @@ import { type ReactNode, createContext, useState, useContext } from "react";
 import { useStore } from "zustand";
 
 import {
-  type AuctionPriceState,
+  type AuctionPriceStore,
   createAuctionPriceStore,
 } from "@/widgets/auction/auction-detail/model/auction-price-store";
 
@@ -13,7 +13,7 @@ export type AuctionPriceStoreApi = ReturnType<typeof createAuctionPriceStore>;
 
 export const AuctionPriceStoreContext = createContext<AuctionPriceStoreApi | undefined>(undefined);
 
-export const useAuctionPriceStore = <T,>(selector: (store: AuctionPriceState) => T): T => {
+export const useAuctionPriceStore = <T,>(selector: (store: AuctionPriceStore) => T): T => {
   const auctionPriceStoreContext = useContext(AuctionPriceStoreContext);
   if (!auctionPriceStoreContext) {
     throw new Error(`useCounterStore must be used within CounterStoreProvider`);
