@@ -10,6 +10,8 @@ import {
   DEFAULT_TIME_SELECTION,
   getDateRange,
   getDefaultDate,
+  getIsTimeDisabled,
+  isValidDateTime,
   type DateTimeModalProps,
   type TimeSelection,
 } from "@/entities/date-modal";
@@ -38,11 +40,14 @@ export function DateTimeModal({
   };
 
   const handleConfirm = () => {
-    if (currentDate) {
+    if (currentDate && isValidDateTime(currentDate, currentTime)) {
       const combinedDate = combineDateTime(currentDate, currentTime);
       onConfirm(combinedDate, currentTime);
     }
   };
+
+  const isTimeDisabled = getIsTimeDisabled(currentDate);
+  const isValid = currentDate ? isValidDateTime(currentDate, currentTime) : false;
 
   return (
     <>
@@ -80,13 +85,17 @@ export function DateTimeModal({
             onDateSelect={handleDateSelect}
           />
           <p className="text-muted-foreground text-xs">
-            * 최소 다음 날부터 최대 7일까지 선택 가능합니다.
+            * 최소 현재 시간 기준 1일 이후부터 최대 7일 이전까지 선택 가능합니다.
           </p>
         </div>
 
         {/* 시간 선택 */}
         <div className="mb-6">
-          <TimeSelector selectedTime={currentTime} onTimeChange={setCurrentTime} />
+          <TimeSelector
+            selectedTime={currentTime}
+            onTimeChange={setCurrentTime}
+            isTimeDisabled={isTimeDisabled}
+          />
         </div>
 
         {/* 확인 버튼 */}
@@ -94,7 +103,7 @@ export function DateTimeModal({
           <Button type="button" onClick={onClose} variant="outline" className="flex-1">
             취소
           </Button>
-          <Button type="button" onClick={handleConfirm} disabled={!currentDate} className="flex-1">
+          <Button type="button" onClick={handleConfirm} disabled={!isValid} className="flex-1">
             확인
           </Button>
         </div>
