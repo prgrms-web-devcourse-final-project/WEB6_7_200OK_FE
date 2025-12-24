@@ -5,27 +5,20 @@ import { ChevronDown, Clock } from "lucide-react";
 
 import { HOURS, MINUTES, TIMEZONES } from "@/entities/auction";
 import { type TimeSelection } from "@/entities/date-modal";
-import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 
-const timeSelectorColumnVariants = cva("flex flex-col");
-const timeSelectorHeaderVariants = cva("bg-muted/30 text-center");
-const timeSelectorHeaderTextVariants = cva("text-muted-foreground text-xs font-medium");
-const timeSelectorButtonVariants = cva("w-full rounded-none border-none shadow-none", {
+const columnClass = cva("flex flex-col");
+const headerClass = cva("bg-muted/30 text-center");
+const headerClassText = cva("text-muted-foreground text-xs font-medium");
+const timeButtonClass = cva("w-full rounded-none border-none shadow-none", {
   variants: {
     selected: {
       true: "bg-brand text-accent dark:text-accent-foreground",
-      false: "",
     },
     disabled: {
       true: "cursor-not-allowed opacity-50",
-      false: "",
     },
-  },
-  defaultVariants: {
-    selected: false,
-    disabled: false,
   },
 });
 
@@ -57,25 +50,19 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
           </span>
         </div>
         <ChevronDown
-          className={cn(
-            "text-muted-foreground size-4 transition-transform duration-200",
-            isOpen && "rotate-180"
-          )}
+          className={`text-muted-foreground size-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
         />
       </Button>
 
       {/* 시간 선택 */}
       <div
-        className={cn(
-          "bg-popover text-popover-foreground relative z-50 mt-2 w-full overflow-hidden rounded-md border shadow-md transition-all duration-200",
-          isOpen ? "max-h-96 opacity-100" : "pointer-events-none max-h-0 opacity-0"
-        )}
+        className={`bg-popover text-popover-foreground relative z-50 mt-2 w-full overflow-hidden rounded-md border shadow-md transition-all duration-200 ${isOpen ? "max-h-96 opacity-100" : "pointer-events-none max-h-0 opacity-0"}`}
       >
         <div className="divide-border grid grid-cols-3 divide-x">
           {/* 오전/오후 */}
-          <div className={timeSelectorColumnVariants()}>
-            <div className={timeSelectorHeaderVariants()}>
-              <span className={timeSelectorHeaderTextVariants()}>오전/오후</span>
+          <div className={columnClass()}>
+            <div className={headerClass()}>
+              <span className={headerClassText()}>오전/오후</span>
             </div>
             <div>
               {TIMEZONES.map((timezone) => {
@@ -89,12 +76,10 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
                     type="button"
                     variant="ghost"
                     disabled={isDisabled}
-                    className={cn(
-                      timeSelectorButtonVariants({
-                        selected: selectedTime.timezone === timezone,
-                        disabled: isDisabled,
-                      })
-                    )}
+                    className={timeButtonClass({
+                      ...(selectedTime.timezone === timezone && { selected: true }),
+                      ...(isDisabled && { disabled: true }),
+                    })}
                     onClick={() => onTimeChange({ ...selectedTime, timezone })}
                   >
                     {timezone}
@@ -105,9 +90,9 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
           </div>
 
           {/* 시 */}
-          <div className={timeSelectorColumnVariants()}>
-            <div className={timeSelectorHeaderVariants()}>
-              <span className={timeSelectorHeaderTextVariants()}>시</span>
+          <div className={columnClass()}>
+            <div className={headerClass()}>
+              <span className={headerClassText()}>시</span>
             </div>
             <ScrollArea className="h-32">
               <div>
@@ -122,12 +107,10 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
                       type="button"
                       variant="ghost"
                       disabled={isDisabled}
-                      className={cn(
-                        timeSelectorButtonVariants({
-                          selected: selectedTime.hour === hour,
-                          disabled: isDisabled,
-                        })
-                      )}
+                      className={timeButtonClass({
+                        ...(selectedTime.hour === hour && { selected: true }),
+                        ...(isDisabled && { disabled: true }),
+                      })}
                       onClick={() => onTimeChange({ ...selectedTime, hour })}
                     >
                       {hour}
@@ -139,9 +122,9 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
           </div>
 
           {/* 분 */}
-          <div className={timeSelectorColumnVariants()}>
-            <div className={timeSelectorHeaderVariants()}>
-              <span className={timeSelectorHeaderTextVariants()}>분</span>
+          <div className={columnClass()}>
+            <div className={headerClass()}>
+              <span className={headerClassText()}>분</span>
             </div>
             <ScrollArea className="h-32">
               <div>
@@ -156,12 +139,10 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
                       type="button"
                       variant="ghost"
                       disabled={isDisabled}
-                      className={cn(
-                        timeSelectorButtonVariants({
-                          selected: selectedTime.minute === minute,
-                          disabled: isDisabled,
-                        })
-                      )}
+                      className={timeButtonClass({
+                        ...(selectedTime.minute === minute && { selected: true }),
+                        ...(isDisabled && { disabled: true }),
+                      })}
                       onClick={() => onTimeChange({ ...selectedTime, minute })}
                     >
                       {String(minute).padStart(2, "0")}

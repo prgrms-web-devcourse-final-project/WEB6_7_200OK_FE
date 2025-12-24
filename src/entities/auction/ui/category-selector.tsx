@@ -1,4 +1,3 @@
-import { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
 import {
   Select,
   SelectContent,
@@ -6,6 +5,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/ui/select/select";
+
+import { CATEGORY_LABEL, ITEM_CATEGORIES } from "../model/category";
 
 interface CategorySelectorProps {
   value: string;
