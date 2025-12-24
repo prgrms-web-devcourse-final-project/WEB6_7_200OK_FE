@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const COOKIE_OPTIONS = {
   ACCESS_TOKEN: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none" as const,
+    secure: isProduction,
+    sameSite: isProduction ? ("none" as const) : ("lax" as const),
     path: "/",
     maxAge: 60 * 60,
   },
   REFRESH_TOKEN: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none" as const,
+    secure: isProduction,
+    sameSite: isProduction ? ("none" as const) : ("lax" as const),
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   },
