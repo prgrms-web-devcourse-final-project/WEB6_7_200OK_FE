@@ -10,6 +10,7 @@ import Separator from "@/shared/ui/separator/separator";
 
 import { DateSelector } from "./date-selector";
 import { TimeSelector } from "./time-selector";
+import { type DateTimeModalProps, type TimeSelection } from "../model/types";
 import {
   combineDateTime,
   DEFAULT_TIME_SELECTION,
@@ -17,8 +18,7 @@ import {
   getDefaultDate,
   getIsTimeDisabled,
   isValidDateTime,
-} from "../model/date-utils";
-import { type DateTimeModalProps, type TimeSelection } from "../model/types";
+} from "../utils/date-utils";
 
 export function DateTimeModal({
   selectedDate,
