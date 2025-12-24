@@ -37,8 +37,6 @@ export {
 
 export { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
 
-export { TIME_SELECTOR_CLASSES } from "@/entities/date-modal/model/time-selector-constants";
-
 export { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
 
 export { ImageAddButton } from "@/entities/auction/ui/auction-create-image/ui/image-add-button";

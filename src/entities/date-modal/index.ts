@@ -13,4 +13,3 @@ export type {
   DateSelectorProps,
   DateRange,
 } from "./model/types";
-export { TIME_SELECTOR_CLASSES } from "./model/time-selector-constants";

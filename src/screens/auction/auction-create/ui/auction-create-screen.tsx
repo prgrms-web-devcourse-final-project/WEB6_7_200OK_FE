@@ -9,12 +9,12 @@ import {
   useItemForm,
   usePriceValidation,
   ImageUploadSection,
+  DateTimeModal,
 } from "@/features/auction/auction-create";
 import Button from "@/shared/ui/button/button";
 import Input from "@/shared/ui/input/input";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 import { Textarea } from "@/shared/ui/textarea/textarea";
-import { DateTimeModal } from "@/widgets/new-item-modal/index";
 
 export function AuctionCreateScreen() {
   const form = useItemForm();
