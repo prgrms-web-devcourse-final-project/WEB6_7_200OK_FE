@@ -7,7 +7,7 @@ export class AuctionTicker {
 
   private intervalId: number | null = null;
 
-  start(onTick: ProxyMarked, durationMs = 5 * 60 * 1000, onExpiry?: ProxyMarked) {
+  start(onTick: ProxyMarked, onExpiry: ProxyMarked, durationMs = 5 * 60 * 1000) {
     this.stop();
 
     this.duration = durationMs;
