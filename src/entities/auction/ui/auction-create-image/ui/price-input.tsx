@@ -20,7 +20,7 @@ export function PriceInput({ className, error, ...props }: PriceInputProps) {
         <Input
           type="number"
           className={cn(
-            "h-full flex-1 border-0 bg-transparent p-0 text-base shadow-none focus-visible:ring-0 md:text-sm dark:bg-transparent",
+            "h-full flex-1 border-0 bg-transparent p-0 text-sm shadow-none focus-visible:ring-0 md:text-base dark:bg-transparent",
             className
           )}
           {...props}
