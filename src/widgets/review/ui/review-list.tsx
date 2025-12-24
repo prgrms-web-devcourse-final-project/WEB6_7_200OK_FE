@@ -1,34 +1,31 @@
 "use client";
 
-import { useMemo } from "react";
-
-import { MOCK_REVIEWS, ReviewCard } from "@/entities/review";
-import { DashboardContentLayout } from "@/shared/ui";
+import { ReviewCard } from "@/entities/review";
+import { useReviewList } from "@/features/review/api/use-reviews";
+import { DashboardContentLayout, Skeleton } from "@/shared/ui";
 
 interface ReviewListProps {
   label?: React.ReactNode;
 }
 
 export function ReviewList({ label }: ReviewListProps) {
-  // TODO: 나중에 db에서 정렬된 순으로 받아오면 제거
-  const sortedReviews = useMemo(
-    () =>
-      [...MOCK_REVIEWS].sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
+  const { data: reviews = [], isLoading } = useReviewList();
 
-        if (dateA !== dateB) {
-          return dateB - dateA;
-        }
-
-        return a.reviewer.name.localeCompare(b.reviewer.name);
-      }),
-    []
-  );
+  if (isLoading) {
+    return (
+      <DashboardContentLayout label={label}>
+        <div className="space-y-4">
+          {[1, 2].map((id) => (
+            <Skeleton key={id} className="h-32 w-full rounded-xl" />
+          ))}
+        </div>
+      </DashboardContentLayout>
+    );
+  }
 
   return (
     <DashboardContentLayout label={label}>
-      {sortedReviews.map((review) => (
+      {reviews.map((review) => (
         <ReviewCard key={review.id} review={review} />
       ))}
     </DashboardContentLayout>

@@ -2,12 +2,12 @@
 
 import { UserProfile, UserProfileType } from "@/entities/user";
 
-interface UserProfileWidgetProps {
+interface UserProfileCardProps {
   profile: UserProfileType;
   isOwn?: boolean;
 }
 
-export function UserProfileWidget({ profile, isOwn }: UserProfileWidgetProps) {
+export function UserProfileCard({ profile, isOwn }: UserProfileCardProps) {
   return (
     <div className="w-full">
       <UserProfile profile={profile} isOwn={isOwn} />
