@@ -11,7 +11,7 @@ import { SalesList } from "@/widgets/sale";
 import { UserDashboardCalendar } from "@/widgets/user-dashboard-calendar";
 import { Wishlist } from "@/widgets/wishlist";
 
-import { DASHBOARD_TABS, TabIdType } from "../model/dashboard-tabs.config";
+import { DASHBOARD_TABS, TabIdType } from "../../../entities/user/model/dashboard-tabs.config";
 
 interface UserDashboardProps {
   isOwn?: boolean;
