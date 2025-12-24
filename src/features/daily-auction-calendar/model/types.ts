@@ -1,10 +1,9 @@
-import dayjs from "dayjs";
-
 import {
   SellingItemType,
   WishlistItemType,
   RecentlyViewedItemType,
 } from "@/entities/item/model/types";
+import { dayjs } from "@/shared/lib/utils/dayjs";
 
 export type DashboardItemType = SellingItemType | WishlistItemType | RecentlyViewedItemType;
 

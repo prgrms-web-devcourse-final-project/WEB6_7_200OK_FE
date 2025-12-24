@@ -2,10 +2,10 @@
 
 import { useState, useMemo } from "react";
 
-import dayjs from "dayjs";
 import { PackageOpen } from "lucide-react";
 
 import { ItemBadge, ItemCard } from "@/entities/item";
+import { dayjs } from "@/shared/lib/utils/dayjs";
 import { filterItemsByStatus } from "@/shared/lib/utils/filter/user-page-item-filter";
 import { cn } from "@/shared/lib/utils/utils";
 import { Button, EmptyState } from "@/shared/ui";

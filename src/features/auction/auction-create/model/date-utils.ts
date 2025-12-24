@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from "dayjs";
+import { dayjs, type Dayjs } from "@/shared/lib/utils/dayjs";
 
 import type { DateRange, TimeSelection } from "./types";
 

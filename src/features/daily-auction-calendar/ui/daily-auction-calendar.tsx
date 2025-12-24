@@ -2,8 +2,6 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import dayjs from "dayjs";
-import "dayjs/locale/ko";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Calendar,
@@ -15,12 +13,12 @@ import {
 } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
+import { dayjs } from "@/shared/lib/utils/dayjs";
 import { cn } from "@/shared/lib/utils/utils";
 import { Button } from "@/shared/ui";
 
 import { CalendarEventType } from "../model/types";
 
-dayjs.locale("ko");
 const localizer = dayjsLocalizer(dayjs);
 
 interface DailyAuctionCalendarProps {
