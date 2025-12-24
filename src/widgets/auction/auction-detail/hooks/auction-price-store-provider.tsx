@@ -16,7 +16,7 @@ export const AuctionPriceStoreContext = createContext<AuctionPriceStoreApi | und
 export const useAuctionPriceStore = <T,>(selector: (store: AuctionPriceStore) => T): T => {
   const auctionPriceStoreContext = useContext(AuctionPriceStoreContext);
   if (!auctionPriceStoreContext) {
-    throw new Error(`useCounterStore must be used within CounterStoreProvider`);
+    throw new Error(`useAuctionPriceStore must be used within AuctionPriceStoreProvider`);
   }
 
   return useStore(auctionPriceStoreContext, selector);
