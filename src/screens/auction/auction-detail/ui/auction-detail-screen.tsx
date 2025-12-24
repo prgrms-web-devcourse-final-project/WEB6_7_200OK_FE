@@ -15,7 +15,7 @@ import {
   AuctionDetailUserActions,
   // ImageCarousel,
 } from "@/widgets/auction/auction-detail";
-import { AuctionPriceStoreProvider } from "@/widgets/auction/auction-detail/hooks/auction-price-store-provider";
+import { AuctionPriceStoreProvider } from "@/widgets/auction/auction-detail/provider/auction-price-store-provider";
 
 export default function AuctionDetailScreen({ data }: { data: AuctionDetailType }) {
   if (!data) {
