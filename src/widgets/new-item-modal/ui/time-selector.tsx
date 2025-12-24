@@ -105,7 +105,8 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
                       className={cn(
                         TIME_SELECTOR_CLASSES.button,
                         selectedTime.hour === hour &&
-                          "bg-brand text-accent dark:text-accent-foreground"
+                          "bg-brand text-accent dark:text-accent-foreground",
+                        isDisabled && "cursor-not-allowed opacity-50"
                       )}
                       onClick={() => onTimeChange({ ...selectedTime, hour })}
                     >
