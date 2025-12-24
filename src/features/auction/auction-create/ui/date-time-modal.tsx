@@ -5,7 +5,6 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { X } from "lucide-react";
 
-import { type DateTimeModalProps, type TimeSelection } from "@/entities/date-modal";
 import Button from "@/shared/ui/button/button";
 import Separator from "@/shared/ui/separator/separator";
 
@@ -19,6 +18,7 @@ import {
   getIsTimeDisabled,
   isValidDateTime,
 } from "../model/date-utils";
+import { type DateTimeModalProps, type TimeSelection } from "../model/types";
 
 export function DateTimeModal({
   selectedDate,

@@ -4,13 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFormState } from "react-hook-form";
 
 import type { ItemImage } from "@/entities/auction";
-import { type TimeSelection } from "@/entities/date-modal";
 
 import { formatDateTimeDisplay } from "./date-utils";
 import { itemFormSchema, type ItemFormValues } from "./schema";
+import { type TimeSelection, ItemFormSubmitData } from "./types";
 import { isFormValid } from "./validators";
-
-import type { ItemFormSubmitData } from "./types";
 
 export function useItemForm() {
   // React Hook Form 설정
