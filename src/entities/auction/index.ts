@@ -35,7 +35,9 @@ export {
   type TimeZone,
 } from "@/entities/auction/model/registration-constants";
 
-export { formatDateTimeDisplay, type TimeSelection } from "@/entities/date-modal";
+export { type TimeSelection } from "@/entities/date-modal";
+
+export { formatDateTimeDisplay } from "@/features/auction/auction-create/model/date-utils";
 
 export { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
 

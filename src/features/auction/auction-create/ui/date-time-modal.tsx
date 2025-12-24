@@ -5,6 +5,12 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { X } from "lucide-react";
 
+import { type DateTimeModalProps, type TimeSelection } from "@/entities/date-modal";
+import Button from "@/shared/ui/button/button";
+import Separator from "@/shared/ui/separator/separator";
+
+import { DateSelector } from "./date-selector";
+import { TimeSelector } from "./time-selector";
 import {
   combineDateTime,
   DEFAULT_TIME_SELECTION,
@@ -12,14 +18,7 @@ import {
   getDefaultDate,
   getIsTimeDisabled,
   isValidDateTime,
-  type DateTimeModalProps,
-  type TimeSelection,
-} from "@/entities/date-modal";
-import Button from "@/shared/ui/button/button";
-import Separator from "@/shared/ui/separator/separator";
-
-import { DateSelector } from "./date-selector";
-import { TimeSelector } from "./time-selector";
+} from "../model/date-utils";
 
 export function DateTimeModal({
   selectedDate,

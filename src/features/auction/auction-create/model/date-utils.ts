@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 
-import type { DateRange, TimeSelection } from "./types";
+import type { DateRange, TimeSelection } from "@/entities/date-modal/model/types";
 
 // 기본 시간 선택
 export const DEFAULT_TIME_SELECTION: TimeSelection = {
