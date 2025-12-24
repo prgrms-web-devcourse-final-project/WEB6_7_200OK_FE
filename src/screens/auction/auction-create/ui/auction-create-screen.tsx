@@ -70,7 +70,7 @@ export function AuctionCreateScreen() {
               <Input
                 id="product-name"
                 type="text"
-                className="border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px]"
+                className="border-input rounded-md border bg-transparent text-base md:text-sm"
                 placeholder="상품명을 입력해주세요"
                 value={productName}
                 onChange={(e) => form.setProductName(e.target.value)}
@@ -99,7 +99,7 @@ export function AuctionCreateScreen() {
               <Textarea
                 id="description"
                 placeholder="상품에 대한 상세한 설명을 입력해주세요."
-                className="min-h-34 resize-none"
+                className="min-h-34 resize-none rounded-md border text-base md:text-sm"
                 value={description}
                 onChange={(e) => form.setDescription(e.target.value)}
               />
@@ -127,7 +127,13 @@ export function AuctionCreateScreen() {
                 variant="outline"
                 className="h-10 w-full justify-between font-normal"
               >
-                <span className={form.selectedDate ? "text-foreground" : "text-muted-foreground"}>
+                <span
+                  className={
+                    form.selectedDate
+                      ? "text-foreground text-base md:text-sm"
+                      : "text-muted-foreground text-base md:text-sm"
+                  }
+                >
                   {form.getDisplayText()}
                 </span>
                 <Calendar className="text-muted-foreground size-4" />
