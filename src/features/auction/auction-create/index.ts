@@ -23,7 +23,7 @@ export {
   combineDateTime,
   isValidDateTime,
   getIsTimeDisabled,
-} from "./model/date-utils";
+} from "./utils/date-utils";
 
 export type {
   TimeSelection,
