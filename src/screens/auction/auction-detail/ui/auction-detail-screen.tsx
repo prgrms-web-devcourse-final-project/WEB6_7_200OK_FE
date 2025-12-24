@@ -26,7 +26,7 @@ export default function AuctionDetailScreen({ data }: { data: AuctionDetailType 
     );
   }
   return (
-    <ScrollArea className="h-[calc(100vh-120px)] lg:h-[calc(100vh-120px)]">
+    <ScrollArea className="h-[calc(100vh-var(--header-h))] lg:h-[calc(100vh-var(--header-h))]">
       <div className="mx-auto flex w-full max-w-7xl flex-col-reverse lg:flex-row">
         {/* Left Section */}
         <div className="lg:min-w-125 lg:shrink lg:grow-0 lg:basis-189">
@@ -42,12 +42,12 @@ export default function AuctionDetailScreen({ data }: { data: AuctionDetailType 
         <Separator orientation="vertical" />
 
         {/* Right Section */}
-        <div className="overflow-y-auto lg:sticky lg:top-0 lg:max-h-[calc(100vh-120px)] lg:min-w-131 lg:shrink-0 lg:grow-0 lg:basis-131">
+        <div className="overflow-y-auto lg:sticky lg:top-0 lg:max-h-[calc(100vh-var(--header-h))] lg:min-w-131 lg:shrink-0 lg:grow-0 lg:basis-131">
           <div className="flex flex-col gap-8 p-4">
             <AuctionDetailCategory category={data.category} />
             <AuctionPriceStoreProvider price={data.currentPrice} stopLoss={data.stopLoss}>
-              <AuctionTickerProvider>
-                <AuctionDetailPrice startPrice={data.startPrice} currentPrice={data.currentPrice} />
+              <AuctionTickerProvider rate={data.discountRate}>
+                <AuctionDetailPrice startPrice={data.startPrice} />
                 <AuctionDetailTitle title={data.title} />
                 <AuctionDetailTags tags={data.tags} />
                 <AuctionDetailSeller seller={data.seller} />
