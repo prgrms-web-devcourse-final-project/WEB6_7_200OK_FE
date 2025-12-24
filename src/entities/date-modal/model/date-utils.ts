@@ -57,7 +57,7 @@ export const isValidDateTime = (date: Date | null, time: TimeSelection | null): 
   const minDateTime = now.add(1, "day");
   const maxDateTime = now.add(7, "days");
 
-  // 날짜 필터링 (+1 ~ +7일)
+  // 날짜 및 시간 검증 (현재 시간 기준 +1일 ~ +7일 범위)
   return (
     (combinedDateTime.isAfter(minDateTime) || combinedDateTime.isSame(minDateTime)) &&
     (combinedDateTime.isBefore(maxDateTime) || combinedDateTime.isSame(maxDateTime))
@@ -65,18 +65,24 @@ export const isValidDateTime = (date: Date | null, time: TimeSelection | null): 
 };
 
 // 특정 날짜+시간이 유효한지 체크
-export const getIsTimeDisabled =
-  (selectedDate: Date | null) =>
-  (hour: number, minute: number, timezone: string): boolean => {
+export const getIsTimeDisabled = (selectedDate: Date | null) => {
+  const cache = new Map<string, boolean>();
+  return (hour: number, minute: number, timezone: string): boolean => {
     if (!selectedDate) {
       return false;
     }
-
+    const key = `${hour}:${minute}:${timezone}`;
+    const cached = cache.get(key);
+    if (cached !== undefined) {
+      return cached;
+    }
     const timeSelection: TimeSelection = {
       hour: hour as TimeSelection["hour"],
       minute,
       timezone: timezone as TimeSelection["timezone"],
     };
-
-    return !isValidDateTime(selectedDate, timeSelection);
+    const isDisabled = !isValidDateTime(selectedDate, timeSelection);
+    cache.set(key, isDisabled);
+    return isDisabled;
   };
+};
