@@ -64,7 +64,7 @@ export const isValidDateTime = (date: Date | null, time: TimeSelection | null): 
   );
 };
 
-// 특정 날짜+시간 조합이 유효한지 체크하는 함수 반환
+// 특정 날짜+시간이 유효한지 체크
 export const getIsTimeDisabled =
   (selectedDate: Date | null) =>
   (hour: number, minute: number, timezone: string): boolean => {
