@@ -65,6 +65,8 @@ export { ConfirmDeleteModal } from "./modal/confirm-delete-modal";
 
 export { Progress } from "./progress/progress";
 
+export { RadioGroup, RadioGroupItem } from "./radio-group/radio-group";
+
 export { type RatingButtonProps, type RatingProps, RatingButton, Rating } from "./rating/rating";
 
 export { ScrollArea, ScrollBar } from "./scroll-area/scroll-area";

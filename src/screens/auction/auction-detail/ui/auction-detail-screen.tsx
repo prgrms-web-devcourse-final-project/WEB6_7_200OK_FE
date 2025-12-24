@@ -17,6 +17,13 @@ import {
 } from "@/widgets/auction/auction-detail";
 
 export default function AuctionDetailScreen({ data }: { data: AuctionDetailType }) {
+  if (!data) {
+    return (
+      <div className="p-4">
+        <p>데이터가 없습니다.</p>
+      </div>
+    );
+  }
   return (
     <ScrollArea className="h-[calc(100vh-120px)] lg:h-[calc(100vh-120px)]">
       <div className="mx-auto flex w-full max-w-7xl flex-col-reverse lg:flex-row">

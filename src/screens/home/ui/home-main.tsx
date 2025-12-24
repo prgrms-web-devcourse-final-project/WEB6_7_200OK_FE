@@ -1,6 +1,6 @@
 import { HomeAuctionsData } from "@/screens/home/model/types";
 import { Container } from "@/shared/ui";
-import { AuctionCarouselSection } from "@/widgets/auction-carousel-section";
+import { AuctionCarouselSection } from "@/widgets/auction/auction-carousel-section";
 import { HeroSection } from "@/widgets/hero-section";
 
 interface HomeMainProps {
