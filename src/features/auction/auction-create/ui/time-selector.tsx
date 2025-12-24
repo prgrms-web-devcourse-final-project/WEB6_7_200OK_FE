@@ -4,9 +4,10 @@ import { cva } from "class-variance-authority";
 import { ChevronDown, Clock } from "lucide-react";
 
 import { HOURS, MINUTES, TIMEZONES } from "@/entities/auction";
-import { type TimeSelection } from "@/entities/date-modal";
 import Button from "@/shared/ui/button/button";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
+
+import { type TimeSelection } from "../model/types";
 
 const columnClass = cva("flex flex-col");
 const headerClass = cva("bg-muted/30 text-center");
