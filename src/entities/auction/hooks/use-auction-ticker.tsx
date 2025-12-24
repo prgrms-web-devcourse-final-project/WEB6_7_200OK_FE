@@ -13,7 +13,7 @@ import React, {
 import * as Comlink from "comlink";
 
 import type { AuctionTicker } from "@/entities/auction/model/auction-ticker";
-import { useAuctionPriceStore } from "@/widgets/auction/auction-detail/hooks/auction-price-store-provider";
+import { useAuctionPriceStore } from "@/widgets/auction/auction-detail/provider/auction-price-store-provider";
 
 interface AuctionTickerValue {
   remainMs: number;
