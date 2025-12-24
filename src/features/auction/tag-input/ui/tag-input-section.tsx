@@ -60,7 +60,7 @@ export function TagInputSection({ tags, onTagsChange }: TagInputSectionProps) {
         onKeyDown={handleTagInputKeyDown}
         disabled={tags.length >= MAX_TAGS}
         className={cn(
-          "border-input rounded-md border bg-transparent text-base md:text-sm",
+          "border-input rounded-md border bg-transparent text-sm md:text-base",
           tags.length >= MAX_TAGS && "select-none"
         )}
         maxLength={10}
