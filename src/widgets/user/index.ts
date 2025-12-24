@@ -1,1 +1,1 @@
-export { UserProfileWidget } from "./ui/user-profile-widget";
+export { UserDashboardHeader } from "./ui/user-dashboard-header";
