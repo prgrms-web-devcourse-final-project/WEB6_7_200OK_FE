@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { Info, Calendar } from "lucide-react";
 
 import { CategorySelector } from "@/entities/auction";
@@ -11,6 +13,7 @@ import {
   ImageUploadSection,
   DateTimeModal,
 } from "@/features/auction/auction-create";
+import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import Input from "@/shared/ui/input/input";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
@@ -40,8 +43,19 @@ export function AuctionCreateScreen() {
     // console.warn("submitData preview:", submitData);
   };
 
+  // TODO: 스크롤 방지 로직 변경 필요 (부수효과)
+  // 임시 스크롤 방지
+  useEffect(() => {
+    if (form.isDateTimeModalOpen) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [form.isDateTimeModalOpen]);
+
   return (
-    <ScrollArea className="bg-background mx-auto min-h-screen w-full max-w-3xl">
+    <ScrollArea className={cn("bg-background mx-auto min-h-screen w-full max-w-3xl")}>
       <div className="flex min-h-screen flex-col items-center gap-2 p-4">
         <div className="w-full max-w-3xl">
           <p className="mb-6 text-left text-2xl font-bold">판매 물품 등록</p>
