@@ -1,7 +1,7 @@
 "use client";
 
 import { formatPriceKRW } from "@/shared/lib/utils/price/formatPriceKRW";
-import { useAuctionPriceStore } from "@/widgets/auction/auction-detail/hooks/auction-price-store-provider";
+import { useAuctionPriceStore } from "@/widgets/auction/auction-detail/provider/auction-price-store-provider";
 
 interface AuctionDetailPriceProps {
   startPrice: number;
