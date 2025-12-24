@@ -1,6 +1,5 @@
-import { Dayjs } from "dayjs";
-
 import type { Hour, TimeZone } from "@/entities/auction/model/registration-constants";
+import { type Dayjs } from "@/shared/lib/utils/dayjs";
 
 export interface ItemFormSubmitData {
   productName: string;
