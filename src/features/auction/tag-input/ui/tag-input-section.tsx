@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { X } from "lucide-react";
 
 import { addTagValidation, validateTagInput, MAX_TAGS } from "@/entities/auction";
+import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import Input from "@/shared/ui/input/input";
 
@@ -58,7 +59,10 @@ export function TagInputSection({ tags, onTagsChange }: TagInputSectionProps) {
         onChange={handleTagInputChange}
         onKeyDown={handleTagInputKeyDown}
         disabled={tags.length >= MAX_TAGS}
-        className={tags.length >= MAX_TAGS ? "select-none" : ""}
+        className={cn(
+          "border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px]",
+          tags.length >= MAX_TAGS && "select-none"
+        )}
         maxLength={10}
       />
       {tags.length > 0 && (
