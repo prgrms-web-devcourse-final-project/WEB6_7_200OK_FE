@@ -12,9 +12,10 @@ import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 interface TimeSelectorProps {
   selectedTime: TimeSelection;
   onTimeChange: (time: TimeSelection) => void;
+  isTimeDisabled?: (hour: number, minute: number, timezone: string) => boolean;
 }
 
-export function TimeSelector({ selectedTime, onTimeChange }: TimeSelectorProps) {
+export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: TimeSelectorProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -57,21 +58,29 @@ export function TimeSelector({ selectedTime, onTimeChange }: TimeSelectorProps) 
               <span className={TIME_SELECTOR_CLASSES.headerText}>오전/오후</span>
             </div>
             <div>
-              {TIMEZONES.map((timezone) => (
-                <Button
-                  key={timezone}
-                  type="button"
-                  variant="ghost"
-                  className={cn(
-                    TIME_SELECTOR_CLASSES.button,
-                    selectedTime.timezone === timezone &&
-                      "bg-brand text-accent dark:text-accent-foreground"
-                  )}
-                  onClick={() => onTimeChange({ ...selectedTime, timezone })}
-                >
-                  {timezone}
-                </Button>
-              ))}
+              {TIMEZONES.map((timezone) => {
+                // 오전/오후 disabled 체크
+                const isDisabled =
+                  isTimeDisabled &&
+                  isTimeDisabled(selectedTime.hour, selectedTime.minute, timezone);
+                return (
+                  <Button
+                    key={timezone}
+                    type="button"
+                    variant="ghost"
+                    disabled={isDisabled}
+                    className={cn(
+                      TIME_SELECTOR_CLASSES.button,
+                      selectedTime.timezone === timezone &&
+                        "bg-brand text-accent dark:text-accent-foreground",
+                      isDisabled && "cursor-not-allowed opacity-50"
+                    )}
+                    onClick={() => onTimeChange({ ...selectedTime, timezone })}
+                  >
+                    {timezone}
+                  </Button>
+                );
+              })}
             </div>
           </div>
 
@@ -82,21 +91,28 @@ export function TimeSelector({ selectedTime, onTimeChange }: TimeSelectorProps) 
             </div>
             <ScrollArea className="h-32">
               <div>
-                {HOURS.map((hour) => (
-                  <Button
-                    key={hour}
-                    type="button"
-                    variant="ghost"
-                    className={cn(
-                      TIME_SELECTOR_CLASSES.button,
-                      selectedTime.hour === hour &&
-                        "bg-brand text-accent dark:text-accent-foreground"
-                    )}
-                    onClick={() => onTimeChange({ ...selectedTime, hour })}
-                  >
-                    {hour}
-                  </Button>
-                ))}
+                {HOURS.map((hour) => {
+                  // hour disabled 체크
+                  const isDisabled =
+                    isTimeDisabled &&
+                    isTimeDisabled(hour, selectedTime.minute, selectedTime.timezone);
+                  return (
+                    <Button
+                      key={hour}
+                      type="button"
+                      variant="ghost"
+                      disabled={isDisabled}
+                      className={cn(
+                        TIME_SELECTOR_CLASSES.button,
+                        selectedTime.hour === hour &&
+                          "bg-brand text-accent dark:text-accent-foreground"
+                      )}
+                      onClick={() => onTimeChange({ ...selectedTime, hour })}
+                    >
+                      {hour}
+                    </Button>
+                  );
+                })}
               </div>
             </ScrollArea>
           </div>
@@ -108,21 +124,29 @@ export function TimeSelector({ selectedTime, onTimeChange }: TimeSelectorProps) 
             </div>
             <ScrollArea className="h-32">
               <div>
-                {MINUTES.map((minute) => (
-                  <Button
-                    key={minute}
-                    type="button"
-                    variant="ghost"
-                    className={cn(
-                      TIME_SELECTOR_CLASSES.button,
-                      selectedTime.minute === minute &&
-                        "bg-brand text-accent dark:text-accent-foreground"
-                    )}
-                    onClick={() => onTimeChange({ ...selectedTime, minute })}
-                  >
-                    {String(minute).padStart(2, "0")}
-                  </Button>
-                ))}
+                {MINUTES.map((minute) => {
+                  // minute disabled 체크
+                  const isDisabled =
+                    isTimeDisabled &&
+                    isTimeDisabled(selectedTime.hour, minute, selectedTime.timezone);
+                  return (
+                    <Button
+                      key={minute}
+                      type="button"
+                      variant="ghost"
+                      disabled={isDisabled}
+                      className={cn(
+                        TIME_SELECTOR_CLASSES.button,
+                        selectedTime.minute === minute &&
+                          "bg-brand text-accent dark:text-accent-foreground",
+                        isDisabled && "cursor-not-allowed opacity-50"
+                      )}
+                      onClick={() => onTimeChange({ ...selectedTime, minute })}
+                    >
+                      {String(minute).padStart(2, "0")}
+                    </Button>
+                  );
+                })}
               </div>
             </ScrollArea>
           </div>
