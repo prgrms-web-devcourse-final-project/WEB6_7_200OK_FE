@@ -1,11 +1,4 @@
-/*
-SCHEDULED("경매 예정"),
-PROCESS("경매 진행 중"),
-COMPLETED("낙찰 완료"),
-FAILED("유찰"),
-CANCELED("경매 취소");
-*/
-export type AuctionStatusType = "SCHEDULED" | "PROCESS" | "COMPLETED" | "FAILED" | "CANCELED";
+import { AuctionStatusType } from "@/entities/auction/model/status";
 
 export interface AuctionItemType {
   auctionId: number;
