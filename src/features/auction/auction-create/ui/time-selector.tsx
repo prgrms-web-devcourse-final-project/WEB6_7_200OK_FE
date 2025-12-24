@@ -1,13 +1,33 @@
 import { useState } from "react";
 
+import { cva } from "class-variance-authority";
 import { ChevronDown, Clock } from "lucide-react";
 
 import { HOURS, MINUTES, TIMEZONES } from "@/entities/auction";
 import { type TimeSelection } from "@/entities/date-modal";
-import { TIME_SELECTOR_CLASSES } from "@/entities/date-modal";
 import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
 import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
+
+const timeSelectorColumnVariants = cva("flex flex-col");
+const timeSelectorHeaderVariants = cva("bg-muted/30 text-center");
+const timeSelectorHeaderTextVariants = cva("text-muted-foreground text-xs font-medium");
+const timeSelectorButtonVariants = cva("w-full rounded-none border-none shadow-none", {
+  variants: {
+    selected: {
+      true: "bg-brand text-accent dark:text-accent-foreground",
+      false: "",
+    },
+    disabled: {
+      true: "cursor-not-allowed opacity-50",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    selected: false,
+    disabled: false,
+  },
+});
 
 interface TimeSelectorProps {
   selectedTime: TimeSelection;
@@ -53,9 +73,9 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
       >
         <div className="divide-border grid grid-cols-3 divide-x">
           {/* 오전/오후 */}
-          <div className={TIME_SELECTOR_CLASSES.column}>
-            <div className={TIME_SELECTOR_CLASSES.header}>
-              <span className={TIME_SELECTOR_CLASSES.headerText}>오전/오후</span>
+          <div className={timeSelectorColumnVariants()}>
+            <div className={timeSelectorHeaderVariants()}>
+              <span className={timeSelectorHeaderTextVariants()}>오전/오후</span>
             </div>
             <div>
               {TIMEZONES.map((timezone) => {
@@ -70,10 +90,10 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
                     variant="ghost"
                     disabled={isDisabled}
                     className={cn(
-                      TIME_SELECTOR_CLASSES.button,
-                      selectedTime.timezone === timezone &&
-                        "bg-brand text-accent dark:text-accent-foreground",
-                      isDisabled && "cursor-not-allowed opacity-50"
+                      timeSelectorButtonVariants({
+                        selected: selectedTime.timezone === timezone,
+                        disabled: isDisabled,
+                      })
                     )}
                     onClick={() => onTimeChange({ ...selectedTime, timezone })}
                   >
@@ -85,9 +105,9 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
           </div>
 
           {/* 시 */}
-          <div className={TIME_SELECTOR_CLASSES.column}>
-            <div className={TIME_SELECTOR_CLASSES.header}>
-              <span className={TIME_SELECTOR_CLASSES.headerText}>시</span>
+          <div className={timeSelectorColumnVariants()}>
+            <div className={timeSelectorHeaderVariants()}>
+              <span className={timeSelectorHeaderTextVariants()}>시</span>
             </div>
             <ScrollArea className="h-32">
               <div>
@@ -103,10 +123,10 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
                       variant="ghost"
                       disabled={isDisabled}
                       className={cn(
-                        TIME_SELECTOR_CLASSES.button,
-                        selectedTime.hour === hour &&
-                          "bg-brand text-accent dark:text-accent-foreground",
-                        isDisabled && "cursor-not-allowed opacity-50"
+                        timeSelectorButtonVariants({
+                          selected: selectedTime.hour === hour,
+                          disabled: isDisabled,
+                        })
                       )}
                       onClick={() => onTimeChange({ ...selectedTime, hour })}
                     >
@@ -119,9 +139,9 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
           </div>
 
           {/* 분 */}
-          <div className={TIME_SELECTOR_CLASSES.column}>
-            <div className={TIME_SELECTOR_CLASSES.header}>
-              <span className={TIME_SELECTOR_CLASSES.headerText}>분</span>
+          <div className={timeSelectorColumnVariants()}>
+            <div className={timeSelectorHeaderVariants()}>
+              <span className={timeSelectorHeaderTextVariants()}>분</span>
             </div>
             <ScrollArea className="h-32">
               <div>
@@ -137,10 +157,10 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
                       variant="ghost"
                       disabled={isDisabled}
                       className={cn(
-                        TIME_SELECTOR_CLASSES.button,
-                        selectedTime.minute === minute &&
-                          "bg-brand text-accent dark:text-accent-foreground",
-                        isDisabled && "cursor-not-allowed opacity-50"
+                        timeSelectorButtonVariants({
+                          selected: selectedTime.minute === minute,
+                          disabled: isDisabled,
+                        })
                       )}
                       onClick={() => onTimeChange({ ...selectedTime, minute })}
                     >

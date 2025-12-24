@@ -33,6 +33,8 @@ export function DateTimeModal({
     selectedTime ?? DEFAULT_TIME_SELECTION
   );
   const dateRange = getDateRange();
+  const isTimeDisabled = getIsTimeDisabled(currentDate);
+  const isValid = currentDate ? isValidDateTime(currentDate, currentTime) : false;
 
   const handleDateSelect = (date: Date) => {
     setCurrentDate(date);
@@ -45,9 +47,6 @@ export function DateTimeModal({
       onConfirm(combinedDate, currentTime);
     }
   };
-
-  const isTimeDisabled = getIsTimeDisabled(currentDate);
-  const isValid = currentDate ? isValidDateTime(currentDate, currentTime) : false;
 
   return (
     <>
