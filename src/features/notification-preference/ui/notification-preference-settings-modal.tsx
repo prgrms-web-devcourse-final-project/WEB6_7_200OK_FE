@@ -18,7 +18,7 @@ import {
   Switch,
 } from "@/shared/ui";
 
-import { NotificationPreferenceItemType } from "../model/types";
+import { NotificationPreferenceItemType } from "../../../entities/notification-preference/model/types";
 
 interface NotificationPreferenceSettingsModalProps {
   open: boolean;
