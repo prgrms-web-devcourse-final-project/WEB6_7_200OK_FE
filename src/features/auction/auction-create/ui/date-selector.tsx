@@ -2,11 +2,12 @@
 
 import { useMemo } from "react";
 
-import dayjs from "dayjs";
 import { Calendar as CalendarIcon } from "lucide-react";
 
-import type { DateSelectorProps } from "@/entities/date-modal";
+import { dayjs } from "@/shared/lib/utils/dayjs";
 import { Calendar } from "@/shared/ui/calendar/calendar";
+
+import type { DateSelectorProps } from "../model/types";
 
 export function DateSelector({
   viewDate,

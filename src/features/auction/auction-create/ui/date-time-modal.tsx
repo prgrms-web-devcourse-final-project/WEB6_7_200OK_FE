@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
-import dayjs from "dayjs";
 import { X } from "lucide-react";
 
+import { dayjs } from "@/shared/lib/utils/dayjs";
 import Button from "@/shared/ui/button/button";
 import Separator from "@/shared/ui/separator/separator";
 
