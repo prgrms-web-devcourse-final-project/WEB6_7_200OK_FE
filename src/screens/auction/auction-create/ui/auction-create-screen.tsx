@@ -43,8 +43,7 @@ export function AuctionCreateScreen() {
     // console.warn("submitData preview:", submitData);
   };
 
-  // TODO: 스크롤 방지 로직 변경 필요 (부수효과)
-  // 임시 스크롤 방지
+  // Modal 영역 뒷 배경 스크롤 방지
   useEffect(() => {
     if (form.isDateTimeModalOpen) {
       document.body.style.overflow = "hidden";
@@ -71,6 +70,7 @@ export function AuctionCreateScreen() {
               <Input
                 id="product-name"
                 type="text"
+                className="border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex h-10 items-center gap-2 rounded-lg border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px]"
                 placeholder="상품명을 입력해주세요"
                 value={productName}
                 onChange={(e) => form.setProductName(e.target.value)}
