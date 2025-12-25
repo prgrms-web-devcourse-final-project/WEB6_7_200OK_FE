@@ -1,4 +1,4 @@
-import { AuctionStatusType } from "@/entities/auction/model/status";
+import { type AuctionStatusType } from "@/entities/auction/model/status";
 
 export interface AuctionItemType {
   auctionId: number;

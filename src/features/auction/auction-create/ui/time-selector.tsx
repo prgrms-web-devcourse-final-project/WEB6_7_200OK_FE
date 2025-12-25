@@ -9,9 +9,9 @@ import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 
 import { type TimeSelection } from "../model/types";
 
-const columnClass = cva("flex flex-col");
-const headerClass = cva("bg-muted/30 text-center");
-const headerClassText = cva("text-muted-foreground text-xs font-medium");
+const columnClass = "flex flex-col";
+const headerClass = "bg-muted/30 text-center";
+const headerClassText = "text-muted-foreground text-xs font-medium";
 const timeButtonClass = cva("w-full rounded-none border-none shadow-none", {
   variants: {
     selected: {
@@ -61,9 +61,9 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
       >
         <div className="divide-border grid grid-cols-3 divide-x">
           {/* 오전/오후 */}
-          <div className={columnClass()}>
-            <div className={headerClass()}>
-              <span className={headerClassText()}>오전/오후</span>
+          <div className={columnClass}>
+            <div className={headerClass}>
+              <span className={headerClassText}>오전/오후</span>
             </div>
             <div>
               {TIMEZONES.map((timezone) => {
@@ -91,9 +91,9 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
           </div>
 
           {/* 시 */}
-          <div className={columnClass()}>
-            <div className={headerClass()}>
-              <span className={headerClassText()}>시</span>
+          <div className={columnClass}>
+            <div className={headerClass}>
+              <span className={headerClassText}>시</span>
             </div>
             <ScrollArea className="h-32">
               <div>
@@ -123,9 +123,9 @@ export function TimeSelector({ selectedTime, onTimeChange, isTimeDisabled }: Tim
           </div>
 
           {/* 분 */}
-          <div className={columnClass()}>
-            <div className={headerClass()}>
-              <span className={headerClassText()}>분</span>
+          <div className={columnClass}>
+            <div className={headerClass}>
+              <span className={headerClassText}>분</span>
             </div>
             <ScrollArea className="h-32">
               <div>

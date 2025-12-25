@@ -48,3 +48,7 @@ export { ImagePreviewItem } from "@/entities/auction/ui/auction-create-image/ui/
 export { ImageCarouselView } from "@/entities/auction/ui/auction-create-image/ui/image-carousel-view";
 
 export { PriceInput } from "@/entities/auction/ui/auction-create-image/ui/price-input";
+
+export { type AuctionStatusType } from "@/entities/auction/model/status";
+
+export { type ItemCategory } from "@/entities/auction/model/category";
