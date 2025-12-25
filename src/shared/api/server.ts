@@ -26,5 +26,5 @@ export async function fetch<TResponse, TRequest = unknown>(
     cache: init?.cache ?? "no-store",
   });
 
-  return response.json() as Promise<ApiResponseType<TResponse>>;
+  return response.json();
 }
