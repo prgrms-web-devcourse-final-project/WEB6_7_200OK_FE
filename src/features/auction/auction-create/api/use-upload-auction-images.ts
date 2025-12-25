@@ -19,7 +19,7 @@ export function useUploadAuctionImages() {
         formData.append("uploadFiles", file);
       });
 
-      const response = await httpClient<UploadImageResponse[], FormData>("api/v1/auction-images", {
+      const response = await httpClient<UploadImageResponse[], FormData>("/api/v1/auction-images", {
         method: "POST",
         body: formData,
       });

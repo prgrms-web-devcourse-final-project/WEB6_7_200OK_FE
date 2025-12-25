@@ -83,6 +83,7 @@ export function useItemForm() {
     }
     return formatDateTimeDisplay(selectedDate, selectedTime);
   };
+
   // 폼 제출 데이터 생성
   const getSubmitData = (sellerId: string, imageIds: number[]): ItemFormSubmitData | null => {
     if (
