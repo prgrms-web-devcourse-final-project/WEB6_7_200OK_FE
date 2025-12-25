@@ -3,10 +3,10 @@ import { useCallback, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFormState } from "react-hook-form";
 
-import type { ItemImage } from "@/entities/auction";
+import type { ItemCategory, ItemImage } from "@/entities/auction";
 
 import { itemFormSchema, type ItemFormValues } from "./schema";
-import { type TimeSelection, ItemFormSubmitData } from "./types";
+import { type TimeSelection, type ItemFormSubmitData } from "./types";
 import { isFormValid } from "./validators";
 import { formatDateTimeDisplay } from "../utils/date-utils";
 
@@ -40,7 +40,6 @@ export function useItemForm() {
   const selectedTime = watch("selectedTime");
 
   // 이미지
-  // TODO: 이미지 업로드 기능 구현 시, images 제출 로직 추가 필요
   const [images, setImages] = useState<ItemImage[]>([]);
 
   // 날짜/시간 모달 상태
@@ -52,20 +51,21 @@ export function useItemForm() {
   const stopLossError = formErrors.stopLossPrice?.message || "";
   const dropPriceError = formErrors.dropPrice?.message || "";
 
-  const customValidation = isFormValid({
-    productName: getValues("productName") || "",
-    category: getValues("category") || "",
-    description: getValues("description") || "",
-    startPrice,
-    stopLossPrice,
-    dropPrice,
-    selectedDate,
-    startPriceError,
-    stopLossError,
-    dropPriceError,
-  });
-
-  const formValid = !hasFormErrors && customValidation;
+  const formValid =
+    !hasFormErrors &&
+    images.length > 0 &&
+    isFormValid({
+      productName: getValues("productName") || "",
+      category: getValues("category") || "",
+      description: getValues("description") || "",
+      startPrice,
+      stopLossPrice,
+      dropPrice,
+      selectedDate,
+      startPriceError,
+      stopLossError,
+      dropPriceError,
+    });
 
   // 날짜/시간 선택 핸들러
   const handleDateTimeConfirm = useCallback(
@@ -83,9 +83,8 @@ export function useItemForm() {
     }
     return formatDateTimeDisplay(selectedDate, selectedTime);
   };
-
   // 폼 제출 데이터 생성
-  const getSubmitData = (): ItemFormSubmitData | null => {
+  const getSubmitData = (sellerId: string, imageIds: number[]): ItemFormSubmitData | null => {
     if (
       !formValid ||
       !selectedDate ||
@@ -98,15 +97,18 @@ export function useItemForm() {
     }
 
     const values = getValues();
+
     return {
-      productName: values.productName || "",
-      category: values.category || "",
+      sellerId,
+      title: values.productName || "",
       description: values.description || "",
-      tags: values.tags || [],
+      category: values.category as ItemCategory,
+      tags: values.tags.map((tag) => ({ name: tag })),
+      imageIds,
       startPrice,
-      stopLossPrice,
-      dropPrice,
-      auctionStartDate: selectedDate,
+      stopLoss: stopLossPrice,
+      dropAmount: dropPrice,
+      startAt: selectedDate,
     };
   };
 

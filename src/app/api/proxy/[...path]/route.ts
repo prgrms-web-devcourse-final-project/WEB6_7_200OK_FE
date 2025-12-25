@@ -29,20 +29,32 @@ interface RefreshResponse {
   };
 }
 
-async function getRequestBody(req: NextRequest): Promise<string | ArrayBuffer | null> {
+async function getRequestBody(req: NextRequest): Promise<{
+  body: string | ArrayBuffer | null;
+  isFormData: boolean;
+}> {
   const contentType = req.headers.get("content-type");
 
   if (contentType?.includes("application/json")) {
     try {
-      return JSON.stringify(await req.json());
+      return { body: JSON.stringify(await req.json()), isFormData: false };
     } catch {
-      return null;
+      return { body: null, isFormData: false };
     }
   }
 
-  // 파일 업로드 등의 경우 ArrayBuffer로 처리
+  if (contentType?.includes("multipart/form-data")) {
+    try {
+      const arrayBuffer = await req.arrayBuffer();
+      return { body: arrayBuffer, isFormData: true };
+    } catch (error) {
+      console.error("FormData 읽기 실패:", error);
+      return { body: null, isFormData: false };
+    }
+  }
+
   const arrayBuffer = await req.arrayBuffer();
-  return arrayBuffer.byteLength > 0 ? arrayBuffer : null;
+  return { body: arrayBuffer.byteLength > 0 ? arrayBuffer : null, isFormData: false };
 }
 
 function clearAuthCookies(response: NextResponse) {
@@ -87,7 +99,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
     let backendRes = await fetch(backendUrl, {
       method: req.method,
       headers,
-      body: requestBody,
+      body: requestBody.body,
       cache: "no-store",
     });
 
@@ -102,7 +114,6 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       // 토큰이 만료되었거나 문제가 있다면 삭제
       if (!refreshRes.ok) {
         console.error("Refresh token failed or expired.");
-
         const response = NextResponse.json(
           { error: "Session expired. Please login again." },
           { status: 401 }
@@ -129,7 +140,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       backendRes = await fetch(backendUrl, {
         method: req.method,
         headers,
-        body: requestBody,
+        body: requestBody.body,
         cache: "no-store",
       });
 

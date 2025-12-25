@@ -3,6 +3,8 @@ export { TagInputSection } from "../tag-input/ui/tag-input-section";
 export { useItemForm } from "./model/item-form";
 export { usePriceValidation } from "./model/price-validation";
 export { ImageUploadSection } from "./ui/image-upload-section";
+export { useCreateAuction } from "./api/use-create-auction";
+export { useUploadAuctionImages } from "./api/use-upload-auction-images";
 export type { ItemFormValues } from "./model/schema";
 export {
   startPriceSchema,
