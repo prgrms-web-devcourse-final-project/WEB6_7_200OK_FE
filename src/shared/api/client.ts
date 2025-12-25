@@ -11,7 +11,7 @@ export async function httpClient<TResponse, TRequest = unknown>(
   path: string,
   init?: StrictRequestInit<TRequest>
 ): Promise<ApiResponseType<TResponse>> {
-  const requestPath = path.startsWith("/") ? path : `/${path}`;
+  const requestPath = path;
   const url = new URL(`${PROXY_BASE_URL}${requestPath}`, window.location.origin);
 
   if (init?.queryParams) {
