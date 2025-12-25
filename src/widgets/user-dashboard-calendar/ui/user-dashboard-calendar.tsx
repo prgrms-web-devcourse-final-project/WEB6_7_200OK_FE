@@ -2,13 +2,14 @@
 
 import { useState, useMemo } from "react";
 
-import { MOCK_SELLING_ITEMS, MOCK_WISHLIST_ITEMS } from "@/entities/item";
 import {
   DailyAuctionCalendar,
   transformItemsToCalendarEvents,
 } from "@/features/daily-auction-calendar";
 import { DailyAuctionList } from "@/features/daily-auction-list";
-import { DashboardContentLayout } from "@/shared/ui";
+import { useSalesList } from "@/features/sale/api/use-sales";
+import { useWishlist } from "@/features/wishlist/api/use-wishlist";
+import { DashboardContentLayout, Skeleton } from "@/shared/ui";
 
 interface UserDashboardCalendarProps {
   label?: React.ReactNode;
@@ -17,9 +18,20 @@ interface UserDashboardCalendarProps {
 export function UserDashboardCalendar({ label }: UserDashboardCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const allItems = useMemo(() => [...MOCK_SELLING_ITEMS, ...MOCK_WISHLIST_ITEMS], []);
+  const { data: salesItems = [], isLoading: isSalesLoading } = useSalesList();
+  const { data: wishlistItems = [], isLoading: isWishlistLoading } = useWishlist();
+
+  const allItems = useMemo(() => [...salesItems, ...wishlistItems], [salesItems, wishlistItems]);
 
   const calendarEvents = useMemo(() => transformItemsToCalendarEvents(allItems), [allItems]);
+
+  if (isSalesLoading || isWishlistLoading) {
+    return (
+      <DashboardContentLayout label={label} className="flex w-full flex-col">
+        <Skeleton className="h-[500px] w-full rounded-xl" />
+      </DashboardContentLayout>
+    );
+  }
 
   return (
     <DashboardContentLayout label={label} className="flex w-full flex-col">

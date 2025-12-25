@@ -2,14 +2,15 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "react";
 
-import { MOCK_SELLING_ITEMS, SellingItemType, ItemCardFilter } from "@/entities/item";
+import { SellingItemType, ItemCardFilter } from "@/entities/item";
 import { SellingItemCard } from "@/features/sale";
+import { useSalesList } from "@/features/sale/api/use-sales";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout, ConfirmDeleteModal } from "@/shared/ui";
+import { DashboardContentLayout, ConfirmDeleteModal, Skeleton } from "@/shared/ui";
 
 const SALES_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
@@ -19,6 +20,8 @@ interface SalesListProps {
 }
 
 export function SalesList({ isOwn = false, label }: SalesListProps) {
+  const { data: salesItems = [], isLoading } = useSalesList();
+
   const [filterStatus, setFilterStatus] = useState("전체");
 
   const [deleteItem, setDeleteItem] = useState<SellingItemType | null>(null);
@@ -32,19 +35,28 @@ export function SalesList({ isOwn = false, label }: SalesListProps) {
   const filterOptions = useMemo(() => generateFilterOptions(SALES_STATUSES), []);
 
   const filteredSales = useMemo(
-    () => sortItemsByDateAndName(filterItemsByStatus(MOCK_SELLING_ITEMS, filterStatus)),
-    [filterStatus]
+    () => sortItemsByDateAndName(filterItemsByStatus(salesItems, filterStatus)),
+    [filterStatus, salesItems]
   );
 
   const handleDelete = useCallback(() => {
     const targetItem = deleteItemRef.current;
-
     if (!targetItem) return;
-
-    // TODO: API 삭제 요청 (targetItem.id 사용)
-
+    // TODO: API 삭제 요청
     setDeleteItem(null);
   }, []);
+
+  if (isLoading) {
+    return (
+      <DashboardContentLayout label={label}>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-40 w-full rounded-xl" />
+          ))}
+        </div>
+      </DashboardContentLayout>
+    );
+  }
 
   return (
     <>

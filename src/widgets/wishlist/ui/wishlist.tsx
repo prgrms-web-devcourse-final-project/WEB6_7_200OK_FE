@@ -2,14 +2,15 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "react";
 
-import { MOCK_WISHLIST_ITEMS, WishlistItemType, ItemCardFilter } from "@/entities/item";
+import { WishlistItemType, ItemCardFilter } from "@/entities/item";
 import { WishlistItemCard } from "@/features/wishlist";
+import { useWishlist } from "@/features/wishlist/api/use-wishlist";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout, ConfirmDeleteModal } from "@/shared/ui";
+import { DashboardContentLayout, ConfirmDeleteModal, Skeleton } from "@/shared/ui";
 
 const WISHLIST_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
@@ -18,6 +19,8 @@ interface WishlistProps {
 }
 
 export function Wishlist({ label }: WishlistProps) {
+  const { data: wishlistItems = [], isLoading } = useWishlist();
+
   const [filterStatus, setFilterStatus] = useState("전체");
 
   const [deleteItem, setDeleteItem] = useState<WishlistItemType | null>(null);
@@ -31,19 +34,28 @@ export function Wishlist({ label }: WishlistProps) {
   const filterOptions = useMemo(() => generateFilterOptions(WISHLIST_STATUSES), []);
 
   const filteredWishlist = useMemo(
-    () => sortItemsByDateAndName(filterItemsByStatus(MOCK_WISHLIST_ITEMS, filterStatus)),
-    [filterStatus]
+    () => sortItemsByDateAndName(filterItemsByStatus(wishlistItems, filterStatus)),
+    [filterStatus, wishlistItems]
   );
 
   const handleDelete = useCallback(() => {
     const targetItem = deleteItemRef.current;
-
     if (!targetItem) return;
-
-    // TODO: API 실제 관심 목록 해제 요청 로직 구현 필요 (targetItem.id 등 사용)
-
+    // TODO: API 실제 관심 목록 해제 요청
     setDeleteItem(null);
   }, []);
+
+  if (isLoading) {
+    return (
+      <DashboardContentLayout label={label}>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-40 w-full rounded-xl" />
+          ))}
+        </div>
+      </DashboardContentLayout>
+    );
+  }
 
   return (
     <>
