@@ -69,6 +69,7 @@ export interface DateSelectorProps {
   selectedDate: Date | null;
   dateRange: DateRange;
   onDateSelect: (date: Date) => void;
+  onViewDateChange: (date: Dayjs) => void;
 }
 
 export interface DateRange {
