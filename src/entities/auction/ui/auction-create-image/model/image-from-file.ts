@@ -1,6 +1,7 @@
 export interface ItemImage {
   id: string;
   url: string;
+  file?: File;
 }
 
 export const MAX_IMAGES = 10;
@@ -18,6 +19,7 @@ export const itemImageFromFile = (file: File): Promise<ItemImage> =>
       resolve({
         id: imageId,
         url: reader.result as string,
+        file,
       });
     };
     reader.onerror = () => {

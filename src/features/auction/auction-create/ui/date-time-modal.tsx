@@ -81,6 +81,7 @@ export function DateTimeModal({
             selectedDate={currentDate}
             dateRange={dateRange}
             onDateSelect={handleDateSelect}
+            onViewDateChange={setViewDate}
           />
           <p className="text-muted-foreground text-xs">
             * 최소 현재 시간 기준 1일 이후부터 최대 7일 이전까지 선택 가능합니다.

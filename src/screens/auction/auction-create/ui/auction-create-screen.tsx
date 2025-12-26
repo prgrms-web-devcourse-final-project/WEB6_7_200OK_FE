@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import { useRouter } from "next/navigation";
 
 import { Info, Calendar } from "lucide-react";
 
@@ -12,6 +14,8 @@ import {
   usePriceValidation,
   ImageUploadSection,
   DateTimeModal,
+  useUploadAuctionImages,
+  useCreateAuction,
 } from "@/features/auction/auction-create";
 import { cn } from "@/shared/lib/utils/utils";
 import Button from "@/shared/ui/button/button";
@@ -20,7 +24,9 @@ import { ScrollArea } from "@/shared/ui/scroll-area/scroll-area";
 import { Textarea } from "@/shared/ui/textarea/textarea";
 
 export function AuctionCreateScreen() {
+  const router = useRouter();
   const form = useItemForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const productName = form.watch("productName");
   const category = form.watch("category");
@@ -34,13 +40,56 @@ export function AuctionCreateScreen() {
     getValues: form.getValues,
   });
 
-  const handleSubmit = async () => {
-    // TODO: 상품 등록 API 연결
-    // const submitData = form.getSubmitData();
-    // if (!submitData) {
-    //   return;
-    // }
-    // console.warn("submitData preview:", submitData);
+  // 이미지 업로드 및 경매 생성 mutation
+  const uploadImagesMutation = useUploadAuctionImages();
+  const createAuctionMutation = useCreateAuction();
+
+  // TODO: sellerId는 추후 삭제될 예정이지만 테스트를 위해 임시로 기입
+  const TEMP_SELLER_ID = "1";
+
+  // 이미지 업로드 (return imageIds)
+  const uploadImages = async (files: File[]): Promise<number[]> => {
+    if (files.length === 0) {
+      return [];
+    }
+
+    const uploadResponse = await uploadImagesMutation.mutateAsync(files);
+    return uploadResponse.map((response) => response.imageId);
+  };
+
+  // 경매 생성
+  const createAuction = async (imageIds: number[]): Promise<void> => {
+    const submitData = form.getSubmitData(TEMP_SELLER_ID, imageIds);
+    if (!submitData) {
+      return;
+    }
+
+    const createResponse = await createAuctionMutation.mutateAsync({
+      formData: submitData,
+      selectedTime: form.selectedTime,
+    });
+
+    if (createResponse?.auctionId) {
+      router.push(`/auctions/${createResponse.auctionId}`);
+    }
+  };
+
+  const handleSubmit = async (): Promise<void> => {
+    setIsSubmitting(true);
+    try {
+      const imageFiles = form.images
+        .map((image) => image.file)
+        .filter((file): file is File => file !== undefined);
+
+      const imageIds = await uploadImages(imageFiles);
+      await createAuction(imageIds);
+    } catch (error) {
+      // 에러 처리는 mutation의 onError에서 처리 중 (toast 메시지 표시)
+      // 아래는 디버깅용 코드
+      console.error("경매 등록 중 오류 발생:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Modal 영역 뒷 배경 스크롤 방지
@@ -161,7 +210,7 @@ export function AuctionCreateScreen() {
               <Button
                 id="reserve-button"
                 className="flex-1"
-                disabled={!form.formValid}
+                disabled={!form.formValid || isSubmitting}
                 onClick={handleSubmit}
               >
                 경매 예약하기

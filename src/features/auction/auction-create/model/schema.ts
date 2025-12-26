@@ -1,11 +1,13 @@
 import { z } from "zod";
 
-import type { Hour, TimeZone } from "@/entities/auction";
+import { ITEM_CATEGORIES, type Hour, type TimeZone } from "@/entities/auction";
 
 // zod 스키마
 export const itemFormSchema = z.object({
   productName: z.string().trim().min(1, "상품명을 입력해주세요"),
-  category: z.string().min(1, "카테고리를 선택해주세요"),
+  category: z.enum([...ITEM_CATEGORIES] as [string, ...string[]], {
+    message: "카테고리를 선택해주세요",
+  }),
   description: z.string().trim().min(1, "상세 정보를 입력해주세요"),
   tags: z.array(z.string()),
   startPrice: z.number().nullable(),

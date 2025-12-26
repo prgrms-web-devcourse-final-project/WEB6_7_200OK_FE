@@ -2,9 +2,10 @@
 
 import { useMemo } from "react";
 
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { dayjs } from "@/shared/lib/utils/dayjs";
+import Button from "@/shared/ui/button/button";
 import { Calendar } from "@/shared/ui/calendar/calendar";
 
 import type { DateSelectorProps } from "../model/types";
@@ -14,8 +15,27 @@ export function DateSelector({
   selectedDate,
   dateRange,
   onDateSelect,
+  onViewDateChange,
 }: DateSelectorProps) {
   const { minDate, maxDate } = dateRange;
+
+  // 범위의 시작 월과 끝 월
+  const minMonth = dayjs(minDate).startOf("month");
+  const maxMonth = dayjs(maxDate).startOf("month");
+  const currentMonth = viewDate.startOf("month");
+
+  // 이전/다음 달 확인
+  const canGoPrevious = currentMonth.isAfter(minMonth);
+  const canGoNext = currentMonth.isBefore(maxMonth);
+
+  const handlePrevious = () => {
+    onViewDateChange(viewDate.subtract(1, "month"));
+  };
+
+  const handleNext = () => {
+    onViewDateChange(viewDate.add(1, "month"));
+  };
+
   // 비활성화 날짜
   const isDisabled = useMemo(
     () => (date: Date) => {
@@ -42,7 +62,29 @@ export function DateSelector({
           <CalendarIcon className="text-muted-foreground size-4" />
           <h3 className="text-base font-medium">날짜 선택</h3>
         </div>
-        <p className="text-base font-medium">{viewDate.format("YYYY년 M월")}</p>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={handlePrevious}
+            disabled={!canGoPrevious}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ChevronLeft className="size-4" />
+          </Button>
+          <p className="text-base font-medium">{viewDate.format("YYYY년 M월")}</p>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={handleNext}
+            disabled={!canGoNext}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ChevronRight className="size-4" />
+          </Button>
+        </div>
       </div>
 
       <div className="bg-accent w-full rounded-md">
