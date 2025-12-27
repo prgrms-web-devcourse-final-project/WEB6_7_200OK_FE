@@ -28,8 +28,8 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
+    <html lang="ko" suppressHydrationWarning className="h-full">
+      <body className={`${inter.className} h-full antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -37,10 +37,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <Header />
-            {children}
-            <ToastRegistry />
-            <BottomNav />
+            <div className="flex min-h-full flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <ToastRegistry />
+              <BottomNav />
+            </div>
           </QueryProvider>
         </ThemeProvider>
       </body>
