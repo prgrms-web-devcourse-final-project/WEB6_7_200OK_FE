@@ -1,6 +1,6 @@
 import type { AuctionType } from "@/entities/auction/model/types";
 
-export interface HomeAuctionsData {
+export interface AuctionsData {
   popularList: AuctionType[];
   processList: AuctionType[];
   scheduledList: AuctionType[];
