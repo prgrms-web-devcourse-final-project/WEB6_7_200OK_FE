@@ -1,11 +1,11 @@
-import * as React from "react";
+import { ComponentProps } from "react";
 
 import { cva, type VariantProps } from "class-variance-authority";
 import { PackageOpen, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils/utils";
 
-function Empty({ className, ...props }: React.ComponentProps<"div">) {
+function Empty({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="empty"
@@ -36,7 +36,7 @@ function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="empty-title"
-      className={cn("text-foreground mb-1 text-lg font-semibold", className)}
+      className={cn("text-foreground text-lg font-semibold", className)}
       {...props}
     />
   );
@@ -84,7 +84,7 @@ const emptyStyles = {
   }),
 };
 
-interface EmptyStateProps extends VariantProps<typeof emptyStyles.iconContainer> {
+export interface EmptyStateProps extends VariantProps<typeof emptyStyles.iconContainer> {
   title?: string;
   description?: string;
   Icon?: LucideIcon;

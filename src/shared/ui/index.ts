@@ -49,7 +49,7 @@ export {
 
 export { Container } from "@/shared/ui/container/container";
 
-export { default as EmptyState } from "./empty/empty";
+export { default as EmptyState, type EmptyStateProps } from "./empty/empty";
 
 export { ErrorTemplate } from "./error/error-template";
 
