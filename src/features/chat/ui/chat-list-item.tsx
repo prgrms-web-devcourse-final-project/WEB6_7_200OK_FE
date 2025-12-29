@@ -19,7 +19,7 @@ function ChatListItemComponent({ chatRoom, isSelected, onClick }: ChatListItemPr
       variant="ghost"
       onClick={onClick}
       className={cn(
-        "border-border rounded-y-md hover:bg-accent border-b-border relative h-auto w-full justify-start rounded-t-none rounded-b-none border-b p-2 p-4 py-4 text-left",
+        "border-border rounded-y-md hover:bg-accent border-b-border relative h-auto w-full justify-start rounded-t-none rounded-b-none border-b p-4 text-left",
         isSelected && "bg-accent"
       )}
     >

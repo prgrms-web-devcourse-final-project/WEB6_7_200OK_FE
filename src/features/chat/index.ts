@@ -7,7 +7,6 @@ export { chatRoomsLoader } from "./api/loader";
 export type { Chat, Message, Product, ListFilter } from "./model/types";
 export {
   type ChatRoomListItem,
-  type ChatRoomListResponse,
   type ChatRoomPartner,
   type ChatRoomAuction,
   type ChatRoomLastMessage,
