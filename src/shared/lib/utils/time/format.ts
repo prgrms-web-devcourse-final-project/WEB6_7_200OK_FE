@@ -23,3 +23,30 @@ export function formatMs(ms: number) {
   const ss = totalSec % 60;
   return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
 }
+
+export function formatRemaining(ms: number) {
+  if (ms <= 0) return "0초";
+
+  const totalMs = Math.ceil(ms / 1000);
+
+  const duration = dayjs.duration(totalMs, "seconds");
+
+  const days = Math.floor(duration.asDays());
+  const hours = duration.hours();
+  const minutes = duration.minutes();
+  const seconds = duration.seconds();
+
+  if (days > 0) {
+    return `${days}일 ${hours}시간`;
+  }
+
+  if (hours > 0) {
+    return `${hours}시간 ${minutes}분`;
+  }
+
+  if (minutes > 0) {
+    return `${minutes}분 ${seconds}초`;
+  }
+
+  return `${seconds}초`;
+}
