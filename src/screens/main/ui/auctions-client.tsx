@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { auctionsQuery } from "@/screens/main/model/auctions-query";
+import { useServerTimeNow } from "@/shared/lib/hooks/use-server-time-now";
 import { useServerTimeStore } from "@/shared/lib/hooks/use-server-time-store";
 import { Container } from "@/shared/ui";
 import { AuctionCarouselSection } from "@/widgets/auction/auction-carousel-section";
@@ -39,6 +40,7 @@ export default function AuctionsClient() {
   });
 
   const setServerTime = useServerTimeStore((s) => s.setServerTime);
+  const now = useServerTimeNow();
 
   useEffect(() => {
     const serverAt = data?.serverAt;
@@ -60,6 +62,7 @@ export default function AuctionsClient() {
           isLoading={isLoading}
           isError={isError}
           items={data?.[section.key]}
+          now={now}
         />
       ))}
     </Container>
