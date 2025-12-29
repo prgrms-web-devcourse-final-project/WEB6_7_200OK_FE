@@ -16,6 +16,7 @@ interface AuctionCarouselSectionProps {
   isLoading: boolean;
   isError: boolean;
   items?: AuctionType[];
+  now: number;
 }
 
 export function AuctionCarouselSection({
@@ -26,6 +27,7 @@ export function AuctionCarouselSection({
   isLoading,
   isError,
   items,
+  now,
 }: AuctionCarouselSectionProps) {
   const hasItems = Array.isArray(items) && items.length > 0;
 
@@ -50,7 +52,7 @@ export function AuctionCarouselSection({
         />
       );
 
-    return <AuctionItemCarousel items={items} variant={variant} />;
+    return <AuctionItemCarousel items={items} variant={variant} now={now} />;
   };
 
   return (
