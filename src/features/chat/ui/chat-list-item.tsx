@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import Image from "next/image";
 
 import type { ChatRoomListItem } from "@/features/chat";
@@ -10,7 +12,7 @@ interface ChatListItemProps {
   onClick: () => void;
 }
 
-export function ChatListItem({ chatRoom, isSelected, onClick }: ChatListItemProps) {
+function ChatListItemComponent({ chatRoom, isSelected, onClick }: ChatListItemProps) {
   return (
     <Button
       type="button"
@@ -65,3 +67,5 @@ export function ChatListItem({ chatRoom, isSelected, onClick }: ChatListItemProp
     </Button>
   );
 }
+
+export const ChatListItem = memo(ChatListItemComponent);
