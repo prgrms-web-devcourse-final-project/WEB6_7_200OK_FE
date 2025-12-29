@@ -6,8 +6,6 @@ import { auctionsQuery } from "@/screens/main/model/auctions-query";
 import { Container } from "@/shared/ui";
 import { AuctionCarouselSection } from "@/widgets/auction/auction-carousel-section";
 
-const FIVE_MIN = 5 * 60 * 1000;
-
 const SECTIONS = [
   {
     key: "popularList",
@@ -35,8 +33,6 @@ const SECTIONS = [
 export default function AuctionsClient() {
   const { data, isLoading, isError } = useQuery({
     ...auctionsQuery,
-    staleTime: FIVE_MIN,
-    refetchInterval: FIVE_MIN,
   });
 
   return (
