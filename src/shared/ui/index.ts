@@ -106,3 +106,5 @@ export { Switch } from "./switch/switch";
 export { Textarea } from "./textarea/textarea";
 
 export { ToastRegistry } from "./toast/toast-registry";
+
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from "./popover/popover";
