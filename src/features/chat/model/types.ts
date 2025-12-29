@@ -54,7 +54,3 @@ export interface ChatRoomListItem {
   lastMessage: ChatRoomLastMessage;
   unreadCount: number;
 }
-
-export interface ChatRoomListResponse {
-  data: ChatRoomListItem[];
-}
