@@ -13,16 +13,6 @@ export const chatRoomsLoader = async (params?: GetChatRoomsParams) => {
     const response = await fetch<ChatRoomListItem[]>(
       `${API_ENDPOINTS.chatRooms}?scope=${scope}&userId=${userId}`
     );
-
-    console.warn("Chat Rooms Loader:", scope, userId);
-
-    console.warn(
-      "Chat Rooms Request:",
-      `${API_ENDPOINTS.chatRooms}?scope=${scope}&userId=${userId}`
-    );
-
-    console.warn("Chat Rooms Response:", response);
-    // TODO: 에러 핸들링
     return response.data;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
