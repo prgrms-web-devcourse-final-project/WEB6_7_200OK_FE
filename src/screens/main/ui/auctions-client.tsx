@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { useQuery } from "@tanstack/react-query";
 
 import { auctionsQuery } from "@/screens/main/model/auctions-query";
+import { useServerTimeStore } from "@/shared/lib/hooks/use-server-time-store";
 import { Container } from "@/shared/ui";
 import { AuctionCarouselSection } from "@/widgets/auction/auction-carousel-section";
 
@@ -34,6 +37,16 @@ export default function AuctionsClient() {
   const { data, isLoading, isError } = useQuery({
     ...auctionsQuery,
   });
+
+  const setServerTime = useServerTimeStore((s) => s.setServerTime);
+
+  useEffect(() => {
+    const serverAt = data?.serverAt;
+
+    if (!serverAt) return;
+
+    setServerTime(serverAt);
+  }, [data?.serverAt, setServerTime]);
 
   return (
     <Container className="my-7 flex flex-col gap-15">
