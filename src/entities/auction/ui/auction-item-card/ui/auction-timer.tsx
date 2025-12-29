@@ -1,5 +1,12 @@
 import { Calendar, Timer, type LucideIcon } from "lucide-react";
 
+import { dayjs } from "@/shared/lib/utils/dayjs";
+import {
+  calculateRemainingTimeToAuctionStart,
+  calculateRemainingTimeToNextPriceDrop,
+} from "@/shared/lib/utils/time/calc";
+import { formatRemaining } from "@/shared/lib/utils/time/format";
+
 export type AuctionTimerType = "drop" | "start";
 
 const AUCTION_TIMER_MAP: Record<
@@ -24,11 +31,20 @@ const AUCTION_TIMER_MAP: Record<
 
 interface AuctionTimerProps {
   type: AuctionTimerType;
-  time: string;
+  now: number;
+  startedAt: string;
 }
 
-export default function AuctionTimer({ type, time }: AuctionTimerProps) {
+export default function AuctionTimer({ type, now, startedAt }: AuctionTimerProps) {
   const { label, ariaLabel, Icon } = AUCTION_TIMER_MAP[type];
+
+  const remainMs =
+    type === "drop"
+      ? calculateRemainingTimeToNextPriceDrop(now, 5 * 60 * 1000)
+      : calculateRemainingTimeToAuctionStart(now, startedAt);
+
+  const time = formatRemaining(remainMs);
+  const dateTime = dayjs.duration(remainMs).toISOString();
 
   return (
     <div
@@ -38,7 +54,7 @@ export default function AuctionTimer({ type, time }: AuctionTimerProps) {
     >
       <Icon aria-hidden className="size-4" />
       <span>{label}</span>
-      <time dateTime={time} className="ml-auto font-semibold">
+      <time dateTime={dateTime} className="ml-auto font-semibold">
         {time} 후
       </time>
     </div>
