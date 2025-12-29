@@ -41,8 +41,9 @@ export function ChatListScreen({ initialData }: ChatListScreenProps) {
     router.push(`?${params.toString()}`);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (message: string) => {
     // TODO: 채팅 전송 로직 구현
+    console.warn("채팅 전송:", message);
   };
 
   const handleBack = () => {
