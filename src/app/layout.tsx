@@ -7,6 +7,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
 import { QueryProvider } from "@/shared/api/query-provider";
+import { ServerTimeStoreProvider } from "@/shared/lib/providers/server-time-store-provider";
 import "@/shared/styles/globals.css";
 import { ToastRegistry } from "@/shared/ui/toast/toast-registry";
 import { BottomNav } from "@/widgets/bottom-nav";
@@ -36,14 +37,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            <div className="flex min-h-full flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <ToastRegistry />
-              <BottomNav />
-            </div>
-          </QueryProvider>
+          <ServerTimeStoreProvider>
+            <QueryProvider>
+              <div className="flex min-h-full flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <ToastRegistry />
+                <BottomNav />
+              </div>
+            </QueryProvider>
+          </ServerTimeStoreProvider>
         </ThemeProvider>
       </body>
     </html>
