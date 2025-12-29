@@ -14,3 +14,10 @@ export function calculateRemainingTimeToNextPriceDrop(nowMs: number, stepMs: num
   const nextStepMs = (Math.floor(nowMs / stepMs) + 1) * stepMs;
   return Math.max(0, nextStepMs - nowMs);
 }
+export function calculateRemainingTimeToAuctionStart(nowMs: number, startAt: string) {
+  const startAtMs = Date.parse(startAt);
+
+  if (Number.isNaN(startAtMs)) return 0;
+
+  return Math.max(0, startAtMs - nowMs);
+}
