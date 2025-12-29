@@ -1,14 +1,15 @@
 import { useCallback, useMemo } from "react";
 
-import { Package, ShoppingBag, type LucideIcon } from "lucide-react";
+import { MessageSquareOff, Package, ShoppingBag, type LucideIcon } from "lucide-react";
 
-import { DmListItem } from "@/entities/dm";
-import type { Chat, ListFilter } from "@/entities/dm";
+import type { ListFilter, ChatRoomListItem } from "@/features/chat";
 import { cn } from "@/shared/lib/utils/utils";
-import { Button, ScrollArea } from "@/shared/ui";
+import { Button, EmptyState, ScrollArea } from "@/shared/ui";
 
-interface DmListSidebarProps {
-  chats: Chat[];
+import { ChatListItem } from "./chat-list-item";
+
+interface ChatListSidebarProps {
+  chatRooms: ChatRoomListItem[];
   selectedChatId: string | null;
   filter: ListFilter;
   onChatSelect: (chatId: string) => void;
@@ -22,28 +23,28 @@ interface FilterOption {
   className: string;
 }
 
-export function DmListSidebar({
-  chats,
+export function ChatListSidebar({
+  chatRooms,
   selectedChatId,
   filter,
   onChatSelect,
   onFilterChange,
-}: DmListSidebarProps) {
+}: ChatListSidebarProps) {
   const filterOptions = useMemo<FilterOption[]>(
     () => [
       {
-        value: "all",
+        value: "ALL",
         label: "전체",
         className: "h-9 w-15",
       },
       {
-        value: "purchase",
+        value: "BUY",
         label: "구매 대화",
         icon: ShoppingBag,
         className: "h-9 w-26",
       },
       {
-        value: "sale",
+        value: "SELL",
         label: "판매 대화",
         icon: Package,
         className: "h-9 w-26",
@@ -69,12 +70,12 @@ export function DmListSidebar({
   return (
     <div
       className={cn(
-        "border-border relative flex h-full w-full flex-col rounded-l-md rounded-r-none border border-r p-4 lg:w-2/5",
+        "border-border relative flex h-full w-full flex-col rounded-l-md rounded-r-none border border-r py-4 lg:w-2/5",
         selectedChatId ? "hidden lg:flex" : "flex"
       )}
     >
       {/* 탭 네비게이션 */}
-      <div className="mb-4 flex items-center gap-2">
+      <div className="mb-2 flex items-center gap-2 p-4">
         {filterOptions.map((option) => {
           const Icon = option.icon;
           const isActive = filter === option.value;
@@ -109,18 +110,32 @@ export function DmListSidebar({
       </div>
 
       {/* 채팅 리스트 */}
-      <ScrollArea className="flex-1">
-        <div className="flex flex-col">
-          {chats.map((chat) => (
-            <DmListItem
-              key={chat.id}
-              chat={chat}
-              isSelected={selectedChatId === chat.id}
-              onClick={handleChatChange(chat.id)}
+      <div className="min-h-0 flex-1 overflow-hidden">
+        {chatRooms.length === 0 ? (
+          <div className="flex h-full items-center justify-center">
+            <EmptyState
+              title="현재 채팅방이 없습니다."
+              description="채팅방을 생성해주세요."
+              Icon={MessageSquareOff}
+              size="xl"
+              className="rounded-none rounded-l-none rounded-r-md border-none bg-transparent"
             />
-          ))}
-        </div>
-      </ScrollArea>
+          </div>
+        ) : (
+          <ScrollArea className="h-full">
+            <div className="flex flex-col">
+              {chatRooms.map((chatRoom) => (
+                <ChatListItem
+                  key={chatRoom.chatRoomId}
+                  chatRoom={chatRoom}
+                  isSelected={selectedChatId === String(chatRoom.chatRoomId)}
+                  onClick={handleChatChange(String(chatRoom.chatRoomId))}
+                />
+              ))}
+            </div>
+          </ScrollArea>
+        )}
+      </div>
     </div>
   );
 }

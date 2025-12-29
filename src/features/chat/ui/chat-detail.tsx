@@ -1,22 +1,23 @@
+"use client";
+
 import { useCallback, useMemo, useState } from "react";
 
 import Image from "next/image";
 
 import { ChevronLeft, Image as ImageIcon, MessageSquareOff, Send } from "lucide-react";
 
-import { DmBubble, DmItemCard } from "@/entities/dm";
-import type { Chat, Message } from "@/entities/dm";
-import AvatarSvg from "@/shared/assets/images/dm-images/avatar.svg";
+import { ChatBubble, ChatItemCard } from "@/entities/chat";
+import type { ChatRoomListItem, Message } from "@/features/chat";
 import { ScrollArea, Button, EmptyState, Input } from "@/shared/ui";
 
-interface DmDetailProps {
-  chat: Chat | null;
+interface ChatDetailProps {
+  chatRoom: ChatRoomListItem | null;
   messages: Message[];
   onSendMessage: (message: string) => void;
   onBack: () => void;
 }
 
-export function DmDetail({ chat, messages, onSendMessage, onBack }: DmDetailProps) {
+export function ChatDetail({ chatRoom, messages, onSendMessage, onBack }: ChatDetailProps) {
   const [messageInput, setMessageInput] = useState("");
 
   const hasMessage = useMemo(() => messageInput.trim().length > 0, [messageInput]);
@@ -26,7 +27,7 @@ export function DmDetail({ chat, messages, onSendMessage, onBack }: DmDetailProp
     onSendMessage("");
   }, [onSendMessage]);
 
-  if (!chat) {
+  if (!chatRoom) {
     return (
       <EmptyState
         title="메시지가 없습니다."
@@ -52,23 +53,23 @@ export function DmDetail({ chat, messages, onSendMessage, onBack }: DmDetailProp
           <ChevronLeft className="size-5" />
         </Button>
         <Image
-          src={AvatarSvg}
-          alt={chat.name}
+          src={chatRoom.partner.profileImageUrl}
+          alt={chatRoom.partner.username}
           width={40}
           height={40}
           className="size-10 shrink-0 rounded-md object-cover"
         />
         <div className="flex-1">
-          <p className="text-lg font-semibold">{chat.name}</p>
+          <p className="text-lg font-semibold">{chatRoom.partner.username}</p>
         </div>
       </div>
 
       {/* 메시지 영역 */}
       <ScrollArea className="min-h-0 flex-1 p-4">
         <div className="flex flex-col gap-4">
-          {chat.product && <DmItemCard product={chat.product} />}
+          <ChatItemCard auction={chatRoom.auction} />
           {messages.map((message) => (
-            <DmBubble key={message.id} message={message} />
+            <ChatBubble key={message.id} message={message} />
           ))}
         </div>
       </ScrollArea>
