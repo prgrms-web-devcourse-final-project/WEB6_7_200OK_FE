@@ -15,7 +15,7 @@ interface AuctionCarouselSectionProps {
   variant: AuctionCardVariantType;
   isLoading: boolean;
   isError: boolean;
-  items?: AuctionType[] | null;
+  items?: AuctionType[];
 }
 
 export function AuctionCarouselSection({
@@ -30,7 +30,7 @@ export function AuctionCarouselSection({
   const hasItems = Array.isArray(items) && items.length > 0;
 
   const renderContent = () => {
-    if (isLoading) return <AuctionCarouselSkeleton />;
+    if (isLoading && !items) return <AuctionCarouselSkeleton variant={variant} />;
 
     if (isError)
       return (
