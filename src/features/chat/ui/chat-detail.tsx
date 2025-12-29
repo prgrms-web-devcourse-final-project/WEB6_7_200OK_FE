@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { memo, useState } from "react";
 
 import Image from "next/image";
 
@@ -17,15 +17,16 @@ interface ChatDetailProps {
   onBack: () => void;
 }
 
-export function ChatDetail({ chatRoom, messages, onSendMessage, onBack }: ChatDetailProps) {
+function ChatDetailComponent({ chatRoom, messages, onSendMessage, onBack }: ChatDetailProps) {
   const [messageInput, setMessageInput] = useState("");
 
-  const hasMessage = useMemo(() => messageInput.trim().length > 0, [messageInput]);
+  const hasMessage = messageInput.trim().length > 0;
 
-  const handleSend = useCallback(() => {
+  const handleSend = () => {
     // TODO: 메시지 전송 관련 로직 작업 예정
-    onSendMessage("");
-  }, [onSendMessage]);
+    onSendMessage(messageInput);
+    setMessageInput("");
+  };
 
   if (!chatRoom) {
     return (
@@ -57,10 +58,10 @@ export function ChatDetail({ chatRoom, messages, onSendMessage, onBack }: ChatDe
           alt={chatRoom.partner.username}
           width={40}
           height={40}
-          className="size-10 shrink-0 rounded-md object-cover"
+          className="size-10 shrink-0 rounded-full object-cover"
         />
         <div className="flex-1">
-          <p className="text-lg font-semibold">{chatRoom.partner.username}</p>
+          <p className="text-md font-semibold sm:text-base">{chatRoom.partner.username}</p>
         </div>
       </div>
 
@@ -110,3 +111,5 @@ export function ChatDetail({ chatRoom, messages, onSendMessage, onBack }: ChatDe
     </div>
   );
 }
+
+export const ChatDetail = memo(ChatDetailComponent);
