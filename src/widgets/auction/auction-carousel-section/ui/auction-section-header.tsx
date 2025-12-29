@@ -5,7 +5,7 @@ import { ChevronRight } from "lucide-react";
 interface AuctionSectionHeaderProps {
   title: string;
   description: string;
-  href: string;
+  href: string | null;
 }
 
 export function AuctionSectionHeader({ title, description, href }: AuctionSectionHeaderProps) {
@@ -17,14 +17,16 @@ export function AuctionSectionHeader({ title, description, href }: AuctionSectio
       </div>
 
       <div>
-        <Link
-          href={href}
-          className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
-          aria-label={`${title} 더보기`}
-        >
-          더보기
-          <ChevronRight aria-hidden="true" className="size-3.5" />
-        </Link>
+        {href && (
+          <Link
+            href={href}
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
+            aria-label={`${title} 더보기`}
+          >
+            더보기
+            <ChevronRight aria-hidden="true" className="size-3.5" />
+          </Link>
+        )}
       </div>
     </header>
   );

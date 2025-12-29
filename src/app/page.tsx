@@ -1,8 +1,5 @@
-import HomeScreen from "@/screens/home";
-
-// FIXME: 임시 처리
-export const dynamic = "force-dynamic";
+import MainScreen from "@/screens/main";
 
 export default function Page() {
-  return <HomeScreen />;
+  return <MainScreen />;
 }
