@@ -9,3 +9,8 @@ export function calcMsPercent(ms: number, durationMs: number) {
 
   return { progress, remain };
 }
+
+export function calculateRemainingTimeToNextPriceDrop(nowMs: number, stepMs: number) {
+  const nextStepMs = (Math.floor(nowMs / stepMs) + 1) * stepMs;
+  return Math.max(0, nextStepMs - nowMs);
+}
