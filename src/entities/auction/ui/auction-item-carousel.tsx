@@ -12,9 +12,10 @@ import {
 interface AuctionItemCarouselProps {
   items: AuctionType[];
   variant: AuctionCardVariantType;
+  now: number;
 }
 
-export function AuctionItemCarousel({ items, variant }: AuctionItemCarouselProps) {
+export function AuctionItemCarousel({ items, variant, now }: AuctionItemCarouselProps) {
   return (
     <Carousel
       opts={{
@@ -33,6 +34,7 @@ export function AuctionItemCarousel({ items, variant }: AuctionItemCarouselProps
               {...item}
               variant={variant}
               rank={variant === "ranking" ? index + 1 : undefined}
+              now={now}
             />
           </CarouselItem>
         ))}
