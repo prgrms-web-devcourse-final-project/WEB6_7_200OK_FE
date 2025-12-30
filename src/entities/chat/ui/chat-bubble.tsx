@@ -1,6 +1,5 @@
+import type { Message } from "@/features/chat";
 import { cn } from "@/shared/lib/utils/utils";
-
-import type { Message } from "../model/types";
 
 interface ChatBubbleProps {
   message: Message;
