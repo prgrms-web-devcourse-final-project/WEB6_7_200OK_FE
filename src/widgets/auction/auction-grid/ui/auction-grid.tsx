@@ -13,6 +13,8 @@ export function AuctionGrid({ items }: { items: AuctionType[] }) {
               variant={item.status === "SCHEDULED" ? "upcoming" : "live"}
               currentPrice={item.currentPrice}
               discountRate={item.discountRate}
+              // FIXME: 임시 처리
+              now={0}
             />
           </li>
         ))}

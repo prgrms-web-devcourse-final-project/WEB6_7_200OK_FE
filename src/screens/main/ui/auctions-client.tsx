@@ -48,7 +48,8 @@ export default function AuctionsClient() {
     if (!serverAt) return;
 
     setServerTime(serverAt);
-  }, [data?.serverAt, setServerTime]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.serverAt]);
 
   return (
     <Container className="my-7 flex flex-col gap-15">

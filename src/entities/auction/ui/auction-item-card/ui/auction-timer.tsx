@@ -1,9 +1,13 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { Calendar, Timer, type LucideIcon } from "lucide-react";
 
 import { dayjs } from "@/shared/lib/utils/dayjs";
 import {
-  calculateRemainingTimeToAuctionStart,
-  calculateRemainingTimeToNextPriceDrop,
+  calculateRemainingTimeToAuctionStartMs,
+  calculateRemainingTimeToNextPriceDropMs,
 } from "@/shared/lib/utils/time/calc";
 import { formatRemaining } from "@/shared/lib/utils/time/format";
 
@@ -38,10 +42,13 @@ interface AuctionTimerProps {
 export default function AuctionTimer({ type, now, startedAt }: AuctionTimerProps) {
   const { label, ariaLabel, Icon } = AUCTION_TIMER_MAP[type];
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const remainMs =
     type === "drop"
-      ? calculateRemainingTimeToNextPriceDrop(now, 5 * 60 * 1000)
-      : calculateRemainingTimeToAuctionStart(now, startedAt);
+      ? calculateRemainingTimeToNextPriceDropMs(now, 5 * 60 * 1000)
+      : calculateRemainingTimeToAuctionStartMs(now, startedAt);
 
   const time = formatRemaining(remainMs);
   const dateTime = dayjs.duration(remainMs).toISOString();
@@ -54,9 +61,13 @@ export default function AuctionTimer({ type, now, startedAt }: AuctionTimerProps
     >
       <Icon aria-hidden className="size-4" />
       <span>{label}</span>
-      <time dateTime={dateTime} className="ml-auto font-semibold">
-        {time} 후
-      </time>
+      {mounted ? (
+        <time dateTime={dateTime} className="ml-auto font-semibold">
+          {time} 후
+        </time>
+      ) : (
+        <span className="ml-auto font-semibold" />
+      )}
     </div>
   );
 }

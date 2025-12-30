@@ -1,5 +1,7 @@
 import { createStore } from "zustand/vanilla";
 
+import { calculateServerNow } from "@/shared/lib/utils/time/calc";
+
 export interface ServerTimeStore {
   serverTimeOffset: number;
   lastSyncServerTime: number | null;
@@ -32,6 +34,7 @@ export const createServerTimeStore = () =>
 
     getCurrentServerTime: () => {
       const { serverTimeOffset } = get();
-      return Date.now() + serverTimeOffset;
+
+      return calculateServerNow(serverTimeOffset);
     },
   }));
