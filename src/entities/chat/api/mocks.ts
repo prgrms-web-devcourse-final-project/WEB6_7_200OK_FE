@@ -1,4 +1,4 @@
-import type { Chat, Message } from "../model/types";
+import type { Chat, Message } from "@/features/chat";
 
 export const mockChats: Chat[] = [
   {
