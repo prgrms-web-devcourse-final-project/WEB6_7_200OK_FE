@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
         hostname: "k.kakaocdn.net",
       },
       { protocol: "https", hostname: "picsum.photos" },
+      { protocol: "https", hostname: "static.toss.im" },
     ],
   },
   async rewrites() {
