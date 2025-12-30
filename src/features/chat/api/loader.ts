@@ -1,9 +1,9 @@
-import type { ChatRoomListItem } from "@/features/chat";
+import type { ChatRoomListItem, ListFilter } from "@/features/chat";
 import { fetch } from "@/shared/api/server";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 interface GetChatRoomsParams {
-  scope?: "ALL" | "BUY" | "SELL";
+  scope?: ListFilter;
 }
 
 export const chatRoomsLoader = async (params?: GetChatRoomsParams) => {
