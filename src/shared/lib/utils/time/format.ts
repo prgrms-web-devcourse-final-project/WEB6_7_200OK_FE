@@ -27,9 +27,9 @@ export function formatMs(ms: number) {
 export function formatRemaining(ms: number) {
   if (ms <= 0) return "0초";
 
-  const totalMs = Math.ceil(ms / 1000);
+  const totalSeconds = Math.ceil(ms / 1000);
 
-  const duration = dayjs.duration(totalMs, "seconds");
+  const duration = dayjs.duration(totalSeconds, "seconds");
 
   const days = Math.floor(duration.asDays());
   const hours = duration.hours();
