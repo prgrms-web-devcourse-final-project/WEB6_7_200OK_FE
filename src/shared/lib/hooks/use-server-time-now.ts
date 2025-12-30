@@ -1,22 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useServerTimeStore } from "@/shared/lib/hooks/use-server-time-store";
+import { calculateServerNow } from "@/shared/lib/utils/time/calc";
 
 export function useServerTimeNow() {
-  const getCurrentServerTime = useServerTimeStore((s) => s.getCurrentServerTime);
-  const [now, setNow] = useState(() => getCurrentServerTime());
+  const serverTimeOffset = useServerTimeStore((s) => s.serverTimeOffset);
+  const offsetRef = useRef(serverTimeOffset);
 
   useEffect(() => {
-    setNow(getCurrentServerTime());
+    offsetRef.current = serverTimeOffset;
+  }, [serverTimeOffset]);
 
-    const id = globalThis.setInterval(() => {
-      setNow(getCurrentServerTime());
-    }, 1_000);
+  const [now, setNow] = useState(() => calculateServerNow(offsetRef.current));
+
+  useEffect(() => {
+    const tick = () => setNow(calculateServerNow(offsetRef.current));
+
+    tick();
+
+    const id = globalThis.setInterval(tick, 1_000);
 
     return () => globalThis.clearInterval(id);
-  }, [getCurrentServerTime]);
+  }, []);
 
   return now;
 }
