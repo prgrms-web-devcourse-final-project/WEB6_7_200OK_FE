@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Calendar, Timer, type LucideIcon } from "lucide-react";
 
+import { useServerTimeNow } from "@/shared/lib/hooks/use-server-time-now";
 import { calculateRemainingSeconds } from "@/shared/lib/utils/time/calc";
 import { formatRemaining } from "@/shared/lib/utils/time/format";
 
@@ -31,13 +32,14 @@ const AUCTION_TIMER_MAP: Record<
 
 interface AuctionTimerProps {
   type: AuctionTimerType;
-  now: number;
   startedAt: string;
   onExpire?: () => void;
 }
 
-export default function AuctionTimer({ type, now, startedAt, onExpire }: AuctionTimerProps) {
+export default function AuctionTimer({ type, startedAt, onExpire }: AuctionTimerProps) {
   const { label, ariaLabel, Icon } = AUCTION_TIMER_MAP[type];
+
+  const now = useServerTimeNow();
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
