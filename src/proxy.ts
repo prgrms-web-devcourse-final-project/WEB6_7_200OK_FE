@@ -38,8 +38,24 @@ async function checkAuth(request: NextRequest): Promise<boolean> {
   }
 }
 
+function getUserIdFromCookie(request: NextRequest): string | null {
+  return request.cookies.get("userId")?.value || null;
+}
+
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // users/me/[tab] -> /users/[userId]/[tab] rewrite
+  if (pathname.startsWith("/users/me")) {
+    const userId = getUserIdFromCookie(request);
+
+    if (!userId) {
+      return NextResponse.redirect(new URL("/auth/login", request.url));
+    }
+
+    const newPath = pathname.replace("/users/me", `/users/${userId}`);
+    return NextResponse.rewrite(new URL(newPath, request.url));
+  }
 
   // 로그인 페이지: 인증된 사용자는 홈으로
   if (pathname === "/auth/login") {
@@ -61,5 +77,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/auth/login", "/user/:path*"],
+  matcher: ["/auth/login", "/user/:path*", "/users/me/:path*"],
 };
