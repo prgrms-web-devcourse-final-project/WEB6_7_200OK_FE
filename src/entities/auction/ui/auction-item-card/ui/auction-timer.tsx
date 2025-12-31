@@ -5,7 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { Calendar, Timer, type LucideIcon } from "lucide-react";
 
 import { useServerTimeNow } from "@/shared/lib/hooks/use-server-time-now";
-import { calculateRemainingSeconds } from "@/shared/lib/utils/time/calc";
+import {
+  calculateAuctionStartSeconds,
+  calculateNextPriceDropSeconds,
+} from "@/shared/lib/utils/time/calc";
 import { formatRemaining } from "@/shared/lib/utils/time/format";
 
 export type AuctionTimerType = "drop" | "start";
@@ -46,8 +49,8 @@ export default function AuctionTimer({ type, startedAt, onExpire }: AuctionTimer
 
   const remainSeconds =
     type === "drop"
-      ? calculateRemainingSeconds(now)
-      : calculateRemainingSeconds(now, Date.parse(startedAt));
+      ? calculateNextPriceDropSeconds(now)
+      : calculateAuctionStartSeconds(now, startedAt);
 
   const prevRemainSecondsRef = useRef<number | null>(null);
 
@@ -55,11 +58,7 @@ export default function AuctionTimer({ type, startedAt, onExpire }: AuctionTimer
     const prev = prevRemainSecondsRef.current;
     prevRemainSecondsRef.current = remainSeconds;
 
-    if (prev === null) return;
-
-    if (prev <= 1 && remainSeconds > prev) {
-      onExpire?.();
-    }
+    if (prev === 1) onExpire?.();
   }, [remainSeconds, onExpire]);
 
   const time = formatRemaining(remainSeconds);
