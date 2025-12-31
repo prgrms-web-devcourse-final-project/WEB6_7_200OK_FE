@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { cn } from "@/shared/lib/utils/utils";
 import {
   Carousel,
   CarouselContent,
@@ -8,13 +9,22 @@ import {
   CarouselPrevious,
 } from "@/shared/ui";
 
+const images = [
+  "https://picsum.photos/seed/auction--2114285778-1/800/800",
+  "https://picsum.photos/seed/auction--2114285778-2/800/800",
+  "https://picsum.photos/seed/auction--2114285778-3/800/800",
+];
+/* TODO: 임시 주석
 interface ImageCarouselProps {
   images: string[];
+  */
+interface ImageCarouselProps {
+  className?: string;
 }
 
-export default function ImageCarousel({ images }: ImageCarouselProps) {
+export default function ImageCarousel({ className }: ImageCarouselProps) {
   return (
-    <div className="flex max-w-full">
+    <div className={cn("flex max-w-full", className)}>
       <Carousel className="h-162 w-full shrink">
         <CarouselContent className="h-162">
           {images.map((image) => (
