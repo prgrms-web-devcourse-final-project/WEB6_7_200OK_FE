@@ -2,6 +2,17 @@ import type { ApiResponseType } from "./types/response";
 
 const PROXY_BASE_URL = "/api/proxy";
 
+export class ApiError extends Error {
+  constructor(
+    public code: number,
+    message: string,
+    public status?: number
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 interface StrictRequestInit<TRequest> extends Omit<RequestInit, "body"> {
   body?: TRequest | FormData;
   queryParams?: Record<string, string | number | boolean | undefined>;
@@ -42,15 +53,18 @@ export async function httpClient<TResponse, TRequest = unknown>(
   });
 
   if (!response.ok) {
+    let errorData;
     try {
-      const errorData = await response.json();
-      throw new Error(errorData.message || errorData.error || "API Request Failed");
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error(`HTTP Error: ${response.status}`);
+      errorData = await response.json();
+    } catch {
+      throw new ApiError(response.status, `HTTP Error: ${response.status}`, response.status);
     }
+
+    const message = errorData.message || errorData.error || "API Request Failed";
+
+    const code = errorData.code || response.status;
+
+    throw new ApiError(code, message, response.status);
   }
 
   return response.json() as Promise<ApiResponseType<TResponse>>;
