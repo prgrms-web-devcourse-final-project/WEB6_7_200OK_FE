@@ -13,9 +13,10 @@ interface AuctionItemCarouselProps {
   items: AuctionType[];
   variant: AuctionCardVariantType;
   now: number;
+  onExpire?: () => void;
 }
 
-export function AuctionItemCarousel({ items, variant, now }: AuctionItemCarouselProps) {
+export function AuctionItemCarousel({ items, variant, now, onExpire }: AuctionItemCarouselProps) {
   return (
     <Carousel
       opts={{
@@ -35,6 +36,7 @@ export function AuctionItemCarousel({ items, variant, now }: AuctionItemCarousel
               variant={variant}
               rank={variant === "ranking" ? index + 1 : undefined}
               now={now}
+              onExpire={onExpire}
             />
           </CarouselItem>
         ))}

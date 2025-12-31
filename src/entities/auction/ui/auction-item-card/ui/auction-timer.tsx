@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Calendar, Timer, type LucideIcon } from "lucide-react";
 
-import { dayjs } from "@/shared/lib/utils/dayjs";
-import {
-  calculateRemainingTimeToAuctionStartMs,
-  calculateRemainingTimeToNextPriceDropMs,
-} from "@/shared/lib/utils/time/calc";
+import { calculateRemainingSeconds } from "@/shared/lib/utils/time/calc";
 import { formatRemaining } from "@/shared/lib/utils/time/format";
 
 export type AuctionTimerType = "drop" | "start";
@@ -37,21 +33,35 @@ interface AuctionTimerProps {
   type: AuctionTimerType;
   now: number;
   startedAt: string;
+  onExpire?: () => void;
 }
 
-export default function AuctionTimer({ type, now, startedAt }: AuctionTimerProps) {
+export default function AuctionTimer({ type, now, startedAt, onExpire }: AuctionTimerProps) {
   const { label, ariaLabel, Icon } = AUCTION_TIMER_MAP[type];
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const remainMs =
+  const remainSeconds =
     type === "drop"
-      ? calculateRemainingTimeToNextPriceDropMs(now, 5 * 60 * 1000)
-      : calculateRemainingTimeToAuctionStartMs(now, startedAt);
+      ? calculateRemainingSeconds(now)
+      : calculateRemainingSeconds(now, Date.parse(startedAt));
 
-  const time = formatRemaining(remainMs);
-  const dateTime = dayjs.duration(remainMs).toISOString();
+  const prevRemainSecondsRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const prev = prevRemainSecondsRef.current;
+    prevRemainSecondsRef.current = remainSeconds;
+
+    if (prev === null) return;
+
+    if (prev <= 1 && remainSeconds > prev) {
+      onExpire?.();
+    }
+  }, [remainSeconds, onExpire]);
+
+  const time = formatRemaining(remainSeconds);
+  const dateTime = `PT${remainSeconds}S`;
 
   return (
     <div

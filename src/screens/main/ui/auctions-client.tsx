@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { auctionsQuery } from "@/screens/main/model/auctions-query";
 import { SECTIONS } from "@/screens/main/model/sections";
@@ -16,6 +16,9 @@ export default function AuctionsClient() {
     ...auctionsQuery,
   });
 
+  const queryClient = useQueryClient();
+  const expireQueuedRef = useRef(false);
+
   const setServerTime = useServerTimeStore((s) => s.setServerTime);
   const now = useServerTimeNow();
 
@@ -27,6 +30,16 @@ export default function AuctionsClient() {
     setServerTime(serverAt);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.serverAt]);
+
+  const handleExpire = () => {
+    if (expireQueuedRef.current) return;
+    expireQueuedRef.current = true;
+
+    setTimeout(() => {
+      expireQueuedRef.current = false;
+      queryClient.invalidateQueries({ queryKey: auctionsQuery.queryKey });
+    }, 0);
+  };
 
   return (
     <Container className="my-7 flex flex-col gap-15">
@@ -41,6 +54,7 @@ export default function AuctionsClient() {
           isError={isError}
           items={data?.[section.key]}
           now={now}
+          onExpire={handleExpire}
         />
       ))}
     </Container>
