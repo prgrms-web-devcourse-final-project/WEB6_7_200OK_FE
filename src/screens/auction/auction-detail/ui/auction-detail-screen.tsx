@@ -13,13 +13,14 @@ import {
   AuctionDetailDescription,
   AuctionDetailLogSheet,
   AuctionDetailUserActions,
+  ImageCarousel,
   // ImageCarousel,
 } from "@/widgets/auction/auction-detail";
 import { AuctionPriceStoreProvider } from "@/widgets/auction/auction-detail/provider/auction-price-store-provider";
 import PurchaseWidget from "@/widgets/auction/auction-purchase/ui/PurchaseWidget";
 
-export default function AuctionDetailScreen({ data }: { data: AuctionDetailType }) {
-  if (!data) {
+export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailType; id: string }) {
+  if (!data || !id) {
     return (
       <div className="p-4">
         <p>데이터가 없습니다.</p>
@@ -33,6 +34,7 @@ export default function AuctionDetailScreen({ data }: { data: AuctionDetailType 
         {/* Left Section */}
         <div className="lg:min-w-125 lg:shrink lg:grow-0 lg:basis-189">
           <div className="flex flex-col gap-8 p-4">
+            <ImageCarousel className="hidden lg:block" />
             <Separator />
             <AuctionDetailDescription description={data.description} />
             <Separator />
@@ -46,6 +48,7 @@ export default function AuctionDetailScreen({ data }: { data: AuctionDetailType 
         {/* Right Section */}
         <div className="overflow-y-auto lg:sticky lg:top-0 lg:max-h-[calc(100vh-var(--header-h))] lg:min-w-131 lg:shrink-0 lg:grow-0 lg:basis-131">
           <div className="flex flex-col gap-8 p-4">
+            <ImageCarousel className="block lg:hidden" />
             <AuctionDetailCategory category={data.category} />
             <AuctionPriceStoreProvider price={data.currentPrice} stopLoss={data.stopLoss}>
               <AuctionTickerProvider rate={data.discountRate}>
@@ -56,7 +59,7 @@ export default function AuctionDetailScreen({ data }: { data: AuctionDetailType 
                 <AuctionProgress />
               </AuctionTickerProvider>
             </AuctionPriceStoreProvider>
-            <AuctionDetailUserActions>
+            <AuctionDetailUserActions auctionId={id}>
               <PurchaseWidget customerKey={customerKey} />
             </AuctionDetailUserActions>
             <div className="flex flex-col gap-3">
@@ -74,7 +77,7 @@ export default function AuctionDetailScreen({ data }: { data: AuctionDetailType 
           </div>
         </div>
       </div>
-      <ScrollBar />
+      <ScrollBar asChild />
     </ScrollArea>
   );
 }

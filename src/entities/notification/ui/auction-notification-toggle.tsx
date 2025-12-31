@@ -10,7 +10,7 @@ export default function AuctionNotificationToggle() {
   const [open, setOpenChange] = useState(false);
   return (
     <Popover open={open} onOpenChange={setOpenChange}>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button variant="ghost" className="h-auto flex-col gap-2 py-2 text-xs" size="sm">
           <Bell className="text-zinc-800 dark:text-zinc-300" />
           알림
