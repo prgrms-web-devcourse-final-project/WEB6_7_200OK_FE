@@ -10,20 +10,11 @@ export function calcMsPercent(ms: number, durationMs: number) {
   return { progress, remain };
 }
 
-// REFACTOR: 검증 함수 공통 로직 분리
-export const calculateRemainingTimeToNextPriceDropMs = (nowMs: number, stepMs = 5 * 60 * 1000) => {
-  if (!Number.isFinite(nowMs) || !Number.isFinite(stepMs) || stepMs <= 0) return 0;
+export const calculateRemainingSeconds = (nowMs: number, stepMs = 5 * 60 * 1000) => {
+  const nextStepMs = Math.ceil(nowMs / stepMs) * stepMs;
+  const remainMs = Math.max(0, nextStepMs - nowMs);
 
-  const nextStepMs = (Math.floor(nowMs / stepMs) + 1) * stepMs;
-  return Math.max(0, nextStepMs - nowMs);
-};
-
-export const calculateRemainingTimeToAuctionStartMs = (nowMs: number, startAt: string) => {
-  const startAtMs = Date.parse(startAt);
-
-  if (Number.isNaN(startAtMs)) return 0;
-
-  return Math.max(0, startAtMs - nowMs);
+  return Math.max(0, Math.ceil(remainMs / 1000));
 };
 
 export const calculateServerNow = (offsetMs: number) => Date.now() + offsetMs;

@@ -24,10 +24,8 @@ export function formatMs(ms: number) {
   return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
 }
 
-export function formatRemaining(ms: number) {
-  if (ms <= 0) return "0초";
-
-  const totalSeconds = Math.ceil(ms / 1000);
+export function formatRemaining(totalSeconds: number) {
+  if (totalSeconds <= 0) return "0초";
 
   const duration = dayjs.duration(totalSeconds, "seconds");
 
