@@ -16,7 +16,7 @@ import UpcomingInfo from "@/entities/auction/ui/auction-item-card/ui/upcoming-in
 export interface AuctionItemCardProps extends AuctionType {
   variant: AuctionCardVariantType;
   rank?: number;
-  now: number;
+  onExpire?: () => void;
 }
 
 export function AuctionItemCard({
@@ -30,7 +30,7 @@ export function AuctionItemCard({
   isLiked,
   startedAt,
   rank,
-  now,
+  onExpire,
 }: AuctionItemCardProps) {
   const config = VARIANT_CONFIG[variant];
 
@@ -60,7 +60,9 @@ export function AuctionItemCard({
             <UpcomingInfo startedAt={startedAt} startPrice={startPrice} />
           )}
 
-          {config.timer && <AuctionTimer type={config.timer} now={now} startedAt={startedAt} />}
+          {config.timer && (
+            <AuctionTimer type={config.timer} startedAt={startedAt} onExpire={onExpire} />
+          )}
         </div>
       </Link>
 
