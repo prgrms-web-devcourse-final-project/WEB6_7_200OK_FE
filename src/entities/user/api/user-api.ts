@@ -1,18 +1,31 @@
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
-import { UserBasicInfoResponseType, UserProfileType } from "../model/types";
+import { UserProfileType } from "../model/types";
 
-export async function fetchUserBasicInfo(): Promise<UserProfileType> {
-  const result = await httpClient<UserBasicInfoResponseType["data"]>(API_ENDPOINTS.authBasic, {
+interface UserInfoResponseData {
+  isOwner: boolean;
+  userId: number;
+  username: string;
+  email: string;
+  profileImage: string;
+  totalReviews: number;
+  rating: number;
+}
+
+export async function getUserProfile(targetUserId: number): Promise<UserProfileType> {
+  const result = await httpClient<UserInfoResponseData>(API_ENDPOINTS.userInfo(targetUserId), {
     method: "GET",
   });
 
+  const { data } = result;
+
   return {
-    name: result.data.username,
-    email: result.data.userEmail,
-    avatarUrl: result.data.userProfileUrl || undefined,
-    rating: 0, // API 제공 안함, 기본값
-    reviewCount: 0, // API 제공 안함, 기본값
+    name: data.username,
+    email: data.email,
+    avatarUrl: data.profileImage || undefined,
+    rating: data.rating,
+    reviewCount: data.totalReviews,
+    isOwner: data.isOwner,
   };
 }

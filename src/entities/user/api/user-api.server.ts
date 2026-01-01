@@ -1,21 +1,77 @@
-import { fetch as serverFetch } from "@/shared/api/server";
+import { cache } from "react";
 
-import { UserBasicInfoResponseType, UserProfileType } from "../model/types";
+import { cookies } from "next/headers";
 
-export async function fetchUserBasicInfoServer(): Promise<UserProfileType> {
-  const response = await serverFetch<UserBasicInfoResponseType["data"]>("/api/v1/auth/basic", {
-    method: "GET",
-  });
+import { fetch as apiFetch } from "@/shared/api/server";
+import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
-  if (response.code !== 200 || !response.data) {
-    throw new Error("사용자 정보를 불러올 수 없습니다.");
+import { UserBasicInfoResponseType } from "../model/types";
+
+interface UserApiResponse {
+  username: string;
+  email: string;
+  profileImage: string | null;
+  rating: number;
+  totalReviews: number;
+  isOwner: boolean;
+}
+
+export const getUserProfileServer = cache(async (targetUserId: number) => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  const path = API_ENDPOINTS.userInfo(targetUserId);
+
+  try {
+    const response = await apiFetch<UserApiResponse>(path, {
+      method: "GET",
+      headers: {
+        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+      },
+
+      cache: "no-store",
+    });
+
+    const { data } = response;
+
+    if (!data) return null;
+
+    return {
+      name: data.username,
+      email: data.email,
+      avatarUrl: data.profileImage || undefined,
+      rating: data.rating,
+      reviewCount: data.totalReviews,
+      isOwner: data.isOwner,
+    };
+  } catch {
+    return null;
+  }
+});
+
+export async function getMyBasicInfoServer() {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return null;
   }
 
-  return {
-    name: response.data.username,
-    email: response.data.userEmail,
-    avatarUrl: response.data.userProfileUrl || undefined,
-    rating: 0,
-    reviewCount: 0,
-  };
+  try {
+    const response = await apiFetch<UserBasicInfoResponseType["data"]>(API_ENDPOINTS.authBasic, {
+      method: "GET",
+
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+
+        Cookie: `accessToken=${accessToken}`,
+      },
+
+      cache: "no-store",
+    });
+
+    return response.data;
+  } catch {
+    return null;
+  }
 }
