@@ -4,6 +4,7 @@ export interface UserProfileType {
   avatarUrl?: string;
   rating: number;
   reviewCount: number;
+  isOwner: boolean;
 }
 
 export interface UserBasicInfoResponseType {
