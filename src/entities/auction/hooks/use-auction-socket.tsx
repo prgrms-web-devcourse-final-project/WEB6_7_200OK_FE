@@ -2,10 +2,13 @@
 
 import { useEffect } from "react";
 
+import { useRouter } from "next/router";
+
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 import type { AuctionStatusType } from "@/entities/auction/model/status";
+import { useAuctionViewer } from "@/features/auction/auction-log/provider/use-auction-viewer";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,6 +21,8 @@ interface SocketResponseType {
 }
 
 export default function useAuctionSocket(auctionId: string) {
+  const router = useRouter();
+  const setViewerCount = useAuctionViewer((state) => state.setViewerCount);
   useEffect(() => {
     const client = new Client({
       webSocketFactory: () => new SockJS(`${API_URL}/ws-stomp`),
@@ -33,10 +38,12 @@ export default function useAuctionSocket(auctionId: string) {
             console.log("금액 변경", response.currentPrice); // TODO: onExpiry 실행 or 서버 타임 diff 계산 및 반영
           }
           if (response.status) {
-            console.log("경매 상태 변경", response.status); // TODO: 경매 status 변경 실행
+            if (response.status !== "PROCESS" && response.status !== "SCHEDULED") {
+              router.reload();
+            }
           }
           if (response.viewerCount) {
-            console.log("경매 시청자 변경", response.viewerCount); // TODO: 경매 viewer 변경 실행
+            setViewerCount(response.viewerCount);
           }
         });
       },
@@ -60,5 +67,5 @@ export default function useAuctionSocket(auctionId: string) {
     return () => {
       client.deactivate();
     };
-  }, [auctionId]);
+  }, [auctionId, setViewerCount, router]);
 }
