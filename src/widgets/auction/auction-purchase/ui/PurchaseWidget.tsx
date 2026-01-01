@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 
+import type { AuctionStatusType } from "@/entities/auction";
 import { PurchaseButton } from "@/features/auction/auction-purchase";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/shared/ui";
 import { useTossPaymentsWidget } from "@/widgets/auction/auction-purchase/useTossPaymentsWidget";
 
 interface PurchaseWidgetProps {
   customerKey: string;
+  status: AuctionStatusType;
 }
 
-export default function PurchaseWidget({ customerKey }: PurchaseWidgetProps) {
+export default function PurchaseWidget({ customerKey, status }: PurchaseWidgetProps) {
   const [open, setOpenChange] = useState(false);
   const { ready, widgets, fetchPaymentWidgets, renderPaymentWidgets, resetPaymentWidgets } =
     useTossPaymentsWidget(customerKey);
@@ -33,7 +35,7 @@ export default function PurchaseWidget({ customerKey }: PurchaseWidgetProps) {
   return (
     <Dialog open={open} onOpenChange={handleDialogHandler}>
       <DialogTrigger asChild>
-        <PurchaseButton onClick={() => setOpenChange(true)} />
+        <PurchaseButton onClick={() => setOpenChange(true)} status={status} />
       </DialogTrigger>
       <DialogContent className="min-w-sm bg-white [&>button]:hidden">
         <DialogTitle className="text-zinc-900">결제</DialogTitle>

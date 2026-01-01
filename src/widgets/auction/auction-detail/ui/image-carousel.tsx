@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { AuctionStatusType, LiveBadge, UpcomingBadge } from "@/entities/auction";
+import AuctionViewerLogBadge from "@/features/auction/auction-log/ui/auction-viewer-log-badge";
 import { cn } from "@/shared/lib/utils/utils";
 import {
   Carousel,
@@ -20,11 +22,17 @@ interface ImageCarouselProps {
   */
 interface ImageCarouselProps {
   className?: string;
+  status: AuctionStatusType;
 }
 
-export default function ImageCarousel({ className }: ImageCarouselProps) {
+export default function ImageCarousel({ className, status }: ImageCarouselProps) {
   return (
-    <div className={cn("flex max-w-full", className)}>
+    <div className={cn("relative flex max-w-full", className)}>
+      <div className="absolute top-3 left-3 z-2 inline-flex gap-2">
+        {status === "PROCESS" && <LiveBadge className="static" />}
+        {status === "SCHEDULED" && <UpcomingBadge className="static" />}
+        <AuctionViewerLogBadge />
+      </div>
       <Carousel className="h-162 w-full shrink">
         <CarouselContent className="h-162">
           {images.map((image) => (
