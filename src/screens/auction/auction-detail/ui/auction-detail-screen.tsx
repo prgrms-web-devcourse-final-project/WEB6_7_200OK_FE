@@ -4,7 +4,7 @@ import { AuctionLogList } from "@/features/auction/auction-log";
 import { AuctionViewerProvider } from "@/features/auction/auction-log/provider/use-auction-viewer";
 import { AuctionDetailReview } from "@/features/auction/auction-review";
 import type { AuctionDetailType } from "@/screens/auction/auction-detail/model/types";
-import { calculateAuctionStartMs, calculateMMSSToMs } from "@/shared/lib/utils/time/calc";
+import { calculateAuctionStartMs, calculate5MinCycleMs } from "@/shared/lib/utils/time/calc";
 import { Separator, ScrollArea, ScrollBar } from "@/shared/ui";
 import {
   AuctionDetailCategory,
@@ -64,7 +64,7 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
                   initDiff={
                     data.status === "SCHEDULED"
                       ? 0
-                      : calculateMMSSToMs(data.serverTime) + now - Date.parse(data.serverTime)
+                      : calculate5MinCycleMs(data.serverTime) + (now - Date.parse(data.serverTime))
                   }
                 >
                   <AuctionDetailPrice startPrice={data.startPrice} />
