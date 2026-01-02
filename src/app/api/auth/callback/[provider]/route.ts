@@ -8,7 +8,8 @@ const COOKIE_OPTIONS = {
     secure: isProduction,
     sameSite: isProduction ? ("none" as const) : ("lax" as const),
     path: "/",
-    maxAge: 60 * 60,
+    maxAge: 60 * 60 * 24,
+    domain: isProduction ? ".wind-fall.store" : undefined,
   },
   REFRESH_TOKEN: {
     httpOnly: true,
@@ -16,6 +17,15 @@ const COOKIE_OPTIONS = {
     sameSite: isProduction ? ("none" as const) : ("lax" as const),
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
+    domain: isProduction ? ".wind-fall.store" : undefined,
+  },
+  USER_ID: {
+    httpOnly: false,
+    secure: isProduction,
+    sameSite: isProduction ? ("none" as const) : ("lax" as const),
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7,
+    domain: isProduction ? ".wind-fall.store" : undefined,
   },
 };
 
@@ -25,6 +35,7 @@ interface ExchangeResponse {
   data: {
     accessToken: string;
     refreshToken: string;
+    userId: number;
   };
 }
 
@@ -69,7 +80,8 @@ export async function GET(
     }
 
     const result: ExchangeResponse = await response.json();
-    const { accessToken, refreshToken } = result.data;
+
+    const { accessToken, refreshToken, userId } = result.data;
 
     if (!accessToken || !refreshToken) {
       return NextResponse.redirect(new URL("/auth/login?error=invalid_tokens", request.url));
@@ -80,6 +92,10 @@ export async function GET(
 
     nextResponse.cookies.set("accessToken", accessToken, COOKIE_OPTIONS.ACCESS_TOKEN);
     nextResponse.cookies.set("refreshToken", refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN);
+
+    if (userId) {
+      nextResponse.cookies.set("userId", String(userId), COOKIE_OPTIONS.USER_ID);
+    }
 
     return nextResponse;
   } catch {
