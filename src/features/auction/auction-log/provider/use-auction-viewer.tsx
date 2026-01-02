@@ -1,4 +1,3 @@
-// src/entities/auction/provider/auction-viewer-provider.tsx
 "use client";
 
 import React, { createContext, useContext, useRef } from "react";
