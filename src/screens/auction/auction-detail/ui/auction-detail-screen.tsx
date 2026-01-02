@@ -4,6 +4,7 @@ import { AuctionLogList } from "@/features/auction/auction-log";
 import { AuctionViewerProvider } from "@/features/auction/auction-log/provider/use-auction-viewer";
 import { AuctionDetailReview } from "@/features/auction/auction-review";
 import type { AuctionDetailType } from "@/screens/auction/auction-detail/model/types";
+import { calculateAuctionStartMs, calculateMMSSToMs } from "@/shared/lib/utils/time/calc";
 import { Separator, ScrollArea, ScrollBar } from "@/shared/ui";
 import {
   AuctionDetailCategory,
@@ -15,7 +16,6 @@ import {
   AuctionDetailLogSheet,
   AuctionDetailUserActions,
   ImageCarousel,
-  // ImageCarousel,
 } from "@/widgets/auction/auction-detail";
 import { AuctionPriceStoreProvider } from "@/widgets/auction/auction-detail/provider/auction-price-store-provider";
 import PurchaseWidget from "@/widgets/auction/auction-purchase/ui/PurchaseWidget";
@@ -29,6 +29,7 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
     );
   }
   const customerKey = globalThis.crypto.randomUUID();
+  const now = Date.now();
   return (
     <ScrollArea className="h-[calc(100vh-var(--header-h))] lg:h-[calc(100vh-var(--header-h))]">
       <AuctionViewerProvider initCount={data.viewerCount}>
@@ -53,7 +54,19 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
               <ImageCarousel className="block lg:hidden" status={data.status} />
               <AuctionDetailCategory category={data.category} />
               <AuctionPriceStoreProvider price={data.currentPrice} stopLoss={data.stopLoss}>
-                <AuctionTickerProvider rate={data.discountRate}>
+                <AuctionTickerProvider
+                  rate={data.discountRate}
+                  duration={
+                    data.status === "SCHEDULED"
+                      ? calculateAuctionStartMs(data.serverTime, data.startedAt)
+                      : 5 * 60 * 1000
+                  }
+                  initDiff={
+                    data.status === "SCHEDULED"
+                      ? 0
+                      : calculateMMSSToMs(data.serverTime) + now - Date.parse(data.serverTime)
+                  }
+                >
                   <AuctionDetailPrice startPrice={data.startPrice} />
                   <AuctionDetailTitle title={data.title} />
                   <AuctionDetailTags tags={data.tags} />
