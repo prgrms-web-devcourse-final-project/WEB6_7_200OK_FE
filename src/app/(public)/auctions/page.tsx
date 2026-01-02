@@ -1,6 +1,5 @@
 import AuctionListScreen from "@/screens/auction/auction-list";
-
-import { parseParams } from "../../../screens/auction/auction-list/model/parse-params";
+import { parseParams } from "@/screens/auction/auction-list/model/parse-params";
 
 export default async function Page({
   searchParams,

@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import {
   CATEGORY_LABEL,
-  CategoryFilter,
+  type CategoryFilter,
   FILTER_CATEGORIES,
 } from "@/entities/auction/model/category";
 import { CategoryNavItem } from "@/widgets/category-nav/ui/category-nav-item";

@@ -18,7 +18,7 @@ const toNumber = (value: string | undefined): number | undefined => {
 const validateEnum = <T extends readonly string[]>(
   value: string | undefined,
   valid: T
-): T[number] | undefined => (value && valid.includes(value) ? value : undefined);
+): T[number] | undefined => (value && valid.includes(value) ? (value as T[number]) : undefined);
 
 export function parseParams(
   params: Record<string, string | string[] | undefined>

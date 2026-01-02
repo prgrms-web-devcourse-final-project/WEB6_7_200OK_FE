@@ -2,7 +2,7 @@ import { Button, Input, RadioGroup, RadioGroupItem, Separator } from "@/shared/u
 
 export function AuctionFiltersSidebar() {
   return (
-    <aside className="bg-card flex h-fit w-62.5 flex-col items-center gap-4 rounded-xl border p-4">
+    <aside className="bg-card hidden h-fit w-62.5 flex-col items-center gap-4 rounded-xl border p-4 lg:flex">
       <div className="flex w-full items-center justify-between">
         <h2>필터</h2>
         <Button variant="ghost" className="text-muted-foreground w-fit px-2 text-sm">
