@@ -14,10 +14,8 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   const failUrl = new URL(`/payments/${id}/fail`, url.origin);
 
   if (!paymentKey || !orderId || !amount) {
-    if (!paymentKey || !orderId || !amount) {
-      failUrl.searchParams.set("code", "MISS_ACCESS");
-      return NextResponse.redirect(failUrl);
-    }
+    failUrl.searchParams.set("code", "MISS_ACCESS");
+    return NextResponse.redirect(failUrl);
   }
 
   try {
