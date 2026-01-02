@@ -1,0 +1,39 @@
+import {
+  ArrowDownUp,
+  CircleCheckBig,
+  Clock,
+  SlidersHorizontal,
+  TextAlignJustify,
+  Zap,
+} from "lucide-react";
+
+import { Button } from "@/shared/ui";
+
+export default function AuctionListToolbar() {
+  return (
+    <div className="flex w-full justify-between">
+      <div className="flex gap-2">
+        <Button variant="brandOutline" className="rounded-full">
+          <TextAlignJustify /> 전체
+        </Button>
+        <Button variant="brandOutline" className="rounded-full">
+          <Zap /> 진행 중
+        </Button>
+        <Button variant="brandOutline" className="rounded-full">
+          <Clock /> 예정
+        </Button>
+        <Button variant="brandOutline" className="rounded-full">
+          <CircleCheckBig /> 종료
+        </Button>
+      </div>
+      <div className="flex gap-2">
+        <Button variant="brandOutline" className="">
+          <ArrowDownUp /> 최신순
+        </Button>
+        <Button variant="brandOutline">
+          <SlidersHorizontal /> 필터
+        </Button>
+      </div>
+    </div>
+  );
+}
