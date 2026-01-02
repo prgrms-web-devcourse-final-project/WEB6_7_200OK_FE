@@ -40,6 +40,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
   } catch (error) {
     console.error(error);
+    return NextResponse.redirect(failUrl);
   }
 
   return NextResponse.redirect(failUrl);
