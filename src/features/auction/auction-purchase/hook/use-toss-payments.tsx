@@ -13,7 +13,7 @@ const clientKey = "test_ck_PBal2vxj81NqeKXKeQPK35RQgOAN";
 const customerKey = nanoid();
 const orderId = nanoid();
 
-export const useTossPayments = (AuctionId: string, title: string, userName: string) => {
+export const useTossPayments = (auctionId: string, title: string, userName: string) => {
   const [payment, setPayment] = useState<TossPaymentsPayment | null>(null);
   const price = useAuctionPriceStore((state) => state.price);
 
@@ -44,8 +44,8 @@ export const useTossPayments = (AuctionId: string, title: string, userName: stri
       amount: { currency: "KRW", value: price },
       orderId, // 고유 주문번호
       orderName: title,
-      successUrl: `${window.location.origin}/payments/${AuctionId}`, // 결제 요청이 성공하면 리다이렉트되는 URL
-      failUrl: `${window.location.origin}/payments/${AuctionId}/fail`, // 결제 요청이 실패하면 리다이렉트되는 URL
+      successUrl: `${window.location.origin}/payments/${auctionId}`, // 결제 요청이 성공하면 리다이렉트되는 URL
+      failUrl: `${window.location.origin}/payments/${auctionId}/fail`, // 결제 요청이 실패하면 리다이렉트되는 URL
       customerName: userName,
       // 카드 결제에 필요한 정보
       card: {
