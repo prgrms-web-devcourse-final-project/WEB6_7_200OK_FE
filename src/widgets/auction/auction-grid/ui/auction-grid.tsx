@@ -14,7 +14,6 @@ export function AuctionGrid({ items }: { items: AuctionType[] }) {
               currentPrice={item.currentPrice}
               discountRate={item.discountRate}
               // FIXME: 임시 처리
-              now={0}
             />
           </li>
         ))}
