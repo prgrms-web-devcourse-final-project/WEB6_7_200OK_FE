@@ -30,22 +30,22 @@ export function useAuctionTicker() {
 
 export function AuctionTickerProvider({
   children,
-  rate,
+  dropAmount,
   duration,
   initDiff,
 }: {
   children: React.ReactNode;
-  rate: number;
+  dropAmount: number;
   duration: number;
   initDiff: number;
 }) {
   const workerRef = useRef<Worker | null>(null);
   const tickerRef = useRef<Comlink.Remote<AuctionTicker> | null>(null);
   const [remainMs, setRemainMs] = useState(() => duration - initDiff);
-  const handleDropPriceByRate = useAuctionPriceStore((state) => state.handleDropPriceByRate);
+  const handleDropPrice = useAuctionPriceStore((state) => state.handleDropPrice);
   const handleOnExpiry = useCallback(() => {
-    handleDropPriceByRate(rate);
-  }, [handleDropPriceByRate, rate]);
+    handleDropPrice(dropAmount);
+  }, [handleDropPrice, dropAmount]);
   useEffect(() => {
     const worker = new Worker(new URL("@/entities/auction/model/auction-ticker", import.meta.url), {
       type: "module",

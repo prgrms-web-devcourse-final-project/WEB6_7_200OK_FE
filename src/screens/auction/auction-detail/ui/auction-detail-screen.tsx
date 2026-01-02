@@ -55,7 +55,7 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
               <AuctionDetailCategory category={data.category} />
               <AuctionPriceStoreProvider price={data.currentPrice} stopLoss={data.stopLoss}>
                 <AuctionTickerProvider
-                  rate={data.discountRate}
+                  dropAmount={data.dropAmount}
                   duration={
                     data.status === "SCHEDULED"
                       ? calculateAuctionStartMs(data.serverTime, data.startedAt)
