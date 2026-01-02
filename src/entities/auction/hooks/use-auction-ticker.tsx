@@ -30,23 +30,22 @@ export function useAuctionTicker() {
 
 export function AuctionTickerProvider({
   children,
-  duration = 5 * 60 * 1000,
   rate,
+  duration,
+  initDiff,
 }: {
   children: React.ReactNode;
-  duration?: number;
   rate: number;
+  duration: number;
+  initDiff: number;
 }) {
   const workerRef = useRef<Worker | null>(null);
   const tickerRef = useRef<Comlink.Remote<AuctionTicker> | null>(null);
-
-  const [remainMs, setRemainMs] = useState(duration);
+  const [remainMs, setRemainMs] = useState(() => duration - initDiff);
   const handleDropPriceByRate = useAuctionPriceStore((state) => state.handleDropPriceByRate);
-
   const handleOnExpiry = useCallback(() => {
     handleDropPriceByRate(rate);
   }, [handleDropPriceByRate, rate]);
-
   useEffect(() => {
     const worker = new Worker(new URL("@/entities/auction/model/auction-ticker", import.meta.url), {
       type: "module",
@@ -60,6 +59,7 @@ export function AuctionTickerProvider({
       await ticker.start(
         Comlink.proxy((ms: number) => setRemainMs(ms)),
         Comlink.proxy(handleOnExpiry),
+        initDiff,
         duration
       );
     })();
@@ -69,7 +69,7 @@ export function AuctionTickerProvider({
       workerRef.current = null;
       tickerRef.current = null;
     };
-  }, [duration, handleOnExpiry]);
+  }, [duration, handleOnExpiry, initDiff]);
 
   const value = useMemo(() => ({ remainMs, duration }), [remainMs, duration]);
 
