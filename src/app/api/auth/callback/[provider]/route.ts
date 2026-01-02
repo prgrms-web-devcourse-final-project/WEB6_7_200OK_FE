@@ -8,7 +8,7 @@ const COOKIE_OPTIONS = {
     secure: isProduction,
     sameSite: isProduction ? ("none" as const) : ("lax" as const),
     path: "/",
-    maxAge: 60 * 60 * 24,
+    maxAge: 60 * 60,
     domain: isProduction ? ".wind-fall.store" : undefined,
   },
   REFRESH_TOKEN: {
@@ -80,7 +80,6 @@ export async function GET(
     }
 
     const result: ExchangeResponse = await response.json();
-
     const { accessToken, refreshToken, userId } = result.data;
 
     if (!accessToken || !refreshToken) {
@@ -92,10 +91,7 @@ export async function GET(
 
     nextResponse.cookies.set("accessToken", accessToken, COOKIE_OPTIONS.ACCESS_TOKEN);
     nextResponse.cookies.set("refreshToken", refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN);
-
-    if (userId) {
-      nextResponse.cookies.set("userId", String(userId), COOKIE_OPTIONS.USER_ID);
-    }
+    nextResponse.cookies.set("userId", userId.toString(), COOKIE_OPTIONS.USER_ID);
 
     return nextResponse;
   } catch {
