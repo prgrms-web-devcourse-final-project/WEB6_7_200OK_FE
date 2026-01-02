@@ -27,7 +27,7 @@ export default function AuctionListToolbar() {
         </Button>
       </div>
       <div className="flex gap-2">
-        <Button variant="brandOutline" className="">
+        <Button variant="brandOutline">
           <ArrowDownUp /> 최신순
         </Button>
         <Button variant="brandOutline">

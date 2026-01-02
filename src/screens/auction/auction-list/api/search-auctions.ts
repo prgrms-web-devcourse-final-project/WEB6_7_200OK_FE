@@ -2,7 +2,7 @@ import { AuctionListData, AuctionListParams } from "@/screens/auction/auction-li
 import { fetch } from "@/shared/api/server";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
-export const searchAuctions = async (params: AuctionListParams, page: number, size: number) => {
+export const searchAuctions = async (params: AuctionListParams, page: number, size?: number) => {
   const query = new URLSearchParams();
 
   if (params.query) query.set("query", params.query);
@@ -14,7 +14,7 @@ export const searchAuctions = async (params: AuctionListParams, page: number, si
   if (params.sortDirection) query.set("sortDirection", params.sortDirection);
 
   query.set("page", String(page));
-  query.set("size", String(size));
+  query.set("size", String(size ?? 15));
 
   const response = await fetch<AuctionListData>(
     `${API_ENDPOINTS.auctionSearch}?${query.toString()}`

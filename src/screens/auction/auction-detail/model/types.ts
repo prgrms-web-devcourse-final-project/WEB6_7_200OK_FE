@@ -1,6 +1,6 @@
+import type { ItemCategory } from "@/entities/auction";
 import type { AuctionStatusType } from "@/entities/auction/model/status";
 import type { AuctionType } from "@/entities/auction/model/types";
-import type { ItemCategory } from "@/entities/item/model/category";
 import type { RecentPriceHistoryType } from "@/features/auction/auction-log";
 import type { SellerType } from "@/features/auction/auction-sale";
 
