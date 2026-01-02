@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -17,7 +17,7 @@ interface SocketResponseType {
   viewerCount?: number;
   currentPrice?: number;
   status?: AuctionStatusType;
-  emojiType?: "LIKE" | "FIRE" | "SAD" | "SMILE"; // TODO: 추후 이모지 구현할 때 타입 분리 예정
+  emojiType?: "LIKE" | "FIRE" | "SAD" | "SMILE";
 }
 
 export default function useAuctionSocket(auctionId: string) {
@@ -39,7 +39,7 @@ export default function useAuctionSocket(auctionId: string) {
           }
           if (response.status) {
             if (response.status !== "PROCESS" && response.status !== "SCHEDULED") {
-              router.reload();
+              router.refresh();
             }
           }
           if (response.viewerCount) {
@@ -48,12 +48,10 @@ export default function useAuctionSocket(auctionId: string) {
         });
       },
 
-      // 연결  해제
       onDisconnect: () => {
         console.log("[STOMP] disconnected");
       },
 
-      // 에러 발생
       onStompError: (frame) => {
         console.error("[STOMP] stomp error:", frame.headers, frame.body);
       },
