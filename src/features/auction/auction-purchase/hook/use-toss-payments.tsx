@@ -10,12 +10,12 @@ import { useAuctionPriceStore } from "@/widgets/auction/auction-detail/provider/
 // ------  SDK 초기화 ------
 // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
 const clientKey = "test_ck_PBal2vxj81NqeKXKeQPK35RQgOAN";
-const customerKey = nanoid();
-const orderId = nanoid();
 
 export const useTossPayments = (auctionId: string, title: string, userName: string) => {
   const [payment, setPayment] = useState<TossPaymentsPayment | null>(null);
   const price = useAuctionPriceStore((state) => state.price);
+  const customerKey = nanoid();
+  const orderId = nanoid();
 
   useEffect(() => {
     async function fetchPayment() {
@@ -30,7 +30,7 @@ export const useTossPayments = (auctionId: string, title: string, userName: stri
       }
     }
     fetchPayment();
-  }, []);
+  }, [customerKey, orderId]);
 
   // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
   // @docs https://docs.tosspayments.com/sdk/v2/js#paymentrequestpayment
