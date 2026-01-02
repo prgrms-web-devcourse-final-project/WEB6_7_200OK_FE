@@ -14,4 +14,9 @@ export type AuctionPublicStatusType = (typeof AUCTION_PUBLIC_STATUS_KEYS)[number
 
 export const AUCTION_STATUS_FILTER_KEYS = ["ALL", ...AUCTION_PUBLIC_STATUS_KEYS] as const;
 
+export const AUCTION_STATUS_FILTER = {
+  ALL: "전체",
+  ...AUCTION_STATUS,
+} as const;
+
 export type AuctionStatusFilterValueType = (typeof AUCTION_STATUS_FILTER_KEYS)[number];
