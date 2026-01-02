@@ -21,7 +21,6 @@ import {
   ImageCarousel,
 } from "@/widgets/auction/auction-detail";
 import { AuctionPriceStoreProvider } from "@/widgets/auction/auction-detail/provider/auction-price-store-provider";
-import PurchaseWidget from "@/widgets/auction/auction-purchase/ui/PurchaseWidget";
 
 export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailType; id: string }) {
   if (!data || !id) {
@@ -31,7 +30,6 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
       </div>
     );
   }
-  const customerKey = globalThis.crypto.randomUUID();
   const now = Date.now();
   return (
     <ScrollArea className="h-[calc(100vh-var(--header-h))] lg:h-[calc(100vh-var(--header-h))]">
@@ -77,10 +75,8 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
                   <AuctionDetailSeller seller={data.seller} />
                   <AuctionProgress status={data.status} />
                 </AuctionTickerProvider>
+                <AuctionDetailUserActions auctionId={id} status={data.status} title={data.title} />
               </AuctionPriceStoreProvider>
-              <AuctionDetailUserActions auctionId={id}>
-                <PurchaseWidget customerKey={customerKey} status={data.status} />
-              </AuctionDetailUserActions>
               <div className="flex flex-col gap-3">
                 <AuctionLogList
                   recentPriceHistory={data.recentPriceHistory}

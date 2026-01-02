@@ -6,10 +6,9 @@ import { useSearchParams } from "next/navigation";
 
 export default function AuctionPurchaseSuccessScreen() {
   const searchParams = useSearchParams();
-  const responseData = null;
 
   return (
-    <>
+    <div>
       <div
         className="mx-auto mt-7.5 items-center rounded-md p-12.5 text-center whitespace-nowrap"
         style={{ width: "600px" }}
@@ -78,15 +77,6 @@ export default function AuctionPurchaseSuccessScreen() {
           </Link>
         </div>
       </div>
-      <div
-        className="text-muted-foreground mx-auto mt-7.5 items-center rounded-md p-12.5 text-left whitespace-nowrap"
-        style={{ width: "600px" }}
-      >
-        <b>Response Data :</b>
-        <div id="response" style={{ whiteSpace: "initial" }} className="text-foreground text-base">
-          {responseData && <pre>{JSON.stringify(responseData, null, 4)}</pre>}
-        </div>
-      </div>
-    </>
+    </div>
   );
 }
