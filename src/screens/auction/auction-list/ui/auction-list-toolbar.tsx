@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/shared/ui";
+import { AuctionFiltersSheet } from "@/widgets/auction/auction-filters";
 
 export default function AuctionListToolbar() {
   return (
@@ -30,7 +31,14 @@ export default function AuctionListToolbar() {
         <Button variant="brandOutline">
           <ArrowDownUp /> 최신순
         </Button>
-        <Button variant="brandOutline">
+        <AuctionFiltersSheet
+          trigger={
+            <Button variant="brandOutline">
+              <SlidersHorizontal /> 필터
+            </Button>
+          }
+        />
+        <Button variant="brandOutline" className="hidden lg:flex">
           <SlidersHorizontal /> 필터
         </Button>
       </div>
