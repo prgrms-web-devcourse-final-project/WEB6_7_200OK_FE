@@ -3,14 +3,15 @@
 import { useState } from "react";
 
 import {
-  FILTER_CATEGORIES,
   CATEGORY_LABEL,
-  type CategoryFilter,
-} from "@/entities/item/model/category";
+  CategoryFilter,
+  FILTER_CATEGORIES,
+} from "@/entities/auction/model/category";
 import { CategoryNavItem } from "@/widgets/category-nav/ui/category-nav-item";
 
+// TODO: usePathName 훅 사용해서 경로 받아오고 경로에 따라 보이게/안보이게
+// TODO: API 연결 후 주소 기반 수정
 export function CategoryNav() {
-  // TODO: API 연결 후 주소 기반 수정
   const [active, setActive] = useState<CategoryFilter | null>(null);
 
   return (
