@@ -12,7 +12,6 @@ export class AuctionTicker {
 
     this.duration = durationMs - initDiff;
     this.expiryAt = Date.now() + this.duration;
-    // TODO: 1초 뒤 실행되는 ui 지연 업데이트 문제 -> 서버 시간 동기화로직과 같이 수정 예정
     this.intervalId = globalThis.self.setInterval(() => {
       const remainMs = Math.max(0, this.expiryAt - Date.now());
       (onTick as unknown as (remain: number) => void)(remainMs);
