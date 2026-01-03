@@ -8,11 +8,12 @@ interface GetChatRoomsParams {
 
 export const chatRoomsLoader = async (params?: GetChatRoomsParams) => {
   const scope = params?.scope ?? "ALL";
-  const userId = "5";
+  const userId = "11";
   try {
     const response = await fetch<ChatRoomListItem[]>(
       `${API_ENDPOINTS.chatRooms}?scope=${scope}&userId=${userId}`
     );
+    console.warn("응답값", response);
     return response.data;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

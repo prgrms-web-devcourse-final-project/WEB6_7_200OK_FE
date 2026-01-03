@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
       },
       { protocol: "https", hostname: "picsum.photos" },
       { protocol: "https", hostname: "static.toss.im" },
+      { protocol: "https", hostname: "windfall-bucket.s3.ap-northeast-2.amazonaws.com" },
+      { protocol: "https", hostname: "wind-fall.store" },
+      { protocol: "http", hostname: "img1.kakaocdn.net" },
     ],
   },
   async rewrites() {
