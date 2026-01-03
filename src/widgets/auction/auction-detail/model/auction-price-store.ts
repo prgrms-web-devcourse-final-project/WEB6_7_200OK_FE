@@ -20,6 +20,8 @@ export const createAuctionPriceStore = (initState: AuctionPriceState = defaultIn
   const store = createStore<AuctionPriceStore>((set) => ({
     ...initState,
     handleDropPrice: (dropAmount: number) => {
+      if (typeof dropAmount !== "number" || !Number.isFinite(dropAmount) || dropAmount <= 0) return;
+
       set((state) => {
         const newState = state.price - dropAmount;
         return { ...state, price: newState < state.stopLoss ? state.stopLoss : newState };
