@@ -42,9 +42,9 @@ export const calculateAuctionStartMs = (now: string, startAt: string) => {
 
 export const calculateServerTimeNow = (offsetMs: number) => Date.now() + offsetMs;
 
-export function calculate5MinCycleMs(dateStr: string) {
-  const m = dateStr.match(/T\d{2}:(\d{2}):(\d{2})(?:\.(\d+))?/);
-  if (!m) throw new Error("Invalid date string");
+export function calculateElapsedMsWithin5MinCycle(dateStr: string) {
+  const m = dateStr.match(/T(?:[01]\d|2[0-3]):([0-5]\d):([0-5]\d)(?:\.(\d+))?/);
+  if (!m) throw new Error(`Invalid date string format: ${dateStr}`);
 
   const min = Number(m[1]) % 5;
   const sec = Number(m[2]);
