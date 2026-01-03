@@ -2,15 +2,15 @@ import { Input } from "@/shared/ui";
 import {
   PRICE_FILTER_KEYS,
   PRICE_FILTERS,
-  PriceFilterValue,
+  type PriceFilterValue,
 } from "@/widgets/auction/auction-filters/model/constants";
-import RadioList from "@/widgets/auction/auction-filters/ui/filter-radio-list";
+import FilterRadioGroup from "@/widgets/auction/auction-filters/ui/filter-radio-group";
 import FilterSection from "@/widgets/auction/auction-filters/ui/filter-section";
 
 export default function PriceSection() {
   return (
     <FilterSection title="가격">
-      <RadioList<PriceFilterValue>
+      <FilterRadioGroup<PriceFilterValue>
         name="price"
         defaultValue="ALL"
         options={PRICE_FILTER_KEYS}
@@ -19,9 +19,9 @@ export default function PriceSection() {
 
       <div className="text-muted-foreground flex w-full flex-col gap-4 text-xs">
         <div className="flex w-full items-center gap-1">
-          <Input className="text-xs" placeholder="100" />
+          <Input type="number" className="text-xs" placeholder="100" aria-label="최소 가격" />
           <span className="shrink-0">원 ~</span>
-          <Input className="text-xs" placeholder="100000" />
+          <Input type="number" className="text-xs" placeholder="100000" aria-label="최대 가격" />
           <span className="shrink-0">원</span>
         </div>
       </div>

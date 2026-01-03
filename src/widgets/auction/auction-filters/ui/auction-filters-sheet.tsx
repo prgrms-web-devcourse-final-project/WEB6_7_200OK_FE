@@ -1,19 +1,19 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import {
+  type CategoryFilter,
   CATEGORY_LABEL,
-  CategoryFilter,
   FILTER_CATEGORIES,
 } from "@/entities/auction/model/category";
 import {
+  type AuctionStatusFilterValueType,
   AUCTION_STATUS_FILTER,
   AUCTION_STATUS_FILTER_KEYS,
-  AuctionStatusFilterValueType,
 } from "@/entities/auction/model/status";
 import { Separator, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui";
-import PriceSection from "@/widgets/auction/auction-filters/ui/filter-price-section";
-import RadioList from "@/widgets/auction/auction-filters/ui/filter-radio-list";
+import FilterRadioGroup from "@/widgets/auction/auction-filters/ui/filter-radio-group";
 import FilterSection from "@/widgets/auction/auction-filters/ui/filter-section";
+import PriceSection from "@/widgets/auction/auction-filters/ui/price-section";
 
 interface AuctionFiltersSheetProps {
   trigger?: ReactNode;
@@ -36,7 +36,7 @@ export function AuctionFiltersSheet({ trigger }: AuctionFiltersSheetProps) {
             <Separator />
 
             <FilterSection title="경매 상태">
-              <RadioList<AuctionStatusFilterValueType>
+              <FilterRadioGroup<AuctionStatusFilterValueType>
                 name="status"
                 defaultValue="ALL"
                 options={AUCTION_STATUS_FILTER_KEYS}
@@ -47,7 +47,7 @@ export function AuctionFiltersSheet({ trigger }: AuctionFiltersSheetProps) {
             <Separator />
 
             <FilterSection title="카테고리">
-              <RadioList<CategoryFilter>
+              <FilterRadioGroup<CategoryFilter>
                 name="category"
                 defaultValue="ALL"
                 options={FILTER_CATEGORIES}
