@@ -1,1 +1,1 @@
-export { UserScreen } from "./ui/user-screen";
+export { UserTabContent } from "./ui/user-tab-content";
