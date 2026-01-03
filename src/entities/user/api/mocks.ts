@@ -5,6 +5,7 @@ export const MOCK_OWN_PROFILE: UserProfileType = {
   email: "hong@example.com",
   rating: 4.8,
   reviewCount: 127,
+  isOwner: true,
   // avatarUrl이 없으면 기본 아이콘이 뜸
 };
 
@@ -13,4 +14,5 @@ export const MOCK_OTHER_PROFILE: UserProfileType = {
   email: "seller@example.com",
   rating: 4.5,
   reviewCount: 89,
+  isOwner: false,
 };

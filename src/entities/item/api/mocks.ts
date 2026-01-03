@@ -1,7 +1,7 @@
 import {
   SellingItemType,
   PurchaseItemType,
-  WishlistItemType,
+  AuctionLikeItemType,
   RecentlyViewedItemType,
 } from "../model/types";
 
@@ -131,7 +131,7 @@ export const MOCK_PURCHASES: PurchaseItemType[] = [
   },
 ];
 
-export const MOCK_WISHLIST_ITEMS: WishlistItemType[] = [
+export const MOCK_AUCTIONLIKE_ITEMS: AuctionLikeItemType[] = [
   {
     id: "w1",
     status: "판매 완료",
