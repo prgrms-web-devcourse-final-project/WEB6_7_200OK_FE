@@ -1,3 +1,5 @@
+import { ROUTES } from "@/shared/config/routes";
+
 export const SECTIONS = [
   {
     key: "popularList",
@@ -11,13 +13,13 @@ export const SECTIONS = [
     title: "⚡ 경매 진행 중",
     description: "실시간 경매가 진행 중인 상품을 모아봤어요!",
     variant: "live",
-    moreHref: "#",
+    moreHref: `${ROUTES.auctions}?status=PROCESS`,
   },
   {
     key: "scheduledList",
     title: "⏳ 경매 진행 예정",
     description: "경매가 곧 진행될 거예요!",
     variant: "upcoming",
-    moreHref: "#",
+    moreHref: `${ROUTES.auctions}?status=SCHEDULED`,
   },
 ] as const;
