@@ -21,6 +21,7 @@ export {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "./dialog/dialog";
 
 export { Avatar, AvatarImage, AvatarFallback } from "./avatar/avatar";

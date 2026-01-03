@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
 import Image from "next/image";
 
 import { Camera, User, PenLine } from "lucide-react";
 
-import { Button, Input, FileInput, Rating, RatingButton } from "@/shared/ui";
+import { Button, FileInput, Rating, RatingButton } from "@/shared/ui";
 
 import { UserProfileType } from "../model/types";
 
@@ -14,38 +14,21 @@ interface UserProfileProps {
   profile: UserProfileType;
   isOwn?: boolean;
   onAvatarChange?: (file: File) => void;
-  onNameChange?: (newName: string) => void;
+  onEditNameClick?: () => void; // [변경] 이름 수정 클릭 이벤트로 변경
 }
 
 export function UserProfile({
   profile,
   isOwn = false,
   onAvatarChange,
-  onNameChange,
+  onEditNameClick,
 }: UserProfileProps) {
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [editedName, setEditedName] = useState(profile.name);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleNameSave = () => {
-    const trimmedName = editedName.trim();
-    if (trimmedName && trimmedName !== profile.name) {
-      onNameChange?.(trimmedName);
-    }
-    setIsEditingName(false);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleNameSave();
-    } else if (e.key === "Escape") {
-      setIsEditingName(false);
-    }
-  };
 
   return (
     <div className="bg-card border-border flex w-full flex-col gap-6 rounded-lg border p-4">
       <div className="flex items-center gap-6">
+        {/* 아바타 영역 */}
         <div className="relative size-20 shrink-0">
           <div className="bg-secondary flex h-full w-full items-center justify-center overflow-hidden rounded-full">
             {profile.avatarUrl ? (
@@ -85,36 +68,21 @@ export function UserProfile({
           )}
         </div>
 
+        {/* 정보 영역 */}
         <div className="flex flex-1 flex-col gap-1">
           <div className="flex items-center gap-1">
-            {isEditingName ? (
-              <Input
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                onKeyDown={handleKeyDown}
-                onBlur={handleNameSave}
-                className="h-7 max-w-25 px-2 py-1 text-xl"
-                autoFocus
-              />
-            ) : (
-              <>
-                <h2 className="text-foreground text-xl">{profile.name}</h2>
+            <h2 className="text-foreground text-xl">{profile.name}</h2>
 
-                {isOwn && (
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => {
-                      setIsEditingName(true);
-                      setEditedName(profile.name);
-                    }}
-                    className="text-muted-foreground size-5"
-                    aria-label="이름 수정"
-                  >
-                    <PenLine className="text-foreground size-4" />
-                  </Button>
-                )}
-              </>
+            {isOwn && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={onEditNameClick} // [변경] 클릭 시 부모에게 알림
+                className="text-muted-foreground size-5"
+                aria-label="이름 수정"
+              >
+                <PenLine className="text-foreground size-4" />
+              </Button>
             )}
           </div>
 

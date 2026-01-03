@@ -92,7 +92,7 @@ export function ItemCard({
                       <span className="text-destructive text-xs">-{discountRate}%</span>
                       <span
                         className={cn(
-                          "text-sm",
+                          "text-sm font-bold",
                           isPriceGray ? "text-muted-foreground" : "text-brand-text"
                         )}
                       >
@@ -103,7 +103,7 @@ export function ItemCard({
                 ) : (
                   <p
                     className={cn(
-                      "text-md mt-2 leading-5 tracking-tight",
+                      "text-md mt-2 leading-5 font-bold tracking-tight",
                       isPriceGray ? "text-muted-foreground" : "text-brand-text"
                     )}
                   >
