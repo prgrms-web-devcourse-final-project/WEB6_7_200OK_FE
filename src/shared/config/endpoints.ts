@@ -11,6 +11,9 @@ export const API_ENDPOINTS = {
   tagSearch: "/api/v1/tags/search",
 
   chatRooms: "/api/v1/chat-rooms",
+  chatRoom: (chatRoomId: number | string) => `/api/v1/chat-rooms/${chatRoomId}`,
+  chatRoomMessages: (chatRoomId: number | string) => `/api/v1/chat-rooms/${chatRoomId}/messages`,
+  chatRoomRead: (chatRoomId: number | string) => `/api/v1/chat-rooms/${chatRoomId}/messages/read`,
 
   auth: "/api/v1/auth",
   authValidateTokens: "/api/v1/auth/validate-tokens",
