@@ -1,6 +1,7 @@
 export const API_ENDPOINTS = {
   auctions: "/api/v1/auctions",
   auctionDetail: (auctionId: number | string) => `/api/v1/auctions/${auctionId}`,
+  auctionLike: (auctionId: number | string) => `/api/v1/auctions/${auctionId}/like`,
   auctionSearch: "/api/v1/auctions/search",
   auctionHistory: (auctionId: number | string) => `/api/v1/auctions/${auctionId}/history`,
   auctionEmoji: (auctionId: number | string, emojiType: "LIKE" | "FIRE" | "SAD" | "SMILE") =>
