@@ -1,21 +1,13 @@
-import { InfiniteData, infiniteQueryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions } from "@tanstack/react-query";
 
 import { searchAuctions } from "@/screens/auction/auction-list/api/search-auctions";
-import type {
-  AuctionListData,
-  AuctionListParams,
-} from "@/screens/auction/auction-list/model/types";
 
-export const searchAuctionsQuery = (params: AuctionListParams) =>
-  infiniteQueryOptions<
-    AuctionListData,
-    Error,
-    InfiniteData<AuctionListData>,
-    ["auctions", "search", AuctionListParams],
-    number
-  >({
-    queryKey: ["auctions", "search", params],
+import type { AuctionFilters } from "./types";
+
+export const searchAuctionsQuery = (filters: AuctionFilters, size = 15) =>
+  infiniteQueryOptions({
+    queryKey: ["auctions", "search", filters] as const,
     initialPageParam: 1,
-    queryFn: ({ pageParam }) => searchAuctions(params, pageParam, params.size ?? 15),
+    queryFn: ({ pageParam }) => searchAuctions({ ...filters, page: pageParam, size }),
     getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
   });
