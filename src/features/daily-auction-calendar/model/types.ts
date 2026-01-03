@@ -1,11 +1,11 @@
 import {
   SellingItemType,
-  WishlistItemType,
+  AuctionLikeItemType,
   RecentlyViewedItemType,
 } from "@/entities/item/model/types";
 import { dayjs } from "@/shared/lib/utils/dayjs";
 
-export type DashboardItemType = SellingItemType | WishlistItemType | RecentlyViewedItemType;
+export type DashboardItemType = SellingItemType | AuctionLikeItemType | RecentlyViewedItemType;
 
 export interface CalendarEventType {
   id: string;
