@@ -17,11 +17,14 @@ export interface Product {
 }
 
 export interface Message {
-  id: string;
-  message: string;
-  time: string;
+  messageId: number;
+  senderId: number;
   isMine: boolean;
+  messageType: "TEXT" | "IMAGE" | "SYSTEM";
+  content: string;
+  imageUrls: string[];
   isRead: boolean;
+  createdAt: string;
 }
 
 export type ListFilter = "ALL" | "BUY" | "SELL";
