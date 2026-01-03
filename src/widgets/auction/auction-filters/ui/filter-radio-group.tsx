@@ -1,6 +1,6 @@
 import { RadioGroup, RadioGroupItem } from "@/shared/ui";
 
-export default function RadioList<K extends string>({
+export default function FilterRadioGroup<K extends string>({
   name,
   defaultValue,
   options,

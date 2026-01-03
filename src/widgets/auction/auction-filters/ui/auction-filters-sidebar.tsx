@@ -3,9 +3,9 @@ import { type CategoryFilter } from "@/entities/auction/model/category";
 import { AUCTION_STATUS_FILTER, AUCTION_STATUS_FILTER_KEYS } from "@/entities/auction/model/status";
 import { type AuctionStatusFilterValueType } from "@/entities/auction/model/status";
 import { Button, Separator } from "@/shared/ui";
-import PriceSection from "@/widgets/auction/auction-filters/ui/filter-price-section";
-import RadioList from "@/widgets/auction/auction-filters/ui/filter-radio-list";
+import FilterRadioGroup from "@/widgets/auction/auction-filters/ui/filter-radio-group";
 import FilterSection from "@/widgets/auction/auction-filters/ui/filter-section";
+import PriceSection from "@/widgets/auction/auction-filters/ui/price-section";
 
 export function AuctionFiltersSidebar() {
   return (
@@ -26,7 +26,7 @@ export function AuctionFiltersSidebar() {
       <Separator />
 
       <FilterSection title="경매 상태">
-        <RadioList<AuctionStatusFilterValueType>
+        <FilterRadioGroup<AuctionStatusFilterValueType>
           name="status"
           defaultValue="ALL"
           options={AUCTION_STATUS_FILTER_KEYS}
@@ -37,7 +37,7 @@ export function AuctionFiltersSidebar() {
       <Separator />
 
       <FilterSection title="카테고리">
-        <RadioList<CategoryFilter>
+        <FilterRadioGroup<CategoryFilter>
           name="category"
           defaultValue="ALL"
           options={FILTER_CATEGORIES}
