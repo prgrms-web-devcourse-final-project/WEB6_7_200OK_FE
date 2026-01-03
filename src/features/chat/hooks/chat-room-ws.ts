@@ -9,6 +9,7 @@ import { type Message } from "@/features/chat";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const MESSAGE_PAGE_SIZE = 20;
 
 interface ChatSendRequest {
   chatRoomId: number;
@@ -67,7 +68,7 @@ export function useChatRoomSocket(
     }
   }, [userId]);
 
-  // 메시지 로드 함수 (cursor 기반) - API 호출이므로 소켓 연결과 무관하게 정의
+  // 메시지 로드 함수
   const loadMessages = useCallback(
     async (cursor: number | null = null) => {
       if (!chatRoomId || !accessToken) return;
@@ -75,7 +76,7 @@ export function useChatRoomSocket(
       setIsLoading(true);
       try {
         const params = new URLSearchParams();
-        params.append("size", "20");
+        params.append("size", MESSAGE_PAGE_SIZE.toString());
         if (cursor) {
           params.append("cursor", cursor.toString());
         }
@@ -99,7 +100,7 @@ export function useChatRoomSocket(
 
           const newMessages = messageData.content || [];
 
-          // userIdRef를 사용하여 isMine 보정
+          // isMine 처리
           const currentUserId = userIdRef.current;
           if (currentUserId) {
             newMessages.forEach((msg) => {
@@ -107,7 +108,7 @@ export function useChatRoomSocket(
             });
           }
 
-          // 과거 메시지가 상단에 오도록 오름차순 정렬
+          // 메시지 오름차순 정렬
           const sortedMessages = [...newMessages].sort(
             (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           );
@@ -132,10 +133,10 @@ export function useChatRoomSocket(
         setIsLoading(false);
       }
     },
-    [chatRoomId, accessToken] // userId 의존성 제거 (Ref 사용)
+    [chatRoomId, accessToken]
   );
 
-  // 읽음 처리 함수 - 소켓 연결과 무관하게 호출 가능하도록 정의 (UI용)
+  // 읽음 처리 함수
   const markAsRead = useCallback(() => {
     if (!chatRoomId || !accessToken) return;
 
@@ -156,11 +157,13 @@ export function useChatRoomSocket(
             loadMessages(null);
           }
         })
-        .catch(console.error);
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }, [chatRoomId, accessToken, loadMessages]);
 
-  // 방 변경 시 초기화 및 첫 로드
+  // 채팅방 변경 시 초기화 및 첫 로드
   useEffect(() => {
     if (chatRoomId) {
       setMessages([]);
@@ -177,7 +180,7 @@ export function useChatRoomSocket(
     }
   }, [chatRoomId, loadMessages, markAsRead]);
 
-  // 더 불러오기 (UI에서 호출)
+  // 더 불러오기 (무한 스크롤)
   const loadMore = useCallback(() => {
     if (!isLoading && hasNextPage && nextCursor) {
       loadMessages(nextCursor);
