@@ -2,15 +2,15 @@
 
 import { X } from "lucide-react";
 
-import { ItemBadge, ItemCard, WishlistItemType } from "@/entities/item";
+import { ItemBadge, ItemCard, AuctionLikeItemType } from "@/entities/item";
 
-interface WishlistItemCardProps {
-  item: WishlistItemType;
-  onClick?: (item: WishlistItemType) => void;
-  onRemove?: (item: WishlistItemType) => void;
+interface AuctionLikeItemProps {
+  item: AuctionLikeItemType;
+  onClick?: (item: AuctionLikeItemType) => void;
+  onRemove?: (item: AuctionLikeItemType) => void;
 }
 
-export function WishlistItemCard({ item, onClick, onRemove }: WishlistItemCardProps) {
+export function AuctionLikeItemCard({ item, onClick, onRemove }: AuctionLikeItemProps) {
   const isSoldOut = item.status === "판매 완료";
   const isAuctionEnded = item.status === "경매 종료";
   const isScheduled = item.status === "경매 예정";
