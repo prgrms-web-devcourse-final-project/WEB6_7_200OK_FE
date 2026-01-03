@@ -5,8 +5,6 @@ import { cookies } from "next/headers";
 import { fetch as apiFetch } from "@/shared/api/server";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
-import { UserBasicInfoResponseType } from "../model/types";
-
 interface UserApiResponse {
   username: string;
   email: string;
@@ -48,30 +46,3 @@ export const getUserProfileServer = cache(async (targetUserId: number) => {
     return null;
   }
 });
-
-export async function getMyBasicInfoServer() {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
-
-  if (!accessToken) {
-    return null;
-  }
-
-  try {
-    const response = await apiFetch<UserBasicInfoResponseType["data"]>(API_ENDPOINTS.authBasic, {
-      method: "GET",
-
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-
-        Cookie: `accessToken=${accessToken}`,
-      },
-
-      cache: "no-store",
-    });
-
-    return response.data;
-  } catch {
-    return null;
-  }
-}

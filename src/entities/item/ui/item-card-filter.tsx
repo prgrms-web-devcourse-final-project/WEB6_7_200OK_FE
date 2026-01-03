@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { SlidersHorizontal } from "lucide-react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui";
@@ -12,6 +14,22 @@ interface ItemCardFilterProps {
 }
 
 export function ItemCardFilter({ value, options, onChange, className }: ItemCardFilterProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 서버/클라 첫 렌더 트리 동일하게 만들기
+  if (!mounted) {
+    return (
+      <div className={className}>
+        {/* 높이만 맞춘 placeholder */}
+        <div className="border-border flex h-9 w-18 items-center justify-center rounded-lg border px-3" />
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
       <Select value={value} onValueChange={onChange}>

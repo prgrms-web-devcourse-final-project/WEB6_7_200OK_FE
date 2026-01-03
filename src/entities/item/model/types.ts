@@ -34,7 +34,7 @@ export interface PurchaseItemType extends BaseItemType {
   };
 }
 
-export interface WishlistItemType extends BaseItemType {
+export interface AuctionLikeItemType extends BaseItemType {
   status: TradeStatusType;
 }
 
