@@ -1,4 +1,4 @@
-import { CategoryFilter } from "@/entities/auction/model/category";
+import { ItemCategory } from "@/entities/auction/model/category";
 import { AuctionPublicStatusType } from "@/entities/auction/model/status";
 import { AuctionType } from "@/entities/auction/model/types";
 
@@ -14,7 +14,7 @@ export type SortDirectionType = (typeof SORT_DIRECTION)[number];
 
 export interface AuctionFilters {
   query?: string;
-  category?: CategoryFilter;
+  category?: ItemCategory;
   status?: AuctionPublicStatusType;
   minPrice?: number;
   maxPrice?: number;
