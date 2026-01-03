@@ -144,7 +144,6 @@ export function useChatListSocket(
       },
       onStompError: (frame) => {
         console.error("[WS] Stomp error:", frame.headers.message);
-        console.error("Additional details:", frame.body);
       },
     });
 
