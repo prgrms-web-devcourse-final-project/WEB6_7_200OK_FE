@@ -1,33 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const isProduction = process.env.NODE_ENV === "production";
-
-const COOKIE_OPTIONS = {
-  ACCESS_TOKEN: {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? ("none" as const) : ("lax" as const),
-    path: "/",
-    maxAge: 60 * 60,
-    domain: isProduction ? ".wind-fall.store" : undefined,
-  },
-  REFRESH_TOKEN: {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? ("none" as const) : ("lax" as const),
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-    domain: isProduction ? ".wind-fall.store" : undefined,
-  },
-  USER_ID: {
-    httpOnly: false,
-    secure: isProduction,
-    sameSite: isProduction ? ("none" as const) : ("lax" as const),
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-    domain: isProduction ? ".wind-fall.store" : undefined,
-  },
-};
+import { setAuthCookies } from "@/shared/lib/utils/auth/cookie-options";
 
 interface ExchangeResponse {
   status: string;
@@ -49,12 +22,10 @@ export async function GET(
   const code = searchParams.get("code");
   const error = searchParams.get("error");
 
-  // OAuth provider에서 에러 발생
   if (error) {
     return NextResponse.redirect(new URL(`/auth/login?error=oauth_${error}`, request.url));
   }
 
-  // Authorization code가 없는 경우
   if (!code) {
     return NextResponse.redirect(new URL("/auth/login?error=missing_code", request.url));
   }
@@ -86,12 +57,9 @@ export async function GET(
       return NextResponse.redirect(new URL("/auth/login?error=invalid_tokens", request.url));
     }
 
-    // 홈으로 redirect 및 쿠키 설정
     const nextResponse = NextResponse.redirect(new URL("/", request.url));
 
-    nextResponse.cookies.set("accessToken", accessToken, COOKIE_OPTIONS.ACCESS_TOKEN);
-    nextResponse.cookies.set("refreshToken", refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN);
-    nextResponse.cookies.set("userId", userId.toString(), COOKIE_OPTIONS.USER_ID);
+    setAuthCookies(nextResponse, { accessToken, refreshToken, userId });
 
     return nextResponse;
   } catch {
