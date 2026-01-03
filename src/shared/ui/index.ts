@@ -12,17 +12,6 @@ export {
   AlertDialogCancel,
 } from "./alert-dialog/alert-dialog";
 
-export {
-  Dialog,
-  DialogTrigger,
-  DialogPortal,
-  DialogClose,
-  DialogOverlay,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "./dialog/dialog";
-
 export { Avatar, AvatarImage, AvatarFallback } from "./avatar/avatar";
 
 export { default as Button, buttonVariants } from "./button/button";
@@ -49,6 +38,35 @@ export {
 
 export { Container } from "@/shared/ui/container/container";
 
+export {
+  Dialog,
+  DialogTrigger,
+  DialogPortal,
+  DialogClose,
+  DialogOverlay,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./dialog/dialog";
+
+export {
+  DropdownMenu,
+  DropdownMenuPortal,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+} from "./dropdown/dropdown-menu";
+
 export { default as EmptyState, type EmptyStateProps } from "./empty/empty";
 
 export { ErrorTemplate } from "./error/error-template";
@@ -62,6 +80,8 @@ export { default as SearchInput } from "./input/search-input";
 export { DashboardContentLayout } from "./layout/dashboard-content-layout";
 
 export { ConfirmDeleteModal } from "./modal/confirm-delete-modal";
+
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from "./popover/popover";
 
 export { Progress } from "./progress/progress";
 
@@ -106,5 +126,3 @@ export { Switch } from "./switch/switch";
 export { Textarea } from "./textarea/textarea";
 
 export { ToastRegistry } from "./toast/toast-registry";
-
-export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from "./popover/popover";
