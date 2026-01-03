@@ -163,23 +163,6 @@ export function useChatRoomSocket(
     }
   }, [chatRoomId, accessToken, loadMessages]);
 
-  // 채팅방 변경 시 초기화 및 첫 로드
-  useEffect(() => {
-    if (chatRoomId) {
-      setMessages([]);
-      setTradeInfo(null);
-      setNextCursor(null);
-      setHasNextPage(true);
-      loadMessages(null);
-
-      // 채팅방 진입 시 읽음 처리
-      markAsRead();
-    } else {
-      setMessages([]);
-      setTradeInfo(null);
-    }
-  }, [chatRoomId, loadMessages, markAsRead]);
-
   // 더 불러오기 (무한 스크롤)
   const loadMore = useCallback(() => {
     if (!isLoading && hasNextPage && nextCursor) {
@@ -209,6 +192,23 @@ export function useChatRoomSocket(
     },
     [chatRoomId]
   );
+
+  // 채팅방 변경 시 초기화 및 첫 로드
+  useEffect(() => {
+    if (chatRoomId) {
+      setMessages([]);
+      setTradeInfo(null);
+      setNextCursor(null);
+      setHasNextPage(true);
+      loadMessages(null);
+
+      // 채팅방 진입 시 읽음 처리
+      markAsRead();
+    } else {
+      setMessages([]);
+      setTradeInfo(null);
+    }
+  }, [chatRoomId, loadMessages, markAsRead]);
 
   // 웹소켓 연결
   useEffect(() => {
