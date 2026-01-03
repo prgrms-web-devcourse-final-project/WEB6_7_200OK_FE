@@ -29,4 +29,28 @@ export const calculateAuctionStartSeconds = (nowMs: number, startAt: string) => 
   return Math.ceil(remainMs / 1000);
 };
 
+export const calculateAuctionStartMs = (now: string, startAt: string) => {
+  const nowMs = Date.parse(now);
+  if (!Number.isFinite(nowMs)) return 0;
+
+  const startAtMs = Date.parse(startAt);
+  if (!Number.isFinite(startAtMs)) return 0;
+
+  const remainMs = Math.max(0, startAtMs - nowMs);
+  return remainMs;
+};
+
 export const calculateServerTimeNow = (offsetMs: number) => Date.now() + offsetMs;
+
+export function calculateElapsedMsWithin5MinCycle(dateStr: string) {
+  const m = dateStr.match(/T(?:[01]\d|2[0-3]):([0-5]\d):([0-5]\d)(?:\.(\d+))?/);
+  if (!m) throw new Error(`Invalid date string format: ${dateStr}`);
+
+  const min = Number(m[1]) % 5;
+  const sec = Number(m[2]);
+
+  const frac = m[3] ?? "";
+  const ms = Number(frac.padEnd(3, "0").slice(0, 3));
+
+  return (min * 60 + sec) * 1000 + ms;
+}

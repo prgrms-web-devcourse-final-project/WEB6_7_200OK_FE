@@ -1,17 +1,18 @@
-import { getAuctions } from "@/screens/auction/auction-list/api/getAuctions";
+import AuctionList from "@/screens/auction/auction-list/ui/auction-list";
+import AuctionListHeader from "@/screens/auction/auction-list/ui/auction-list-header";
+import AuctionListToolbar from "@/screens/auction/auction-list/ui/auction-list-toolbar";
 import { Container } from "@/shared/ui";
 import { AuctionFiltersSidebar } from "@/widgets/auction/auction-filters";
-import { AuctionGrid } from "@/widgets/auction/auction-grid";
 
-export default async function AuctionListScreen() {
-  const data = await getAuctions();
-
+export default function AuctionListScreen() {
   return (
-    <main>
-      <Container className="flex gap-4">
+    <Container className="flex flex-col gap-4">
+      <AuctionListHeader />
+      <AuctionListToolbar />
+      <div className="flex gap-4">
         <AuctionFiltersSidebar />
-        <AuctionGrid items={data.slice} />;
-      </Container>
-    </main>
+        <AuctionList />
+      </div>
+    </Container>
   );
 }

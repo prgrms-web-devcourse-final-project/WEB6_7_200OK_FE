@@ -6,7 +6,7 @@ export interface AuctionPriceState {
 }
 
 export interface AuctionPriceActions {
-  handleDropPriceByRate: (rate: number) => void;
+  handleDropPrice: (dropAmount: number) => void;
 }
 
 export type AuctionPriceStore = AuctionPriceState & AuctionPriceActions;
@@ -19,14 +19,11 @@ export const defaultInitState: AuctionPriceState = {
 export const createAuctionPriceStore = (initState: AuctionPriceState = defaultInitState) => {
   const store = createStore<AuctionPriceStore>((set) => ({
     ...initState,
-    handleDropPriceByRate: (rate: number) => {
-      if (!Number.isFinite(rate) || rate <= 0) return;
-      if (rate >= 100) {
-        set((state) => ({ ...state, price: state.stopLoss }));
-      }
+    handleDropPrice: (dropAmount: number) => {
+      if (typeof dropAmount !== "number" || !Number.isFinite(dropAmount) || dropAmount <= 0) return;
 
       set((state) => {
-        const newState = Math.floor((state.price * (100 - rate)) / 100);
+        const newState = state.price - dropAmount;
         return { ...state, price: newState < state.stopLoss ? state.stopLoss : newState };
       });
     },

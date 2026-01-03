@@ -3,8 +3,8 @@ import { AuctionType } from "@/entities/auction/model/types";
 
 export function AuctionGrid({ items }: { items: AuctionType[] }) {
   return (
-    <main>
-      <ul className="grid grid-cols-3 gap-2 lg:grid-cols-4 xl:grid-cols-5">
+    <section className="w-full">
+      <ul className="grid grid-cols-2 gap-2 lg:grid-cols-3 xl:grid-cols-4">
         {items.map((item) => (
           <li key={item.auctionId}>
             <AuctionItemCard
@@ -13,12 +13,10 @@ export function AuctionGrid({ items }: { items: AuctionType[] }) {
               variant={item.status === "SCHEDULED" ? "upcoming" : "live"}
               currentPrice={item.currentPrice}
               discountRate={item.discountRate}
-              // FIXME: 임시 처리
-              now={0}
             />
           </li>
         ))}
       </ul>
-    </main>
+    </section>
   );
 }

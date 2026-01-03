@@ -39,7 +39,7 @@ export { type TimeSelection } from "@/features/auction/auction-create/model/type
 
 export { formatDateTimeDisplay } from "@/features/auction/auction-create/utils/date-utils";
 
-export { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/item/model/category";
+export { CATEGORY_LABEL, ITEM_CATEGORIES } from "@/entities/auction/model/category";
 
 export { ImageAddButton } from "@/entities/auction/ui/auction-create-image/ui/image-add-button";
 

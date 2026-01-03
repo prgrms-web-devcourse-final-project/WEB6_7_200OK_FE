@@ -1,4 +1,3 @@
-// src/entities/auction/model/auction-viewer.store.ts
 import { createStore } from "zustand/vanilla";
 
 export interface AuctionViewerState {

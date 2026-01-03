@@ -1,15 +1,19 @@
 "use client";
 
+import type { AuctionStatusType } from "@/entities/auction";
 import useAuctionSocket from "@/entities/auction/hooks/use-auction-socket";
 import { AuctionNotificationToggle } from "@/entities/notification";
 import { AuctionDetailLikeToggle } from "@/features/auction/auction-like";
+import { PurchaseButton } from "@/features/auction/auction-purchase";
 
 export default function AuctionDetailUserActions({
-  children,
   auctionId,
+  status,
+  title,
 }: {
-  children: React.ReactNode;
   auctionId: string;
+  status: AuctionStatusType;
+  title: string;
 }) {
   useAuctionSocket(auctionId);
   return (
@@ -18,7 +22,7 @@ export default function AuctionDetailUserActions({
         <AuctionNotificationToggle />
         <AuctionDetailLikeToggle />
       </div>
-      {children}
+      <PurchaseButton status={status} auctionId={auctionId} title={title} userName="김토스" />
     </div>
   );
 }
