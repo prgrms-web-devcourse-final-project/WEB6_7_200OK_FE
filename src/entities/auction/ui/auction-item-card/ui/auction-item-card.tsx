@@ -8,10 +8,12 @@ import { VARIANT_CONFIG } from "@/entities/auction/ui/auction-item-card/model/co
 import { AuctionCardVariantType } from "@/entities/auction/ui/auction-item-card/model/types";
 import AuctionPrice from "@/entities/auction/ui/auction-item-card/ui/auction-price";
 import AuctionTimer from "@/entities/auction/ui/auction-item-card/ui/auction-timer";
+import BuyCtaButton from "@/entities/auction/ui/auction-item-card/ui/buy-cta-button";
 import CtaButton from "@/entities/auction/ui/auction-item-card/ui/cta-button";
 import LikeButton from "@/entities/auction/ui/auction-item-card/ui/like-button";
 import RankingBadge from "@/entities/auction/ui/auction-item-card/ui/ranking-badge";
 import UpcomingInfo from "@/entities/auction/ui/auction-item-card/ui/upcoming-info";
+import { ROUTES } from "@/shared/config/routes";
 
 export interface AuctionItemCardProps extends AuctionType {
   variant: AuctionCardVariantType;
@@ -36,13 +38,13 @@ export function AuctionItemCard({
 
   return (
     <article className="bg-card h-fit w-full overflow-hidden rounded-xl border select-none">
-      <Link href={`/auctions/${auctionId}`}>
+      <Link href={ROUTES.auctionDetail(auctionId)}>
         <div className="relative aspect-square">
           <Image src={imageUrl} alt={title} fill className="object-cover" />
           {config.badge === "ranking" && rank != null && <RankingBadge rank={rank} />}
           {config.badge === "live" && <LiveBadge />}
           {config.badge === "upcoming" && <UpcomingBadge />}
-          {config.like && <LikeButton isLiked={isLiked} />}
+          {config.like && <LikeButton auctionId={auctionId} isLiked={isLiked} />}
         </div>
 
         <div className="flex flex-col gap-4 p-4">
@@ -68,7 +70,8 @@ export function AuctionItemCard({
 
       {config.cta && (
         <div className="w-full px-4 pb-4">
-          <CtaButton type={config.cta} />
+          {config.cta === "buy" && <BuyCtaButton href={ROUTES.auctionDetail(auctionId)} />}
+          {config.cta === "notify" && <CtaButton type={config.cta} />}
         </div>
       )}
     </article>
