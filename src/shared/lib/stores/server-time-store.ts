@@ -1,3 +1,4 @@
+import { subscribeWithSelector } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
 
 import { calculateServerTimeNow } from "@/shared/lib/utils/time/calc";
@@ -15,52 +16,54 @@ export interface ServerTimeStore {
 }
 
 export const createServerTimeStore = () =>
-  createStore<ServerTimeStore>()((set, get) => ({
-    serverTimeOffset: 0,
-    lastSyncServerTime: null,
-    serverNowMs: Date.now(),
-    tickerId: null,
+  createStore<ServerTimeStore>()(
+    subscribeWithSelector((set, get) => ({
+      serverTimeOffset: 0,
+      lastSyncServerTime: null,
+      serverNowMs: Date.now(),
+      tickerId: null,
 
-    setServerTime: (serverTime: string) => {
-      const serverTimeMs = Date.parse(serverTime);
-      if (Number.isNaN(serverTimeMs)) return;
+      setServerTime: (serverTime: string) => {
+        const serverTimeMs = Date.parse(serverTime);
+        if (Number.isNaN(serverTimeMs)) return;
 
-      const { lastSyncServerTime } = get();
-      if (lastSyncServerTime === serverTimeMs) return;
+        const { lastSyncServerTime } = get();
+        if (lastSyncServerTime === serverTimeMs) return;
 
-      const clientTime = Date.now();
-      const offset = serverTimeMs - clientTime;
+        const clientTime = Date.now();
+        const offset = serverTimeMs - clientTime;
 
-      set({
-        serverTimeOffset: offset,
-        lastSyncServerTime: serverTimeMs,
-        serverNowMs: calculateServerTimeNow(offset),
-      });
-    },
+        set({
+          serverTimeOffset: offset,
+          lastSyncServerTime: serverTimeMs,
+          serverNowMs: calculateServerTimeNow(offset),
+        });
+      },
 
-    updateServerNow: () => {
-      const { serverTimeOffset } = get();
-      set({ serverNowMs: calculateServerTimeNow(serverTimeOffset) });
-    },
+      updateServerNow: () => {
+        const { serverTimeOffset } = get();
+        set({ serverNowMs: calculateServerTimeNow(serverTimeOffset) });
+      },
 
-    startTicker: () => {
-      const { tickerId } = get();
-      if (tickerId !== null) return;
+      startTicker: () => {
+        const { tickerId } = get();
+        if (tickerId !== null) return;
 
-      get().updateServerNow();
-
-      const id = globalThis.setInterval(() => {
         get().updateServerNow();
-      }, 1_000);
 
-      set({ tickerId: id });
-    },
+        const id = globalThis.setInterval(() => {
+          get().updateServerNow();
+        }, 1_000);
 
-    stopTicker: () => {
-      const { tickerId } = get();
-      if (tickerId == null) return;
+        set({ tickerId: id });
+      },
 
-      globalThis.clearInterval(tickerId);
-      set({ tickerId: null });
-    },
-  }));
+      stopTicker: () => {
+        const { tickerId } = get();
+        if (tickerId == null) return;
+
+        globalThis.clearInterval(tickerId);
+        set({ tickerId: null });
+      },
+    }))
+  );
