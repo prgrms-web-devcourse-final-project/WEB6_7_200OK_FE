@@ -98,15 +98,14 @@ export function useChatRoomSocket(
             setTradeInfo(chatRoomMeta.trade);
           }
 
-          const newMessages = messageData.content || [];
-
-          // isMine 처리
           const currentUserId = userIdRef.current;
-          if (currentUserId) {
-            newMessages.forEach((msg) => {
-              msg.isMine = msg.senderId === currentUserId;
-            });
-          }
+          const newMessages = (messageData.content || []).map((msg) => {
+            if (!currentUserId) return msg;
+            return {
+              ...msg,
+              isMine: msg.senderId === currentUserId,
+            };
+          });
 
           // 메시지 오름차순 정렬
           const sortedMessages = [...newMessages].sort(
@@ -193,6 +192,14 @@ export function useChatRoomSocket(
     [chatRoomId]
   );
 
+  // // TODO:메시지 전송 (이미지)
+  // const sendImageMessage = useCallback((imageUrls: string[]) => {
+  //   if (!clientRef.current?.connected || !chatRoomId) {
+  //     console.error("Socket not connected or no chat room selected");
+  //     return;
+  //   }
+  // }, [chatRoomId]);
+
   // 채팅방 변경 시 초기화 및 첫 로드
   useEffect(() => {
     if (chatRoomId) {
@@ -219,14 +226,15 @@ export function useChatRoomSocket(
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
-      reconnectDelay: 5000,
+      reconnectDelay: 2000,
       onConnect: () => {
         console.warn(`[ChatRoom WS] Connected to room ${chatRoomId}`);
         client.subscribe(`/topic/chat.rooms.${chatRoomId}`, (frame) => {
           try {
             const parsedBody = JSON.parse(frame.body);
+            console.warn("parsedBody", parsedBody);
 
-            // 1. 일반 채팅 메시지 (messageId 존재)
+            // 일반 채팅 메시지
             if (parsedBody.messageId) {
               const message: Message = parsedBody;
 
@@ -245,6 +253,8 @@ export function useChatRoomSocket(
                 return [...prev, message];
               });
             }
+
+            // TODO: 실시간 메시지 읽음 이벤트 처리 (BE측에서 기능 추가 예정)
           } catch (error) {
             console.error("[WS] Failed to parse message:", error);
           }
@@ -260,6 +270,7 @@ export function useChatRoomSocket(
         });
       },
       onStompError: (frame) => {
+        // TODO: 웹소켓 연결 에러 처리
         console.error("[WS] Stomp error:", frame.headers.message);
       },
     });
