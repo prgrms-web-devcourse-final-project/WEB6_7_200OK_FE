@@ -22,17 +22,17 @@ const UserDashboardCalendar = dynamic<DashboardWidgetProps>(
 );
 
 const SalesList = dynamic<DashboardWidgetProps>(
-  () => import("@/widgets/sale").then((mod) => mod.SalesList),
+  () => import("@/widgets/sale").then((mod) => mod.UserSalesList),
   { loading: () => <CommonItemTabSkeleton /> }
 );
 
 const PurchaseList = dynamic<DashboardWidgetProps>(
-  () => import("@/widgets/purchase").then((mod) => mod.PurchaseList),
+  () => import("@/widgets/purchase").then((mod) => mod.UserPurchaseList),
   { loading: () => <CommonItemTabSkeleton /> }
 );
 
 const AuctionLike = dynamic<DashboardWidgetProps>(
-  () => import("@/widgets/auctionLike").then((mod) => mod.AuctionLike),
+  () => import("@/widgets/auction/auction-like").then((mod) => mod.UserAuctionLikeList),
   { loading: () => <CommonItemTabSkeleton /> }
 );
 
@@ -42,7 +42,7 @@ const NotificationPreferenceList = dynamic<DashboardWidgetProps>(
 );
 
 const RecentViewedList = dynamic<DashboardWidgetProps>(
-  () => import("@/widgets/recent-viewed").then((mod) => mod.RecentViewedList),
+  () => import("@/widgets/recent-viewed").then((mod) => mod.UserRecentViewedList),
   { loading: () => <CommonItemTabSkeleton /> }
 );
 
