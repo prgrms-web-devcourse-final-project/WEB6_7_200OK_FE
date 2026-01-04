@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import { Skeleton } from "@/shared/ui";
 
 interface ChildrenProps {
@@ -29,7 +27,7 @@ export function DashboardSkeletonLayout({ children }: ChildrenProps) {
 
 // --- Item Card List (판매, 구매, 관심, 최근, 알림) 기본 로딩 ---
 export function CommonItemListSkeleton({ count = 5 }: { count?: number }) {
-  const keys = useMemo(() => createKeys("common-item", count), [count]);
+  const keys = createKeys("common-item", count);
 
   return (
     <div className="flex flex-col gap-4">
@@ -72,7 +70,7 @@ export function CommonItemTabSkeleton() {
 
 // --- Review List ---
 export function ReviewItemListSkeleton() {
-  const keys = useMemo(() => createKeys("review-item", 5), []);
+  const keys = createKeys("review-item", 5);
 
   return (
     <div className="flex flex-col gap-4">

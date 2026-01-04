@@ -2,9 +2,9 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
-import { MOCK_PURCHASES, PurchaseItemType, ItemCardFilter } from "@/entities/item";
+import { MOCK_PURCHASES, UserPurchaseItemType, UserItemCardFilter } from "@/entities/auction";
 import { MOCK_REVIEWS, ReviewType } from "@/entities/review";
-import { PurchasedItemCard } from "@/features/purchase";
+import { UserPurchasedItemCard } from "@/features/purchase";
 import { ReviewEditModal, ReviewWriteModal } from "@/features/review";
 import {
   filterItemsByStatus,
@@ -19,15 +19,15 @@ interface PurchaseListProps {
   label?: React.ReactNode;
 }
 
-export function PurchaseList({ label }: PurchaseListProps) {
+export function UserPurchaseList({ label }: PurchaseListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
-  const [writeModalItem, setWriteModalItem] = useState<PurchaseItemType | null>(null);
+  const [writeModalItem, setWriteModalItem] = useState<UserPurchaseItemType | null>(null);
   const [editModalReview, setEditModalReview] = useState<ReviewType | null>(null);
 
-  const [confirmItem, setConfirmItem] = useState<PurchaseItemType | null>(null);
+  const [confirmItem, setConfirmItem] = useState<UserPurchaseItemType | null>(null);
 
-  const confirmItemRef = useRef<PurchaseItemType | null>(null);
+  const confirmItemRef = useRef<UserPurchaseItemType | null>(null);
 
   useEffect(() => {
     confirmItemRef.current = confirmItem;
@@ -40,7 +40,7 @@ export function PurchaseList({ label }: PurchaseListProps) {
     [filterStatus]
   );
 
-  const handleReviewBtnClick = useCallback((item: PurchaseItemType) => {
+  const handleReviewBtnClick = useCallback((item: UserPurchaseItemType) => {
     if (item.hasReview) {
       // TODO: API 연동 - 리뷰 데이터 조회
       const targetReview =
@@ -81,11 +81,15 @@ export function PurchaseList({ label }: PurchaseListProps) {
       <DashboardContentLayout
         label={label}
         filters={
-          <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
+          <UserItemCardFilter
+            value={filterStatus}
+            options={filterOptions}
+            onChange={setFilterStatus}
+          />
         }
       >
         {filteredPurchases.map((item) => (
-          <PurchasedItemCard
+          <UserPurchasedItemCard
             key={item.id}
             item={item}
             onReviewClick={handleReviewBtnClick}

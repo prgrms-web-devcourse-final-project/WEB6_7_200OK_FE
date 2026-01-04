@@ -2,8 +2,8 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "react";
 
-import { MOCK_SELLING_ITEMS, SellingItemType, ItemCardFilter } from "@/entities/item";
-import { SellingItemCard } from "@/features/sale";
+import { MOCK_SELLING_ITEMS, UserSellingItemType, UserItemCardFilter } from "@/entities/auction";
+import { UserSellingItemCard } from "@/features/auction/auction-sale";
 import {
   filterItemsByStatus,
   generateFilterOptions,
@@ -18,12 +18,12 @@ interface SalesListProps {
   label?: ReactNode;
 }
 
-export function SalesList({ isOwn = false, label }: SalesListProps) {
+export function UserSalesList({ isOwn = false, label }: SalesListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
-  const [deleteItem, setDeleteItem] = useState<SellingItemType | null>(null);
+  const [deleteItem, setDeleteItem] = useState<UserSellingItemType | null>(null);
 
-  const deleteItemRef = useRef<SellingItemType | null>(null);
+  const deleteItemRef = useRef<UserSellingItemType | null>(null);
 
   useEffect(() => {
     deleteItemRef.current = deleteItem;
@@ -51,11 +51,15 @@ export function SalesList({ isOwn = false, label }: SalesListProps) {
       <DashboardContentLayout
         label={label}
         filters={
-          <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
+          <UserItemCardFilter
+            value={filterStatus}
+            options={filterOptions}
+            onChange={setFilterStatus}
+          />
         }
       >
         {filteredSales.map((item) => (
-          <SellingItemCard key={item.id} item={item} onDelete={setDeleteItem} isOwn={isOwn} />
+          <UserSellingItemCard key={item.id} item={item} onDelete={setDeleteItem} isOwn={isOwn} />
         ))}
       </DashboardContentLayout>
 
