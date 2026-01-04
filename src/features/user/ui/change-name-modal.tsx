@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { z } from "zod";
+
 import {
   Button,
   Dialog,
@@ -19,14 +21,19 @@ interface ChangeNameModalProps {
   onSave: (newName: string) => void;
 }
 
-const NAME_REGEX = /^[가-힣a-zA-Z0-9]+$/;
+const nameSchema = z
+  .string()
+  .trim()
+  .min(2, { message: "2자 이상 입력해주세요." })
+  .max(20, { message: "20자 이내로 입력해주세요." })
+  .regex(/^[가-힣a-zA-Z0-9]+$/, { message: "한글, 영문, 숫자만 사용 가능합니다." });
 
 export function ChangeNameModal({ open, onOpenChange, currentName, onSave }: ChangeNameModalProps) {
   const [name, setName] = useState(currentName);
 
-  const isValidLength = name.trim().length >= 2 && name.trim().length <= 20;
-  const isValidPattern = NAME_REGEX.test(name.trim());
-  const isValid = isValidLength && isValidPattern;
+  const validationResult = nameSchema.safeParse(name);
+  const isValid = validationResult.success;
+  const errorMessage = !isValid ? validationResult.error.issues[0].message : null;
 
   const isChanged = name.trim() !== currentName.trim();
 
@@ -37,8 +44,10 @@ export function ChangeNameModal({ open, onOpenChange, currentName, onSave }: Cha
   }, [open, currentName]);
 
   const handleSave = () => {
-    if (!isValid) return;
-    onSave(name);
+    const result = nameSchema.safeParse(name);
+    if (!result.success) return;
+
+    onSave(result.data);
     onOpenChange(false);
   };
 
@@ -61,7 +70,9 @@ export function ChangeNameModal({ open, onOpenChange, currentName, onSave }: Cha
           <p
             className={`mt-2 text-xs ${!isValid && name.length > 0 ? "text-red-500" : "text-muted-foreground"}`}
           >
-            한글, 영문, 숫자 포함 2-20자 이내로 입력해주세요.
+            {!isValid && name.length > 0
+              ? errorMessage
+              : "한글, 영문, 숫자 포함 2-20자 이내로 입력해주세요."}
           </p>
         </div>
 

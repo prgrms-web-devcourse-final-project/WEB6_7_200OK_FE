@@ -2,21 +2,21 @@
 
 import { X } from "lucide-react";
 
-import { ItemBadge, ItemCard, AuctionLikeItemType } from "@/entities/item";
+import { UserItemBadge, UserItemCard, UserAuctionLikeItemType } from "@/entities/auction";
 
-interface AuctionLikeItemProps {
-  item: AuctionLikeItemType;
-  onClick?: (item: AuctionLikeItemType) => void;
-  onRemove?: (item: AuctionLikeItemType) => void;
+interface UserAuctionLikeItemProps {
+  item: UserAuctionLikeItemType;
+  onClick?: (item: UserAuctionLikeItemType) => void;
+  onRemove?: (item: UserAuctionLikeItemType) => void;
 }
 
-export function AuctionLikeItemCard({ item, onClick, onRemove }: AuctionLikeItemProps) {
+export function UserAuctionLikeItemCard({ item, onClick, onRemove }: UserAuctionLikeItemProps) {
   const isSoldOut = item.status === "판매 완료";
   const isAuctionEnded = item.status === "경매 종료";
   const isScheduled = item.status === "경매 예정";
 
   return (
-    <ItemCard
+    <UserItemCard
       name={item.name}
       imageUrl={item.imageUrl}
       date={item.date}
@@ -25,7 +25,7 @@ export function AuctionLikeItemCard({ item, onClick, onRemove }: AuctionLikeItem
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
-      badgeNode={<ItemBadge status={item.status} />}
+      badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         <button
           type="button"

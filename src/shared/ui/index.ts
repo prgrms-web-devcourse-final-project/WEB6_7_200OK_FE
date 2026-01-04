@@ -47,6 +47,7 @@ export {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "./dialog/dialog";
 
 export {
