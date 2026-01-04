@@ -1,14 +1,14 @@
-export interface Chat {
+export interface ChatInfo {
   id: string;
   name: string;
   avatar: string;
   lastMessage: string;
   lastMessageTime: string;
   unreadCount: number;
-  product?: Product;
+  product?: ProductInfo;
 }
 
-export interface Product {
+export interface ProductInfo {
   id: string;
   name: string;
   image: string;
@@ -16,7 +16,7 @@ export interface Product {
   purchaseDate: string;
 }
 
-export interface Message {
+export interface ChatMessage {
   messageId: number;
   senderId: number;
   isMine: boolean;
