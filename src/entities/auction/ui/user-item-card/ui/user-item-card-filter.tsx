@@ -6,14 +6,19 @@ import { SlidersHorizontal } from "lucide-react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui";
 
-interface ItemCardFilterProps {
+interface UserItemCardFilterProps {
   value: string;
   options: string[];
   onChange: (value: string) => void;
   className?: string;
 }
 
-export function ItemCardFilter({ value, options, onChange, className }: ItemCardFilterProps) {
+export function UserItemCardFilter({
+  value,
+  options,
+  onChange,
+  className,
+}: UserItemCardFilterProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

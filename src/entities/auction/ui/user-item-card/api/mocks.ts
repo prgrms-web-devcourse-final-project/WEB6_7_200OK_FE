@@ -1,11 +1,11 @@
 import {
-  SellingItemType,
-  PurchaseItemType,
-  AuctionLikeItemType,
-  RecentlyViewedItemType,
+  UserSellingItemType,
+  UserPurchaseItemType,
+  UserAuctionLikeItemType,
+  UserRecentlyViewedItemType,
 } from "../model/types";
 
-export const MOCK_SELLING_ITEMS: SellingItemType[] = [
+export const MOCK_SELLING_ITEMS: UserSellingItemType[] = [
   {
     id: "s1",
     status: "판매중",
@@ -62,7 +62,7 @@ export const MOCK_SELLING_ITEMS: SellingItemType[] = [
   },
 ];
 
-export const MOCK_PURCHASES: PurchaseItemType[] = [
+export const MOCK_PURCHASES: UserPurchaseItemType[] = [
   {
     id: "p1",
     status: "구매 확정",
@@ -131,7 +131,7 @@ export const MOCK_PURCHASES: PurchaseItemType[] = [
   },
 ];
 
-export const MOCK_AUCTIONLIKE_ITEMS: AuctionLikeItemType[] = [
+export const MOCK_AUCTIONLIKE_ITEMS: UserAuctionLikeItemType[] = [
   {
     id: "w1",
     status: "판매 완료",
@@ -186,7 +186,7 @@ export const MOCK_AUCTIONLIKE_ITEMS: AuctionLikeItemType[] = [
   },
 ];
 
-export const MOCK_RECENT_ITEMS: RecentlyViewedItemType[] = [
+export const MOCK_RECENT_ITEMS: UserRecentlyViewedItemType[] = [
   {
     id: "rc1",
     status: "경매 예정",

@@ -52,3 +52,20 @@ export { PriceInput } from "@/entities/auction/ui/auction-create-image/ui/price-
 export { type AuctionStatusType } from "@/entities/auction/model/status";
 
 export { type ItemCategory } from "@/entities/auction/model/category";
+
+export { UserItemBadge, type UserItemStatusType } from "@/entities/auction/ui/user-item-badge";
+
+export {
+  UserItemCard,
+  UserItemCardFilter,
+  MOCK_SELLING_ITEMS,
+  MOCK_PURCHASES,
+  MOCK_AUCTIONLIKE_ITEMS,
+  MOCK_RECENT_ITEMS,
+  type UserSellingItemType,
+  type UserPurchaseItemType,
+  type UserAuctionLikeItemType,
+  type UserRecentlyViewedItemType,
+  type UserTradeStatusType,
+  type UserPurchaseStatusType,
+} from "@/entities/auction/ui/user-item-card";
