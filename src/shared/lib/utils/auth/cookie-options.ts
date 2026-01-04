@@ -64,7 +64,7 @@ export function setAuthCookies(
 }
 
 export function clearAuthCookies(response: NextResponse) {
-  response.cookies.delete("accessToken");
-  response.cookies.delete("refreshToken");
-  response.cookies.delete("userId");
+  response.cookies.delete(COOKIE_OPTIONS.ACCESS_TOKEN.name);
+  response.cookies.delete(COOKIE_OPTIONS.REFRESH_TOKEN.name);
+  response.cookies.delete(COOKIE_OPTIONS.USER_ID.name);
 }
