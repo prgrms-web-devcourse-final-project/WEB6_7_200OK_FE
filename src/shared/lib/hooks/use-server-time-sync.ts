@@ -1,3 +1,5 @@
+"use client";
+
 import { useContext, useEffect } from "react";
 
 import { type QueryKey } from "@tanstack/react-query";
@@ -8,12 +10,12 @@ import { useThrottledInvalidate } from "@/shared/lib/hooks/use-throttled-invalid
 import { ServerTimeStoreContext } from "@/shared/lib/providers/server-time-store-provider";
 import { calculateNextPriceDropSeconds } from "@/shared/lib/utils/time/calc";
 
-interface UseAuctionSyncProps {
+interface ServerTimeSyncProps {
   serverTime: string | undefined;
   queryKey: QueryKey;
 }
 
-export function useServerTimeSync({ serverTime, queryKey }: UseAuctionSyncProps) {
+export function useServerTimeSync({ serverTime, queryKey }: ServerTimeSyncProps) {
   const setServerTime = useServerTimeStore((state) => state.setServerTime);
   const throttledInvalidate = useThrottledInvalidate(queryKey);
   const serverTimeStoreContext = useContext(ServerTimeStoreContext);

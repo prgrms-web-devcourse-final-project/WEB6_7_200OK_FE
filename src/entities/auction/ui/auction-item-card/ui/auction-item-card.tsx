@@ -18,7 +18,6 @@ import { ROUTES } from "@/shared/config/routes";
 export interface AuctionItemCardProps extends AuctionType {
   variant: AuctionCardVariantType;
   rank?: number;
-  onExpire?: () => void;
 }
 
 export function AuctionItemCard({
@@ -32,7 +31,6 @@ export function AuctionItemCard({
   isLiked,
   startedAt,
   rank,
-  onExpire,
 }: AuctionItemCardProps) {
   const config = VARIANT_CONFIG[variant];
 
@@ -44,7 +42,7 @@ export function AuctionItemCard({
           {config.badge === "ranking" && rank != null && <RankingBadge rank={rank} />}
           {config.badge === "live" && <LiveBadge />}
           {config.badge === "upcoming" && <UpcomingBadge />}
-          {config.like && <LikeButton auctionId={auctionId} isLiked={isLiked} />}
+          {config.like && <LikeButton isLiked={isLiked} />}
         </div>
 
         <div className="flex flex-col gap-4 p-4">
@@ -62,9 +60,7 @@ export function AuctionItemCard({
             <UpcomingInfo startedAt={startedAt} startPrice={startPrice} />
           )}
 
-          {config.timer && (
-            <AuctionTimer type={config.timer} startedAt={startedAt} onExpire={onExpire} />
-          )}
+          {config.timer && <AuctionTimer type={config.timer} startedAt={startedAt} />}
         </div>
       </Link>
 
