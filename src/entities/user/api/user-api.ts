@@ -29,3 +29,18 @@ export async function getUserProfile(targetUserId: number): Promise<UserProfileT
     isOwner: data.isOwner,
   };
 }
+
+interface UserBasicResponse {
+  userEmail: string;
+  username: string;
+  userProfileUrl: string;
+}
+
+export async function getUserBasic(): Promise<UserBasicResponse> {
+  const result = await httpClient<UserBasicResponse>(API_ENDPOINTS.authBasic, {
+    method: "GET",
+  });
+
+  const { data } = result;
+  return data;
+}
