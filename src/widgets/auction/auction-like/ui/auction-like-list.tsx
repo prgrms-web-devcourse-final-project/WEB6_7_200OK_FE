@@ -4,9 +4,8 @@ import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "re
 
 import { Heart } from "lucide-react";
 
-import { AuctionLikeItemType, ItemCardFilter } from "@/entities/item";
-import { AuctionLikeItemCard } from "@/features/auctionLike";
-import { useAuctionLike } from "@/features/auctionLike/api/use-auctionLike";
+import { type UserAuctionLikeItemType, UserItemCardFilter } from "@/entities/auction";
+import { UserAuctionLikeItemCard, useUserAuctionLike } from "@/features/auction/auction-like";
 import {
   filterItemsByStatus,
   generateFilterOptions,
@@ -22,13 +21,12 @@ interface AuctionLikeProps {
   label?: ReactNode;
 }
 
-export function AuctionLike({ label }: AuctionLikeProps) {
-  const { data: auctionLikeItems = [], isLoading } = useAuctionLike();
+export function UserAuctionLikeList({ label }: AuctionLikeProps) {
+  const { data: auctionLikeItems = [], isLoading } = useUserAuctionLike();
 
   const [filterStatus, setFilterStatus] = useState("전체");
-  const [deleteItem, setDeleteItem] = useState<AuctionLikeItemType | null>(null);
-  const deleteItemRef = useRef<AuctionLikeItemType | null>(null);
-
+  const [deleteItem, setDeleteItem] = useState<UserAuctionLikeItemType | null>(null);
+  const deleteItemRef = useRef<UserAuctionLikeItemType | null>(null);
   useEffect(() => {
     deleteItemRef.current = deleteItem;
   }, [deleteItem]);
@@ -60,12 +58,16 @@ export function AuctionLike({ label }: AuctionLikeProps) {
       <DashboardContentLayout
         label={label}
         filters={
-          <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
+          <UserItemCardFilter
+            value={filterStatus}
+            options={filterOptions}
+            onChange={setFilterStatus}
+          />
         }
       >
         {filteredAuctionLike.length > 0 ? (
           filteredAuctionLike.map((item) => (
-            <AuctionLikeItemCard
+            <UserAuctionLikeItemCard
               key={item.id}
               item={item}
               onRemove={(target) => setDeleteItem(target)}

@@ -2,8 +2,12 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
-import { MOCK_RECENT_ITEMS, RecentlyViewedItemType, ItemCardFilter } from "@/entities/item";
-import { RecentViewedItemCard } from "@/features/recent-viewed";
+import {
+  MOCK_RECENT_ITEMS,
+  UserRecentlyViewedItemType,
+  UserItemCardFilter,
+} from "@/entities/auction";
+import { UserRecentViewedItemCard } from "@/features/recent-viewed";
 import {
   filterItemsByStatus,
   generateFilterOptions,
@@ -17,12 +21,12 @@ interface RecentlyViewedListProps {
   label?: React.ReactNode;
 }
 
-export function RecentViewedList({ label }: RecentlyViewedListProps) {
+export function UserRecentViewedList({ label }: RecentlyViewedListProps) {
   const [filterStatus, setFilterStatus] = useState("전체");
 
-  const [deleteItem, setDeleteItem] = useState<RecentlyViewedItemType | null>(null);
+  const [deleteItem, setDeleteItem] = useState<UserRecentlyViewedItemType | null>(null);
 
-  const deleteItemRef = useRef<RecentlyViewedItemType | null>(null);
+  const deleteItemRef = useRef<UserRecentlyViewedItemType | null>(null);
 
   useEffect(() => {
     deleteItemRef.current = deleteItem;
@@ -50,11 +54,15 @@ export function RecentViewedList({ label }: RecentlyViewedListProps) {
       <DashboardContentLayout
         label={label}
         filters={
-          <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
+          <UserItemCardFilter
+            value={filterStatus}
+            options={filterOptions}
+            onChange={setFilterStatus}
+          />
         }
       >
         {filteredRecent.map((item) => (
-          <RecentViewedItemCard
+          <UserRecentViewedItemCard
             key={item.id}
             item={item}
             onRemove={(target) => setDeleteItem(target)}
