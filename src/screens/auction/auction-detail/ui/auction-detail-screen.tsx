@@ -77,7 +77,14 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
                   <AuctionDetailSeller seller={data.seller} />
                   <AuctionProgress status={data.status} />
                 </AuctionTickerProvider>
-                <AuctionDetailUserActions auctionId={id} status={data.status} title={data.title} />
+                <AuctionDetailUserActions
+                  auctionId={id}
+                  status={data.status}
+                  title={data.title}
+                  isLike={data.isLiked}
+                  likeCount={data.likeCount}
+                  sellerId={data.seller.sellerId}
+                />
               </AuctionPriceStoreProvider>
               <div className="flex flex-col gap-3">
                 <AuctionLogList
