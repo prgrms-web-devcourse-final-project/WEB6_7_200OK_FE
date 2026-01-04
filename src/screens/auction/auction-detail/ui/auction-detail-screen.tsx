@@ -4,6 +4,7 @@ import { AuctionLogList } from "@/features/auction/auction-log";
 import { AuctionViewerProvider } from "@/features/auction/auction-log/provider/use-auction-viewer";
 import { AuctionDetailReview } from "@/features/auction/auction-review";
 import type { AuctionDetailType } from "@/screens/auction/auction-detail/model/types";
+import AuctionDetailErrorScreen from "@/screens/auction/auction-detail/ui/auction-detail-error-screen";
 import {
   calculateAuctionStartMs,
   calculateElapsedMsWithin5MinCycle,
@@ -25,9 +26,10 @@ import { AuctionPriceStoreProvider } from "@/widgets/auction/auction-detail/prov
 export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailType; id: string }) {
   if (!data || !id) {
     return (
-      <div className="p-4">
-        <p>데이터가 없습니다.</p>
-      </div>
+      <AuctionDetailErrorScreen
+        title="경매를 찾을 수 없습니다"
+        description="요청하신 경매에 대한 정보를 찾을 수 없어요"
+      />
     );
   }
   const now = Date.now();
