@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MOCK_REVIEWS, ReviewType } from "@/entities/review";
 
 // TODO: 실제 API 엔드포인트가 나오면 교체
-const fetchMyReviews = async (): Promise<ReviewType[]> =>
+const getMyReviews = async (): Promise<ReviewType[]> =>
   new Promise((resolve) => {
     // TODO: 실제 API 엔드포인트 연결하면 제거(서버에서 정렬해서 줌)
     const sortedReviews = [...MOCK_REVIEWS].sort((a, b) => {
@@ -21,6 +21,6 @@ export const reviewKeys = {
 export function useReviewList() {
   return useQuery({
     queryKey: reviewKeys.all,
-    queryFn: fetchMyReviews,
+    queryFn: getMyReviews,
   });
 }

@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 
 import { PackageOpen } from "lucide-react";
 
-import { ItemBadge, ItemCard } from "@/entities/item";
+import { UserItemBadge, UserItemCard } from "@/entities/auction";
 import { dayjs } from "@/shared/lib/utils/dayjs";
 import { filterItemsByStatus } from "@/shared/lib/utils/filter/user-page-item-filter";
 import { cn } from "@/shared/lib/utils/utils";
@@ -58,7 +58,7 @@ export function DailyAuctionList({ items, selectedDate }: DailyAuctionListProps)
       <div className="flex flex-col gap-3">
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
-            <ItemCard
+            <UserItemCard
               key={`${item.id}-${item.name}`}
               name={item.name}
               imageUrl={item.imageUrl}
@@ -67,7 +67,7 @@ export function DailyAuctionList({ items, selectedDate }: DailyAuctionListProps)
               originalPrice={item.originalPrice}
               discountRate={item.discountRate}
               isPriceGray={item.status === "경매 예정"}
-              badgeNode={<ItemBadge status={item.status} />}
+              badgeNode={<UserItemBadge status={item.status} />}
             />
           ))
         ) : (
