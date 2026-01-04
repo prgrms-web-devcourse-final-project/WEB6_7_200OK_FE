@@ -16,7 +16,7 @@ import LikeButton from "@/entities/auction/ui/auction-item-card/ui/like-button";
 import RankingBadge from "@/entities/auction/ui/auction-item-card/ui/ranking-badge";
 import UpcomingInfo from "@/entities/auction/ui/auction-item-card/ui/upcoming-info";
 import { ROUTES } from "@/shared/config/routes";
-import ImageLabelOverlay from "@/shared/ui/image-label-overlay/image-label-overlay";
+import { ImageLabelOverlay } from "@/shared/ui";
 
 export interface AuctionItemCardProps extends AuctionType {
   variant: AuctionCardVariantType;
@@ -43,7 +43,7 @@ export function AuctionItemCard({
         <div className="relative aspect-square">
           <Image src={imageUrl} alt={title} fill className="object-cover" />
           {variant === "ended" && <ImageLabelOverlay label="낙찰 완료" />}
-          {config.badge === "ranking" && rank != null && <RankingBadge rank={rank} />}
+          {config.badge === "ranking" && rank && <RankingBadge rank={rank} />}
           {config.badge === "live" && <LiveBadge />}
           {config.badge === "upcoming" && <UpcomingBadge />}
           {config.like && <LikeButton isLiked={isLiked} />}
