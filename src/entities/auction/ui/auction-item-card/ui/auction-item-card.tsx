@@ -6,6 +6,7 @@ import { LiveBadge } from "@/entities/auction/ui/auction-badge/live-badge";
 import { UpcomingBadge } from "@/entities/auction/ui/auction-badge/upcoming-badge";
 import { VARIANT_CONFIG } from "@/entities/auction/ui/auction-item-card/model/constants";
 import { type AuctionCardVariantType } from "@/entities/auction/ui/auction-item-card/model/types";
+import AuctionEndTimer from "@/entities/auction/ui/auction-item-card/ui/auction-end-timer";
 import AuctionPrice from "@/entities/auction/ui/auction-item-card/ui/auction-price";
 import AuctionTimer from "@/entities/auction/ui/auction-item-card/ui/auction-timer";
 import BuyCtaButton from "@/entities/auction/ui/auction-item-card/ui/buy-cta-button";
@@ -62,7 +63,10 @@ export function AuctionItemCard({
             <UpcomingInfo startedAt={startedAt} startPrice={startPrice} />
           )}
 
-          {config.timer && <AuctionTimer type={config.timer} startedAt={startedAt} />}
+          {config.timer === "ended" && <AuctionEndTimer />}
+          {config.timer && config.timer !== "ended" && (
+            <AuctionTimer type={config.timer} startedAt={startedAt} />
+          )}
         </div>
       </Link>
 
