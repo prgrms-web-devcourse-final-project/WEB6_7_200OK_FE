@@ -57,3 +57,9 @@ export interface ChatRoomListItem {
   lastMessage: ChatRoomLastMessage;
   unreadCount: number;
 }
+
+export interface ChatRoomTradeInfo {
+  tradeId: number;
+  finalPrice: number;
+  purchasedAt: string;
+}

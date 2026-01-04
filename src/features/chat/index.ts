@@ -10,6 +10,7 @@ export {
   type ChatRoomPartner,
   type ChatRoomAuction,
   type ChatRoomLastMessage,
+  type ChatRoomTradeInfo,
 } from "./model/types";
 
 export { useChatListSocket } from "./hooks/chat-list-ws";

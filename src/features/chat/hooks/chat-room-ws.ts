@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-import { type Message } from "@/features/chat";
+import { type ChatRoomTradeInfo, type Message } from "@/features/chat";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -16,12 +16,6 @@ interface ChatSendRequest {
   messageType: "TEXT" | "IMAGE";
   content: string;
   imageUrls: string[] | null;
-}
-
-export interface ChatRoomTradeInfo {
-  tradeId: number;
-  finalPrice: number;
-  purchasedAt: string;
 }
 
 interface ChatRoomResponse {
