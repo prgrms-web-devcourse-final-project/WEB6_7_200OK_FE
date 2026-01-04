@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Calendar, Timer, type LucideIcon } from "lucide-react";
 
@@ -36,10 +36,9 @@ const AUCTION_TIMER_MAP: Record<
 interface AuctionTimerProps {
   type: AuctionTimerType;
   startedAt: string;
-  onExpire?: () => void;
 }
 
-export default function AuctionTimer({ type, startedAt, onExpire }: AuctionTimerProps) {
+export default function AuctionTimer({ type, startedAt }: AuctionTimerProps) {
   const { label, ariaLabel, Icon } = AUCTION_TIMER_MAP[type];
 
   const now = useServerTimeNow();
@@ -51,15 +50,6 @@ export default function AuctionTimer({ type, startedAt, onExpire }: AuctionTimer
     type === "drop"
       ? calculateNextPriceDropSeconds(now)
       : calculateAuctionStartSeconds(now, startedAt);
-
-  const prevRemainSecondsRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const prev = prevRemainSecondsRef.current;
-    prevRemainSecondsRef.current = remainSeconds;
-
-    if (prev === 1) onExpire?.();
-  }, [remainSeconds, onExpire]);
 
   const time = formatRemaining(remainSeconds);
   const dateTime = `PT${remainSeconds}S`;
@@ -73,7 +63,10 @@ export default function AuctionTimer({ type, startedAt, onExpire }: AuctionTimer
       <Icon aria-hidden className="size-4" />
       <span>{label}</span>
       {mounted ? (
-        <time dateTime={dateTime} className="ml-auto font-semibold">
+        <time
+          dateTime={dateTime}
+          className="ml-auto inline-flex w-21 justify-end font-semibold whitespace-nowrap tabular-nums"
+        >
           {time} 후
         </time>
       ) : (

@@ -16,7 +16,6 @@ interface AuctionCarouselSectionProps {
   isLoading: boolean;
   isError: boolean;
   items?: AuctionType[];
-  onExpire?: () => void;
 }
 
 export function AuctionCarouselSection({
@@ -27,7 +26,6 @@ export function AuctionCarouselSection({
   isLoading,
   isError,
   items,
-  onExpire,
 }: AuctionCarouselSectionProps) {
   const hasItems = Array.isArray(items) && items.length > 0;
 
@@ -52,7 +50,7 @@ export function AuctionCarouselSection({
         />
       );
 
-    return <AuctionItemCarousel items={items} variant={variant} onExpire={onExpire} />;
+    return <AuctionItemCarousel items={items} variant={variant} />;
   };
 
   return (
