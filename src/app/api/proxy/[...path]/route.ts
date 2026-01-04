@@ -38,7 +38,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
   const { path } = await params;
   const pathString = path.join("/");
   const searchParams = req.nextUrl.search;
-  const backendUrl = `${API_BASE_URL}/${pathString}${searchParams}`;
+  const apiUrl = `${API_BASE_URL}/${pathString}${searchParams}`;
 
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
@@ -54,11 +54,11 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
   headers.delete("cookie");
   headers.delete("content-length");
 
-  const initialBackendCookies = [];
-  if (accessToken) initialBackendCookies.push(`accessToken=${accessToken}`);
-  if (refreshToken) initialBackendCookies.push(`refreshToken=${refreshToken}`);
-  if (initialBackendCookies.length > 0) {
-    headers.set("Cookie", initialBackendCookies.join("; "));
+  const requestCookies = [];
+  if (accessToken) requestCookies.push(`accessToken=${accessToken}`);
+  if (refreshToken) requestCookies.push(`refreshToken=${refreshToken}`);
+  if (requestCookies.length > 0) {
+    headers.set("Cookie", requestCookies.join("; "));
   }
 
   const requestBody = await getRequestBody(req);
@@ -69,14 +69,14 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
   }
 
   try {
-    let backendRes = await fetch(backendUrl, {
+    let apiResponse = await fetch(apiUrl, {
       method: req.method,
       headers,
       body: requestBody.body,
       cache: "no-store",
     });
 
-    if (backendRes.status === 401 && refreshToken) {
+    if (apiResponse.status === 401 && refreshToken) {
       const newAuthData = await refreshCookie(refreshToken);
 
       if (!newAuthData) {
@@ -105,16 +105,25 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
         headers.set("Cookie", retryCookies.join("; "));
       }
 
-      backendRes = await fetch(backendUrl, {
+      apiResponse = await fetch(apiUrl, {
         method: req.method,
         headers,
         body: retryBody,
         cache: "no-store",
       });
 
-      const response = new NextResponse(backendRes.body, {
-        status: backendRes.status,
-        headers: backendRes.headers,
+      if (apiResponse.status === 401) {
+        const response = NextResponse.json(
+          { error: "Session expired even after refresh." },
+          { status: 401 }
+        );
+        clearAuthCookies(response);
+        return response;
+      }
+
+      const response = new NextResponse(apiResponse.body, {
+        status: apiResponse.status,
+        headers: apiResponse.headers,
       });
 
       setAuthCookies(response, newAuthData);
@@ -122,9 +131,9 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       return response;
     }
 
-    return new NextResponse(backendRes.body, {
-      status: backendRes.status,
-      headers: backendRes.headers,
+    return new NextResponse(apiResponse.body, {
+      status: apiResponse.status,
+      headers: apiResponse.headers,
     });
   } catch (error) {
     console.error("Proxy Error:", error);
