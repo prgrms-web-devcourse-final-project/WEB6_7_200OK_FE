@@ -1,8 +1,11 @@
+"use client";
+
 import { useId } from "react";
 
 import { Box, MessageSquareOff } from "lucide-react";
 
 import type { SellerType } from "@/features/auction/auction-sale";
+import { useSellerInfo } from "@/features/auction/auction-sale/hook/use-seller-info";
 import { Rating, RatingButton, EmptyState } from "@/shared/ui";
 
 interface AuctionDetailReviewProps {
@@ -10,6 +13,14 @@ interface AuctionDetailReviewProps {
 }
 
 export default function AuctionDetailReview({ seller }: AuctionDetailReviewProps) {
+  const { data, isLoading, error } = useSellerInfo(seller.sellerId);
+  console.log(data);
+  if (error) {
+    return <div>error</div>;
+  }
+  if (isLoading) {
+    return <div>isLoading</div>;
+  }
   return (
     <div className="flex flex-col gap-4">
       <AuctionDetailReviewRating reviewCount={seller.reviewCount} rating={seller.rating} />
