@@ -19,8 +19,16 @@ interface ChangeNameModalProps {
   onSave: (newName: string) => void;
 }
 
+const NAME_REGEX = /^[가-힣a-zA-Z0-9]+$/;
+
 export function ChangeNameModal({ open, onOpenChange, currentName, onSave }: ChangeNameModalProps) {
   const [name, setName] = useState(currentName);
+
+  const isValidLength = name.trim().length >= 2 && name.trim().length <= 20;
+  const isValidPattern = NAME_REGEX.test(name.trim());
+  const isValid = isValidLength && isValidPattern;
+
+  const isChanged = name.trim() !== currentName.trim();
 
   useEffect(() => {
     if (open) {
@@ -29,7 +37,7 @@ export function ChangeNameModal({ open, onOpenChange, currentName, onSave }: Cha
   }, [open, currentName]);
 
   const handleSave = () => {
-    if (!name.trim()) return;
+    if (!isValid) return;
     onSave(name);
     onOpenChange(false);
   };
@@ -50,17 +58,15 @@ export function ChangeNameModal({ open, onOpenChange, currentName, onSave }: Cha
             className="w-full"
             autoFocus
           />
-          <p className="text-muted-foreground mt-2 text-xs">
+          <p
+            className={`mt-2 text-xs ${!isValid && name.length > 0 ? "text-red-500" : "text-muted-foreground"}`}
+          >
             한글, 영문, 숫자 포함 2-20자 이내로 입력해주세요.
           </p>
         </div>
 
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button
-            onClick={handleSave}
-            disabled={!name.trim() || name === currentName}
-            variant="primary"
-          >
+          <Button onClick={handleSave} disabled={!isValid || !isChanged} variant="primary">
             저장
           </Button>
         </DialogFooter>
