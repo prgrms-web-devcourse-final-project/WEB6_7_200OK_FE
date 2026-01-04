@@ -20,11 +20,11 @@ export function UserDashboardCalendar({ label }: UserDashboardCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const { data: salesItems = [], isLoading: isSalesLoading } = useSalesList();
-  const { data: AuctionLikeItems = [], isLoading: isAuctionLikeLoading } = useAuctionLike();
+  const { data: auctionLikeItems = [], isLoading: isAuctionLikeLoading } = useAuctionLike();
 
   const allItems = useMemo(
-    () => [...salesItems, ...AuctionLikeItems],
-    [salesItems, AuctionLikeItems]
+    () => [...salesItems, ...auctionLikeItems],
+    [salesItems, auctionLikeItems]
   );
 
   const calendarEvents = useMemo(() => transformItemsToCalendarEvents(allItems), [allItems]);
