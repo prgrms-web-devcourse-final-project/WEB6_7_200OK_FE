@@ -72,6 +72,8 @@ export { default as EmptyState, type EmptyStateProps } from "./empty/empty";
 
 export { ErrorTemplate } from "./error/error-template";
 
+export { ImageLabelOverlay } from "./image-label-overlay/image-label-overlay";
+
 export { InfoAlert } from "./info-alert/info-alert";
 
 export { default as FileInput } from "./input/file-input";
