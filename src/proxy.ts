@@ -35,5 +35,7 @@ export const config = {
     "/payments/:path*",
     "/user/:path*",
     "/users/:path*",
+    "/dm",
+    "/dm/:path*",
   ],
 };
