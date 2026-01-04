@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import type { Metadata } from "next";
 
@@ -43,7 +43,7 @@ export default function RootLayout({
               <div className="flex min-h-full flex-col">
                 <Header />
                 <CategoryNav />
-                <main className="flex-1">{children}</main>
+                <main className="flex-1 select-none">{children}</main>
                 <ToastRegistry />
                 <BottomNav />
               </div>
