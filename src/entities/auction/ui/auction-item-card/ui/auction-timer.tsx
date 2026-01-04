@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Calendar, Timer, type LucideIcon } from "lucide-react";
 
+import { type AuctionCardTimerType } from "@/entities/auction/ui/auction-item-card/model/types";
 import { useServerTimeNow } from "@/shared/lib/hooks/use-server-time-now";
 import {
   calculateAuctionStartSeconds,
@@ -11,10 +12,10 @@ import {
 } from "@/shared/lib/utils/time/calc";
 import { formatRemaining } from "@/shared/lib/utils/time/format";
 
-export type AuctionTimerType = "drop" | "start";
+type AuctionActiveTimerType = Exclude<NonNullable<AuctionCardTimerType>, "ended">;
 
 const AUCTION_TIMER_MAP: Record<
-  AuctionTimerType,
+  AuctionActiveTimerType,
   {
     label: string;
     ariaLabel: string;
@@ -34,17 +35,17 @@ const AUCTION_TIMER_MAP: Record<
 };
 
 interface AuctionTimerProps {
-  type: AuctionTimerType;
+  type: AuctionActiveTimerType;
   startedAt: string;
 }
 
 export default function AuctionTimer({ type, startedAt }: AuctionTimerProps) {
-  const { label, ariaLabel, Icon } = AUCTION_TIMER_MAP[type];
-
   const now = useServerTimeNow();
-
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => setMounted(true), []);
+
+  const { label, ariaLabel, Icon } = AUCTION_TIMER_MAP[type];
 
   const remainSeconds =
     type === "drop"
