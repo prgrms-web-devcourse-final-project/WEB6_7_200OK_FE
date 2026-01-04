@@ -2,7 +2,7 @@ import { cva } from "class-variance-authority";
 
 import { cn } from "@/shared/lib/utils/utils";
 
-import { ItemStatusType } from "../model/types";
+import { UserItemStatusType } from "../model/types";
 
 const badgeVariants = cva(
   "flex items-center justify-center rounded-full px-2 py-1 text-xs leading-4 font-medium",
@@ -15,17 +15,17 @@ const badgeVariants = cva(
         "경매 종료": "bg-brand-surface text-brand-text",
         "구매 완료": "bg-brand-surface text-brand-text",
         "구매 확정": "bg-brand text-brand-contrast",
-      } satisfies Record<ItemStatusType, string>,
+      } satisfies Record<UserItemStatusType, string>,
     },
     defaultVariants: { status: "판매중" },
   }
 );
 
-interface ItemBadgeProps {
-  status: ItemStatusType;
+interface UserItemBadgeProps {
+  status: UserItemStatusType;
   className?: string;
 }
 
-export function ItemBadge({ status, className }: ItemBadgeProps) {
+export function UserItemBadge({ status, className }: UserItemBadgeProps) {
   return <span className={cn(badgeVariants({ status }), className)}>{status}</span>;
 }

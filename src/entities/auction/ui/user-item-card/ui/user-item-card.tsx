@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { cn } from "@/shared/lib/utils/utils";
 
-interface ItemCardProps {
+interface UserItemCardProps {
   imageUrl?: string;
   name: string;
   date: string;
@@ -19,7 +19,7 @@ interface ItemCardProps {
   onClick?: () => void;
 }
 
-export function ItemCard({
+export function UserItemCard({
   imageUrl,
   name,
   date,
@@ -32,7 +32,7 @@ export function ItemCard({
   overlayNode,
   footerNode,
   onClick,
-}: ItemCardProps) {
+}: UserItemCardProps) {
   const isInteractive = !!onClick;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
