@@ -20,7 +20,8 @@ interface ChatRoomUpdateEvent {
 
 export function useChatListSocket(
   initialData: ChatRoomListItem[],
-  accessToken: string | undefined
+  accessToken: string | undefined,
+  selectedChatId: string | null
 ) {
   const [chatRooms, setChatRooms] = useState<ChatRoomListItem[]>(initialData);
 
@@ -62,13 +63,14 @@ export function useChatListSocket(
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
-      reconnectDelay: 5000,
+      reconnectDelay: 2000,
       onConnect: () => {
         console.warn("[ChatList WS] Connected...");
         // 내 채팅방 목록 전체 업데이트 구독
         client.subscribe("/user/queue/chat.rooms", (frame) => {
           try {
             const event: ChatRoomUpdateEvent = JSON.parse(frame.body);
+            console.warn("event", event);
 
             setChatRooms((prev) => {
               const targetIndex = prev.findIndex((room) => room.chatRoomId === event.chatRoomId);
@@ -77,6 +79,12 @@ export function useChatListSocket(
               if (targetIndex === -1) return prev;
 
               const targetRoom = prev[targetIndex];
+              const isSelected = String(event.chatRoomId) === selectedChatId;
+
+              let newUnreadCount = targetRoom.unreadCount + event.unreadCountDelta;
+              if (isSelected || event.resetUnread) {
+                newUnreadCount = 0;
+              }
 
               const updatedRoom: ChatRoomListItem = {
                 ...targetRoom,
@@ -85,9 +93,7 @@ export function useChatListSocket(
                   lastMessageAt: event.lastMessageAt,
                   type: event.lastMessageType,
                 },
-                unreadCount: event.resetUnread
-                  ? 0
-                  : targetRoom.unreadCount + event.unreadCountDelta,
+                unreadCount: newUnreadCount,
               };
 
               // 해당 방을 제거하고 맨 앞으로 이동 (최신순 정렬)
@@ -118,6 +124,10 @@ export function useChatListSocket(
                 const preview = message.messageType === "IMAGE" ? "사진" : message.content;
                 const type = message.messageType === "IMAGE" ? "IMAGE" : "TEXT";
 
+                // 현재 보고 있는 방이면 안 읽음 수 증가 X
+                const isSelected = String(id) === selectedChatId;
+                const newUnreadCount = isSelected ? 0 : targetRoom.unreadCount + 1;
+
                 const updatedRoom: ChatRoomListItem = {
                   ...targetRoom,
                   lastMessage: {
@@ -125,13 +135,14 @@ export function useChatListSocket(
                     lastMessageAt: message.createdAt,
                     type,
                   },
-                  unreadCount: targetRoom.unreadCount,
+                  unreadCount: newUnreadCount,
                 };
 
                 const otherRooms = prev.filter((_, idx) => idx !== targetIndex);
                 return [updatedRoom, ...otherRooms];
               });
             } catch (error) {
+              // TODO: 각 채팅방별 메시지 토픽 구독 에러 처리
               console.error(`[WS] Failed to parse room ${id} message:`, error);
             }
           });
@@ -139,10 +150,12 @@ export function useChatListSocket(
 
         // 에러 큐
         client.subscribe("/user/queue/errors", (frame) => {
+          // TODO: 에러 처리
           console.error("[WS] Error:", frame.body);
         });
       },
       onStompError: (frame) => {
+        // TODO: 웹소켓 에러 처리
         console.error("[WS] Stomp error:", frame.headers.message);
       },
     });
@@ -153,7 +166,7 @@ export function useChatListSocket(
       console.warn("[ChatList WS] Disconnecting...");
       client.deactivate();
     };
-  }, [accessToken, chatRoomIdsString]);
+  }, [accessToken, chatRoomIdsString, selectedChatId]);
 
   return { chatRooms, markRoomAsRead };
 }
