@@ -7,6 +7,7 @@ export interface UserProfileType {
   rating: number;
   reviewCount: number;
   isOwner: boolean;
+  userId: number;
 }
 
 export interface UserBasicInfoResponseType {
