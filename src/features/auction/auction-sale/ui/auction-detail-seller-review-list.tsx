@@ -2,14 +2,15 @@ import Link from "next/link";
 
 import { MessageSquareOff } from "lucide-react";
 
-import type { BuyersType } from "@/features/auction/auction-sale/model/types";
+import type { BuyerType } from "@/features/auction/auction-sale/model/types";
+import { ROUTES } from "@/shared/config/routes";
 import { EmptyState, Button } from "@/shared/ui";
 
 export default function AuctionDetailSellerReviewList({
   buyers,
   sellerId,
 }: {
-  buyers: BuyersType[];
+  buyers: BuyerType[];
   sellerId: number;
 }) {
   if (buyers.length === 0) {
@@ -34,7 +35,7 @@ export default function AuctionDetailSellerReviewList({
         ))}
       </div>
       <Button className="flex-1" variant="outline" size="default">
-        <Link href={`/users/${sellerId}/reviews`}>리뷰 보러가기</Link>
+        <Link href={ROUTES.userReview(sellerId)}>리뷰 보러가기</Link>
       </Button>
     </div>
   );

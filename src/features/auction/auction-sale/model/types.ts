@@ -1,4 +1,4 @@
-import { AuctionType } from "@/entities/auction/model/types";
+import type { AuctionType } from "@/entities/auction/model/types";
 
 export interface SellerType {
   // TODO: 추후 user profile type 수정
@@ -9,7 +9,7 @@ export interface SellerType {
   reviewCount: number;
 }
 
-export interface BuyersType {
+export interface BuyerType {
   buyerId: number;
   username: string;
   content: string;
@@ -23,6 +23,6 @@ export interface AuctionSellerInfoType {
   username: string;
   rating: number;
   totalReviews: number;
-  buyers: BuyersType[];
+  buyers: BuyerType[];
   auctions: SellerAuctionType[];
 }
