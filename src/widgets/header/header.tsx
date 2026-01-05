@@ -8,8 +8,8 @@ import Logo from "@/shared/assets/icons/windfall.svg";
 import { ROUTES } from "@/shared/config/routes";
 import { Container } from "@/shared/ui";
 import Button from "@/shared/ui/button/button";
-import SearchInput from "@/shared/ui/input/search-input";
 import HeaderActions from "@/widgets/header/ui/header-actions";
+import HeaderSearch from "@/widgets/header/ui/header-search";
 
 export async function Header() {
   const cookieStore = await cookies();
@@ -28,21 +28,13 @@ export async function Header() {
           </h1>
         </Link>
 
-        <form className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-135">
-            <label htmlFor="search" className="sr-only">
-              검색
-            </label>
-            {/* TODO: SearchInput 스타일 리팩토링 */}
-            <SearchInput id="search" />
-          </div>
-        </form>
+        <HeaderSearch />
 
         {hasValidUserId ? (
           <HeaderActions userId={numericUserId} />
         ) : (
           <Button asChild size="lg">
-            <Link href={ROUTES.login} aria-label="내 정보">
+            <Link href={ROUTES.login} aria-label="로그인">
               <LogIn className="size-5" />
               <span className="font-semibold">로그인</span>
             </Link>
