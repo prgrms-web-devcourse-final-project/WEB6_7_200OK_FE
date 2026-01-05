@@ -33,7 +33,7 @@ export default function AuctionDetailUserActions({
   return (
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-1">
-        <AuctionNotificationToggle userId={userId} />
+        <AuctionNotificationToggle auctionId={auctionId} />
         <AuctionDetailLikeToggle
           auctionId={auctionId}
           initLikeCount={likeCount}
