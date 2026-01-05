@@ -15,3 +15,4 @@ export {
 
 export { useChatListSocket } from "./hooks/chat-list-ws";
 export { useChatRoomSocket } from "./hooks/chat-room-ws";
+export { useUploadChatImages } from "./api/upload-chat-images";
