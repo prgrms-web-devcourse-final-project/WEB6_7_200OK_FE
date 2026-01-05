@@ -23,12 +23,12 @@ export default function HeaderSearch() {
   const applyQuery = (value: string) => {
     const trimmed = value.trim();
 
-    if (!trimmed) return;
-
     if (pathname === ROUTES.auctions) {
       setFilters({ query: trimmed });
       return;
     }
+
+    if (!trimmed) return;
 
     const params = new URLSearchParams();
     params.set("query", trimmed);
