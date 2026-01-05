@@ -189,6 +189,12 @@ export function useChatRoomSocket(
         return;
       }
 
+      // 이미지 URL 유효성 검증
+      if (!imageUrls || imageUrls.length === 0) {
+        toast.error("전송할 이미지가 없습니다.");
+        return;
+      }
+
       const payload: ChatSendRequest = {
         chatRoomId: Number(chatRoomId),
         messageType: "IMAGE",
