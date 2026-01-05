@@ -7,6 +7,16 @@ import { API_ENDPOINTS } from "@/shared/config/endpoints";
 export function useUploadChatImages() {
   return useMutation({
     mutationFn: async (files: File[]) => {
+      if (!files || files.length === 0) {
+        throw new Error("업로드할 파일이 없습니다.");
+      }
+
+      files.forEach((file) => {
+        if (!file.type.startsWith("image/")) {
+          throw new Error("이미지 파일만 업로드할 수 있습니다.");
+        }
+      });
+
       const formData = new FormData();
       files.forEach((file) => {
         formData.append("uploadFiles", file);
@@ -18,8 +28,9 @@ export function useUploadChatImages() {
       });
       return response.data;
     },
-    onError: (_error) => {
-      toast.error("이미지 업로드에 실패했습니다.");
+    onError: (error) => {
+      // 검증 에러 메시지 표시
+      toast.error(error.message || "이미지 업로드에 실패했습니다.");
     },
   });
 }
