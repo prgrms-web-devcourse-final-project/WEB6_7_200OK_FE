@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 export function useUploadChatImages() {
   return useMutation({
@@ -30,7 +30,7 @@ export function useUploadChatImages() {
     },
     onError: (error) => {
       // 검증 에러 메시지 표시
-      toast.error(error.message || "이미지 업로드에 실패했습니다.");
+      showToast.error(error.message || "이미지 업로드에 실패했습니다.");
     },
   });
 }

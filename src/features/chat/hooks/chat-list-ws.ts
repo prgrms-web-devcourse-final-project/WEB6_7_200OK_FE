@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { toast } from "sonner";
 
 import type { ChatMessage, ChatRoomListItem } from "@/features/chat";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -179,10 +179,10 @@ export function useChatListSocket(
           errorMessage === "Unauthorized" || errorMessage.includes("[clientInboundChannel]");
 
         if (isAuthError) {
-          toast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+          showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
           router.push("/auth/login");
         } else {
-          toast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+          showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
         }
       },
     });
