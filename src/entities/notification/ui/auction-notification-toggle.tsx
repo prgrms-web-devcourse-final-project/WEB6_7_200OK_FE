@@ -26,9 +26,9 @@ export default function AuctionNotificationToggle({ auctionId }: AuctionNotifica
   const [open, setOpenChange] = useState(false);
 
   const settingQuery = useQuery({
-    queryKey: ["auction-detail-notification", auctionId] as const,
+    queryKey: auctionNotificationSettingsKey(auctionId),
     queryFn: () => getAuctionNotificationSettings(auctionId),
-    enabled: open && user,
+    enabled: open && !!user,
   });
   const { control, register, reset, handleSubmit, watch } = useForm<NotificationSettingsType>({
     defaultValues: {
