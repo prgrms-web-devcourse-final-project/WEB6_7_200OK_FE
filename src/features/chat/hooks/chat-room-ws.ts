@@ -17,7 +17,7 @@ import { type ApiResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
-import { WS_STOMP_ERROR_CODES } from "../model/types";
+import { WS_QUEUE_ERROR_CODES, WS_STOMP_ERROR_CODES } from "../model/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MESSAGE_PAGE_SIZE = 20;
@@ -304,6 +304,29 @@ export function useChatRoomSocket(
     }
   }, []);
 
+  const handleQueueError = useCallback((frame: IFrame) => {
+    try {
+      const errorResponse: WebSocketResponse = JSON.parse(frame.body);
+      const { code } = errorResponse;
+
+      switch (code) {
+        case WS_QUEUE_ERROR_CODES.FORBIDDEN_CHAT_ROOM:
+          showToast.error("접근 권한이 없는 채팅방입니다.");
+          break;
+        case WS_QUEUE_ERROR_CODES.INVALID_TRADE_STATUS_FOR_CHAT:
+          showToast.error("거래 상태가 유효하지 않아 채팅을 할 수 없습니다.");
+          break;
+        case WS_QUEUE_ERROR_CODES.NOT_FOUND_CHAT_ROOM:
+          showToast.error("존재하지 않는 채팅방입니다.");
+          break;
+        default:
+          showToast.error("채팅방 연결 중 오류가 발생했습니다.");
+      }
+    } catch {
+      showToast.error("채팅방 연결 중 에러가 발생하였습니다.");
+    }
+  }, []);
+
   // 초기 데이터 로드
   useEffect(() => {
     if (chatRoomId) {
@@ -333,9 +356,7 @@ export function useChatRoomSocket(
         client.subscribe(API_ENDPOINTS.wsChatRoom(chatRoomId), handleMessageReceived);
         client.subscribe(API_ENDPOINTS.wsRealTimeRead(chatRoomId), handleReadEventReceived);
 
-        client.subscribe(API_ENDPOINTS.wsUserQueueErrors, () => {
-          showToast.error("채팅방 연결 중 에러가 발생했습니다.");
-        });
+        client.subscribe(API_ENDPOINTS.wsUserQueueErrors, handleQueueError);
         client.publish({
           destination: API_ENDPOINTS.wsChatRead,
           body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
@@ -351,7 +372,14 @@ export function useChatRoomSocket(
       client.deactivate();
       clientRef.current = null;
     };
-  }, [chatRoomId, accessToken, handleMessageReceived, handleReadEventReceived, handleStompError]);
+  }, [
+    chatRoomId,
+    accessToken,
+    handleMessageReceived,
+    handleReadEventReceived,
+    handleQueueError,
+    handleStompError,
+  ]);
 
   return {
     messages: displayMessages,
