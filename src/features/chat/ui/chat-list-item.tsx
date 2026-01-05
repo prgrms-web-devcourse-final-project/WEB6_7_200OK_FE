@@ -46,8 +46,10 @@ function ChatListItemComponent({ chatRoom, isSelected, onSelect }: ChatListItemP
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold">{chatRoom.partner.username}</span>
               {chatRoom.unreadCount > 0 && (
-                <div className="bg-brand flex size-5 shrink-0 items-center justify-center rounded-full">
-                  <span className="text-xs font-semibold text-white">{chatRoom.unreadCount}</span>
+                <div className="bg-brand flex h-6 shrink-0 items-center justify-center rounded-full px-2">
+                  <span className="text-xs leading-none font-bold text-white">
+                    {chatRoom.unreadCount > 999 ? "999+" : chatRoom.unreadCount}
+                  </span>
                 </div>
               )}
             </div>

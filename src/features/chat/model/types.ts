@@ -63,3 +63,33 @@ export interface ChatRoomTradeInfo {
   finalPrice: number;
   purchasedAt: string;
 }
+
+export interface WebSocketResponse {
+  code: string;
+  message: string;
+  timestamp: Date;
+}
+
+export const WS_STOMP_ERROR_CODES = {
+  AUTH_REQUIRED: "WS_AUTH_REQUIRED",
+  TOKEN_INVALID: "WS_TOKEN_INVALID",
+  TOKEN_EXPIRED: "WS_TOKEN_EXPIRED",
+  TOKEN_MISSING: "WS_TOKEN_MISSING",
+} as const;
+
+export type WsErrorCode = (typeof WS_STOMP_ERROR_CODES)[keyof typeof WS_STOMP_ERROR_CODES];
+
+export const WS_QUEUE_ERROR_CODES = {
+  FORBIDDEN_CHAT_ROOM: "FORBIDDEN_CHAT_ROOM",
+  INVALID_TRADE_STATUS_FOR_CHAT: "INVALID_TRADE_STATUS_FOR_CHAT",
+  NOT_FOUND_CHAT_ROOM: "NOT_FOUND_CHAT_ROOM",
+} as const;
+
+export type WsQueueErrorCode = (typeof WS_QUEUE_ERROR_CODES)[keyof typeof WS_QUEUE_ERROR_CODES];
+
+export interface ChatReadEvent {
+  chatRoomId: number;
+  readerId: number;
+  lastReadMessageId: number;
+  readAt: string;
+}

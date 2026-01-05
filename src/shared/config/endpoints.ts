@@ -28,9 +28,10 @@ export const API_ENDPOINTS = {
   wsStomp: "/ws-stomp",
   wsChatSend: "/app/chat.send",
   wsChatRead: "/app/chat.read",
-  wsChatRoom: (chatRoomId: number | string) => `/topic/chat.rooms.${chatRoomId}`,
   wsUserQueueChatRooms: "/user/queue/chat.rooms",
   wsUserQueueErrors: "/user/queue/errors",
+  wsChatRoom: (chatRoomId: number | string) => `/topic/chat.rooms.${chatRoomId}`,
+  wsRealTimeRead: (chatRoomId: number | string) => `/topic/chat.read.${chatRoomId}`,
 
   auth: "/api/v1/auth",
   authValidateTokens: "/api/v1/auth/validate-tokens",
