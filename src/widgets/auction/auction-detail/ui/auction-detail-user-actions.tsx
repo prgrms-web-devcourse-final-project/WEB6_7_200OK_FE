@@ -34,7 +34,11 @@ export default function AuctionDetailUserActions({
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-1">
         <AuctionNotificationToggle userId={userId} />
-        <AuctionDetailLikeToggle userId={userId} likeCount={likeCount} isLike={isLike} />
+        <AuctionDetailLikeToggle
+          auctionId={auctionId}
+          initLikeCount={likeCount}
+          initIsLiked={isLike}
+        />
       </div>
       {isSeller ? (
         <button type="button">감정 보내기</button>
