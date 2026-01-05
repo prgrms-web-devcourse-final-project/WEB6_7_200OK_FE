@@ -7,7 +7,7 @@ interface PageProps {
   }>;
 }
 
-export default async function UserTabPage({ params }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const { userId, tab } = await params;
 
   const targetUserId = Number(userId);
