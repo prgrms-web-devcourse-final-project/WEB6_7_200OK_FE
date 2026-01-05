@@ -31,20 +31,20 @@ export async function getUserProfile(targetUserId: number): Promise<UserProfileT
   };
 }
 
-// interface UserBasicResponse {
-//   userEmail: string;
-//   username: string;
-//   userProfileUrl: string;
-// }
+interface UserBasicResponse {
+  userEmail: string;
+  username: string;
+  userProfileUrl: string;
+}
 
-// export async function getUserBasic(): Promise<UserBasicResponse> {
-//   const result = await httpClient<UserBasicResponse>(API_ENDPOINTS.authBasic, {
-//     method: "GET",
-//   });
+export async function getUserBasic(): Promise<UserBasicResponse> {
+  const result = await httpClient<UserBasicResponse>(API_ENDPOINTS.authBasic, {
+    method: "GET",
+  });
 
-//   const { data } = result;
-//   return data;
-// }
+  const { data } = result;
+  return data;
+}
 
 export async function updateUserProfileImage(file: File) {
   const formData = new FormData();
