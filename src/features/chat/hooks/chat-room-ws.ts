@@ -6,6 +6,7 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 import { type ChatRoomTradeInfo, type ChatMessage } from "@/features/chat";
+import { type ApiResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
@@ -20,20 +21,15 @@ interface ChatSendRequest {
 }
 
 interface ChatRoomResponse {
-  code: number;
-  status: string;
-  message: string;
-  data: {
-    chatRoomMeta: {
-      trade: ChatRoomTradeInfo;
-    };
-    messages: {
-      content: ChatMessage[];
-      nextCursor: number | null;
-      hasNext: boolean;
-      size: number;
-      timeStamp: string;
-    };
+  chatRoomMeta: {
+    trade: ChatRoomTradeInfo;
+  };
+  messages: {
+    content: ChatMessage[];
+    nextCursor: number | null;
+    hasNext: boolean;
+    size: number;
+    timeStamp: string;
   };
 }
 
@@ -87,37 +83,53 @@ export function useChatRoomSocket(
           }
         );
 
-        if (res.ok) {
-          const response: ChatRoomResponse = await res.json();
-          const { chatRoomMeta, messages: messageData } = response.data;
+        if (!res.ok) {
+          try {
+            const errorResponse: ApiResponseType<null> = await res.json();
 
-          if (!cursor && chatRoomMeta?.trade) {
-            setTradeInfo(chatRoomMeta.trade);
+            switch (errorResponse.code) {
+              case 400:
+              case 403:
+              case 404:
+                showToast.error(errorResponse.message);
+                break;
+              default:
+                showToast.error("메시지를 불러오는데 실패했습니다.");
+            }
+          } catch (e) {
+            console.error("Failed to parse error response:", e);
           }
-
-          const newMessages = messageData.content || [];
-
-          // 메시지 오름차순 정렬
-          const sortedMessages = [...newMessages].sort(
-            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
-
-          setMessages((prev) => {
-            if (cursor === null) return sortedMessages;
-
-            // 중복 제거 및 병합
-            const newIds = new Set(sortedMessages.map((m) => m.messageId));
-            const filteredPrev = prev.filter((m) => !newIds.has(m.messageId));
-            return [...sortedMessages, ...filteredPrev];
-          });
-
-          setNextCursor(messageData.nextCursor);
-          setHasNextPage(messageData.hasNext);
-        } else if (res.status === 401) {
-          console.error("[Chat] Unauthorized: Access token might be invalid or expired.");
+          return;
         }
+
+        const response: ApiResponseType<ChatRoomResponse> = await res.json();
+        const { chatRoomMeta, messages: messageData } = response.data;
+
+        if (!cursor && chatRoomMeta?.trade) {
+          setTradeInfo(chatRoomMeta.trade);
+        }
+
+        const newMessages = messageData.content || [];
+
+        // 메시지 오름차순 정렬
+        const sortedMessages = [...newMessages].sort(
+          (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+
+        setMessages((prev) => {
+          if (cursor === null) return sortedMessages;
+
+          // 중복 제거 및 병합
+          const newIds = new Set(sortedMessages.map((m) => m.messageId));
+          const filteredPrev = prev.filter((m) => !newIds.has(m.messageId));
+          return [...sortedMessages, ...filteredPrev];
+        });
+
+        setNextCursor(messageData.nextCursor);
+        setHasNextPage(messageData.hasNext);
       } catch (error) {
         console.error("Failed to load messages:", error);
+        showToast.error("메시지 목록을 불러올 수 없습니다.");
       } finally {
         setIsLoading(false);
       }
@@ -126,7 +138,7 @@ export function useChatRoomSocket(
   );
 
   // 읽음 처리
-  const markAsRead = useCallback(() => {
+  const markAsRead = useCallback(async () => {
     if (!chatRoomId || !accessToken) return;
 
     if (clientRef.current?.connected) {
@@ -134,21 +146,39 @@ export function useChatRoomSocket(
         destination: API_ENDPOINTS.wsChatRead,
         body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
       });
-    } else {
-      fetch(`${API_URL}${API_ENDPOINTS.chatRoomRead(chatRoomId)}`, {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}${API_ENDPOINTS.chatRoomRead(chatRoomId)}`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      })
-        .then(() => {
-          if (!clientRef.current?.connected) {
-            loadMessages(null);
+      });
+
+      if (!res.ok) {
+        try {
+          const apiError: ApiResponseType<null> = await res.json();
+          switch (apiError.code) {
+            case 403:
+            case 404:
+              showToast.error(apiError.message);
+              break;
+            default:
+              console.error("읽음 처리 서버 에러:", apiError);
           }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        } catch (e) {
+          console.error("Failed to parse error response:", e);
+        }
+        return;
+      }
+
+      if (!clientRef.current?.connected) {
+        loadMessages(null);
+      }
+    } catch (error) {
+      console.error("읽음 처리 관련: ", error);
     }
   }, [chatRoomId, accessToken, loadMessages]);
 

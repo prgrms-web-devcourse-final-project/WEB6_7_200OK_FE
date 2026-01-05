@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { httpClient } from "@/shared/api/client";
+import { type ApiResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
@@ -29,8 +30,19 @@ export function useUploadChatImages() {
       return response.data;
     },
     onError: (error) => {
-      // 검증 에러 메시지 표시
-      showToast.error(error.message || "이미지 업로드에 실패했습니다.");
+      const apiError = error as unknown as ApiResponseType<null>;
+
+      if (apiError.code) {
+        switch (apiError.code) {
+          case 400:
+          case 404:
+          case 502:
+            showToast.error(apiError.message);
+            break;
+          default:
+            showToast.error(apiError.message || "이미지 업로드에 실패했습니다.");
+        }
+      }
     },
   });
 }
