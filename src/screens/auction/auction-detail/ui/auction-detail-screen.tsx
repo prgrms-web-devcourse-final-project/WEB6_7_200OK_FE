@@ -32,7 +32,6 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
       />
     );
   }
-  const now = Date.now();
   return (
     <ScrollArea className="h-[calc(100vh-var(--header-h))] lg:h-[calc(100vh-var(--header-h))]">
       <AuctionViewerProvider initCount={data.viewerCount}>
@@ -67,8 +66,7 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
                   initDiff={
                     data.status === "SCHEDULED"
                       ? 0
-                      : calculateElapsedMsWithin5MinCycle(data.serverTime) +
-                        (now - Date.parse(data.serverTime))
+                      : calculateElapsedMsWithin5MinCycle(data.serverTime)
                   }
                 >
                   <AuctionDetailPrice startPrice={data.startPrice} />
