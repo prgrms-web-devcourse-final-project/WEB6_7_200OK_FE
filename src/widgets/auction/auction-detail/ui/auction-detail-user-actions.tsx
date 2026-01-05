@@ -5,6 +5,7 @@ import useAuctionSocket from "@/entities/auction/hooks/use-auction-socket";
 import { AuctionNotificationToggle } from "@/entities/notification";
 import { AuctionDetailLikeToggle } from "@/features/auction/auction-like";
 import { PurchaseButton } from "@/features/auction/auction-purchase";
+import { useRecentView } from "@/features/auction/auction-view/hook/use-recent-view";
 import { useMounted } from "@/shared/lib/hooks/use-mounted";
 
 export default function AuctionDetailUserActions({
@@ -24,6 +25,7 @@ export default function AuctionDetailUserActions({
 }) {
   const mounted = useMounted();
   useAuctionSocket(auctionId);
+  useRecentView(auctionId);
   if (!mounted) return null;
   const userId = document.cookie
     .split("; ")

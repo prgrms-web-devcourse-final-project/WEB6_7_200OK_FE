@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   auctionSellerInfo: (sellerId: number | string) => `/api/v1/auctions/${sellerId}/seller`,
   auctionNotificationSetting: (auctionId: string | number) =>
     `/api/v1/auctions/${auctionId}/notification-settings`,
+  auctionRecentView: (auctionId: number | string) => `/api/v1/recentview/${auctionId}`,
 
   userInfo: (userid: number) => `/api/v1/users/${userid}`,
 
