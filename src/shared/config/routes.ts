@@ -7,5 +7,6 @@ export const ROUTES = {
   notification: "/notifications",
   search: "/search",
   payment: "/payments",
+  myPage: "/users/me",
   userReview: (sellerId: number | string) => `/users/${sellerId}/reviews`,
 } as const;

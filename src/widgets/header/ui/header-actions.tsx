@@ -6,8 +6,9 @@ import { getUserProfileServer } from "@/entities/user/api/user-api.server";
 import { ROUTES } from "@/shared/config/routes";
 import { Avatar, AvatarFallback, AvatarImage, Button } from "@/shared/ui";
 
-export default async function HeaderActions({ userId }: { userId: string }) {
-  const profile = await getUserProfileServer(Number(userId));
+export default async function HeaderActions({ userId }: { userId: number }) {
+  const profile = await getUserProfileServer(userId);
+
   const avatarUrl = profile?.avatarUrl;
   const avatarAlt = profile?.name ?? "프로필";
 

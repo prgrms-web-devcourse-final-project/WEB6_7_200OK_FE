@@ -1,15 +1,23 @@
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Bell, Plus, User } from "lucide-react";
+import { LogIn } from "lucide-react";
 
 import Logo from "@/shared/assets/icons/windfall.svg";
 import { ROUTES } from "@/shared/config/routes";
 import { Container } from "@/shared/ui";
 import Button from "@/shared/ui/button/button";
 import SearchInput from "@/shared/ui/input/search-input";
+import HeaderActions from "@/widgets/header/ui/header-actions";
 
-export function Header() {
+export async function Header() {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("userId")?.value;
+
+  const numericUserId = Number(userId);
+  const hasValidUserId = Number.isInteger(numericUserId) && numericUserId > 0;
+
   return (
     <header className="bg-background h-header sticky top-0 z-50 hidden select-none md:flex">
       <Container className="lg:px flex items-center justify-around gap-4 px-2 min-[960px]:px-3 lg:px-5 xl:px-7">
@@ -30,33 +38,16 @@ export function Header() {
           </div>
         </form>
 
-        <div className="flex shrink-0 items-center gap-3">
-          <Button asChild aria-label="경매 등록" size="icon-lg" className="min-[960px]:hidden">
-            <Link href={ROUTES.auctionCreate}>
-              <Plus className="size-5" />
+        {hasValidUserId ? (
+          <HeaderActions userId={numericUserId} />
+        ) : (
+          <Button asChild size="lg">
+            <Link href={ROUTES.login} aria-label="내 정보">
+              <LogIn className="size-5" />
+              <span className="font-semibold">로그인</span>
             </Link>
           </Button>
-
-          <Button asChild aria-label="경매 등록" size="lg" className="hidden min-[960px]:flex">
-            <Link href={ROUTES.auctionCreate}>
-              <Plus className="size-5" />
-              <span className="font-semibold">경매 등록</span>
-            </Link>
-          </Button>
-
-          <Button aria-label="알림" size="icon-lg" variant="ghost" className="relative">
-            <Bell className="size-5" />
-            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
-          </Button>
-
-          {/* TODO: 로그인 연결 후 유저 아바타 */}
-          <Button aria-label="프로필" size="icon-lg" variant="ghost">
-            {/* 임시로 users/me/calendar로 이동하도록 삽입 */}
-            <Link href="/users/me/calendar">
-              <User className="size-5" />
-            </Link>
-          </Button>
-        </div>
+        )}
       </Container>
     </header>
   );
