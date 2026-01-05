@@ -9,7 +9,7 @@ export default function AuctionDetailSellerReviewHeader({
   const id = useId();
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center">
-      <h3 className="text-foreground font-lg font-semibold">판매자 후기</h3>
+      <h3 className="text-foreground text-lg font-semibold">판매자 후기</h3>
       <div className="flex items-center gap-1">
         <Rating defaultValue={rating} readOnly>
           {Array.from({ length: 5 }, (_, i) => i + 1).map((v) => (
