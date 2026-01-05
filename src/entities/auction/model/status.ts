@@ -1,6 +1,6 @@
 export const AUCTION_STATUS = {
-  SCHEDULED: "예정",
   PROCESS: "진행 중",
+  SCHEDULED: "예정",
   COMPLETED: "종료",
   FAILED: "실패",
   CANCELED: "취소",
@@ -8,7 +8,7 @@ export const AUCTION_STATUS = {
 
 export type AuctionStatusType = keyof typeof AUCTION_STATUS;
 
-export const AUCTION_PUBLIC_STATUS_KEYS = ["SCHEDULED", "PROCESS", "COMPLETED"] as const;
+export const AUCTION_PUBLIC_STATUS_KEYS = ["PROCESS", "SCHEDULED", "COMPLETED"] as const;
 
 export type AuctionPublicStatusType = (typeof AUCTION_PUBLIC_STATUS_KEYS)[number];
 
