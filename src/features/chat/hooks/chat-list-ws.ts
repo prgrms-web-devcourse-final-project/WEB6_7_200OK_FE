@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Client, type IFrame } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-import { type ChatMessage, type ChatRoomListItem, type WebSocketResponse } from "@/features/chat";
+import type { ChatMessage, ChatRoomListItem, WebSocketResponse } from "@/features/chat";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
