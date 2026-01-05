@@ -7,7 +7,7 @@ export default function AuctionDetailSellerSales({ auctions }: { auctions: Selle
   if (auctions.length === 0) {
     return (
       <div className="flex flex-col gap-2">
-        <h3 className="font-base font-semibold">판매 상품</h3>
+        <h3 className="text-base font-semibold">판매 상품</h3>
         <EmptyState
           Icon={Box}
           title="현재 판매중인 물품이 없어요."
