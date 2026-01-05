@@ -7,6 +7,9 @@ export const API_ENDPOINTS = {
   auctionEmoji: (auctionId: number | string, emojiType: "LIKE" | "FIRE" | "SAD" | "SMILE") =>
     `/api/v1/auctions/${auctionId}/emojis/${emojiType}`,
   auctionSellerInfo: (sellerId: number | string) => `/api/v1/auctions/${sellerId}/seller`,
+  auctionNotificationSetting: (auctionId: string | number) =>
+    `/api/v1/auctions/${auctionId}/notification-settings`,
+
   userInfo: (userid: number) => `/api/v1/users/${userid}`,
 
   tagSearch: "/api/v1/tags/search",
