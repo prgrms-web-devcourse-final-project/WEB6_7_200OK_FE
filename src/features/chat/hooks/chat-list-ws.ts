@@ -31,6 +31,12 @@ export function useChatListSocket(
   const [chatRooms, setChatRooms] = useState<ChatRoomListItem[]>(initialData);
   const clientRef = useRef<Client | null>(null);
 
+  const selectedChatIdRef = useRef(selectedChatId);
+
+  useEffect(() => {
+    selectedChatIdRef.current = selectedChatId;
+  }, [selectedChatId]);
+
   useEffect(() => {
     setChatRooms(initialData);
   }, [initialData]);
@@ -58,74 +64,67 @@ export function useChatListSocket(
     [initialData]
   );
 
-  const handleChatRoomUpdate = useCallback(
-    (event: ChatRoomUpdateEvent) => {
-      setChatRooms((prev) => {
-        const targetIndex = prev.findIndex((room) => room.chatRoomId === event.chatRoomId);
+  const handleChatRoomUpdate = useCallback((event: ChatRoomUpdateEvent) => {
+    setChatRooms((prev) => {
+      const targetIndex = prev.findIndex((room) => room.chatRoomId === event.chatRoomId);
 
-        // 목록에 없는 방이면 무시
-        if (targetIndex === -1) return prev;
+      // 목록에 없는 방이면 무시
+      if (targetIndex === -1) return prev;
 
-        const targetRoom = prev[targetIndex];
-        const isSelected = String(event.chatRoomId) === selectedChatId;
+      const targetRoom = prev[targetIndex];
+      const isSelected = String(event.chatRoomId) === selectedChatIdRef.current;
 
-        let newUnreadCount = targetRoom.unreadCount + event.unreadCountDelta;
-        if (isSelected || event.resetUnread) {
-          newUnreadCount = 0;
-        }
+      let newUnreadCount = targetRoom.unreadCount + event.unreadCountDelta;
+      if (isSelected || event.resetUnread) {
+        newUnreadCount = 0;
+      }
 
-        const updatedRoom: ChatRoomListItem = {
-          ...targetRoom,
-          lastMessage: {
-            preview: event.lastMessagePreview,
-            lastMessageAt: event.lastMessageAt,
-            type: event.lastMessageType,
-          },
-          unreadCount: newUnreadCount,
-        };
+      const updatedRoom: ChatRoomListItem = {
+        ...targetRoom,
+        lastMessage: {
+          preview: event.lastMessagePreview,
+          lastMessageAt: event.lastMessageAt,
+          type: event.lastMessageType,
+        },
+        unreadCount: newUnreadCount,
+      };
 
-        // 최신순 정렬
-        const otherRooms = prev.filter((_, idx) => idx !== targetIndex);
-        return [updatedRoom, ...otherRooms];
-      });
-    },
-    [selectedChatId]
-  );
+      // 최신순 정렬
+      const otherRooms = prev.filter((_, idx) => idx !== targetIndex);
+      return [updatedRoom, ...otherRooms];
+    });
+  }, []);
 
-  const handleMessageUpdate = useCallback(
-    (id: string, message: ChatMessage) => {
-      if (!message.messageId) return;
+  const handleMessageUpdate = useCallback((id: string, message: ChatMessage) => {
+    if (!message.messageId) return;
 
-      setChatRooms((prev) => {
-        const targetIndex = prev.findIndex((r) => r.chatRoomId === Number(id));
-        if (targetIndex === -1) return prev;
+    setChatRooms((prev) => {
+      const targetIndex = prev.findIndex((r) => r.chatRoomId === Number(id));
+      if (targetIndex === -1) return prev;
 
-        const targetRoom = prev[targetIndex];
+      const targetRoom = prev[targetIndex];
 
-        // 마지막 메시지 미리보기
-        const preview = message.messageType === "IMAGE" ? "사진을 보냈습니다." : message.content;
-        const type = message.messageType === "IMAGE" ? "IMAGE" : "TEXT";
+      // 마지막 메시지 미리보기
+      const preview = message.messageType === "IMAGE" ? "사진을 보냈습니다." : message.content;
+      const type = message.messageType === "IMAGE" ? "IMAGE" : "TEXT";
 
-        // 현재 보고 있는 방이면 안 읽음 수 증가 X
-        const isSelected = String(id) === selectedChatId;
-        const newUnreadCount = isSelected ? 0 : targetRoom.unreadCount + 1;
+      const isSelected = String(id) === selectedChatIdRef.current;
+      const newUnreadCount = isSelected ? 0 : targetRoom.unreadCount + 1;
 
-        const updatedRoom: ChatRoomListItem = {
-          ...targetRoom,
-          lastMessage: {
-            preview,
-            lastMessageAt: message.createdAt,
-            type,
-          },
-          unreadCount: newUnreadCount,
-        };
+      const updatedRoom: ChatRoomListItem = {
+        ...targetRoom,
+        lastMessage: {
+          preview,
+          lastMessageAt: message.createdAt,
+          type,
+        },
+        unreadCount: newUnreadCount,
+      };
 
-        const otherRooms = prev.filter((_, idx) => idx !== targetIndex);
-        return [updatedRoom, ...otherRooms];
-      });
-    },
-    [selectedChatId]
-  );
+      const otherRooms = prev.filter((_, idx) => idx !== targetIndex);
+      return [updatedRoom, ...otherRooms];
+    });
+  }, []);
 
   useEffect(() => {
     if (!accessToken) return;
