@@ -21,6 +21,7 @@ export async function getUserProfile(targetUserId: number): Promise<UserProfileT
   const { data } = result;
 
   return {
+    userId: data.userId,
     name: data.username,
     email: data.email,
     avatarUrl: data.profileImage || undefined,
