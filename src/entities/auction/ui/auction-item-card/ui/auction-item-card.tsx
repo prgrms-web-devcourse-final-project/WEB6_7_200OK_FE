@@ -41,7 +41,13 @@ export function AuctionItemCard({
     <article className="bg-card h-fit w-full overflow-hidden rounded-xl border select-none">
       <Link href={ROUTES.auctionDetail(auctionId)}>
         <div className="relative aspect-square">
-          <Image src={imageUrl} alt={title} fill className="object-cover" sizes="274px" />
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(min-width: 1280px) 320px, (min-width: 768px) 33vw, (min-width: 500px) 50vw, 100vw"
+          />
           {variant === "ended" && <ImageLabelOverlay label="낙찰 완료" />}
           {config.badge === "ranking" && rank && <RankingBadge rank={rank} />}
           {config.badge === "live" && <LiveBadge />}
