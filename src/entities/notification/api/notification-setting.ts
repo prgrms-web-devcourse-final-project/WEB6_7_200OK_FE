@@ -30,5 +30,5 @@ export async function updateAuctionNotificationSettings(
   });
 
   if (res.code === 200) return;
-  throw new Error("Failed  to update notification setting");
+  throw new Error("Failed to update notification setting");
 }
