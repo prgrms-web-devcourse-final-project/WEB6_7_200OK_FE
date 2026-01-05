@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 
-import { PurchaseItemType } from "@/entities/item";
+import { UserPurchaseItemType } from "@/entities/auction";
 import { ReviewModalBase, ReviewModalActions } from "@/entities/review";
 import { ConfirmDeleteModal } from "@/shared/ui";
 
 interface ReviewWriteModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  item: PurchaseItemType | null;
+  item: UserPurchaseItemType | null;
   onSubmit?: (data: { rating: number; content: string }) => void;
 }
 
