@@ -2,9 +2,9 @@
 
 import { ArrowDownUp, SlidersHorizontal } from "lucide-react";
 
+import { AuctionFiltersSheet } from "@/features/auction/filters";
 import QuickFilterButtons from "@/screens/auction/auction-list/ui/quick-filter-buttons";
 import { Button } from "@/shared/ui";
-import { AuctionFiltersSheet } from "@/widgets/auction/auction-filters";
 
 export default function AuctionListToolbar() {
   return (

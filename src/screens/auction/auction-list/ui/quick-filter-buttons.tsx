@@ -1,6 +1,6 @@
 import { CircleCheckBig, Clock, TextAlignJustify, Zap } from "lucide-react";
 
-import { useAuctionFilters } from "@/screens/auction/auction-list/model/use-auction-filters";
+import { useAuctionFilters } from "@/features/auction/filters/model/use-auction-filters";
 import { Button } from "@/shared/ui";
 
 export default function QuickFilterButtons() {
