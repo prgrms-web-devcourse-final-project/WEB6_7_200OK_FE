@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+import { recordRecentView } from "@/features/auction/auction-view/api/recent-view";
 import { useIsAuthenticated } from "@/features/auth/api/use-is-authenticated";
 
 export function useRecentView(auctionId: string | number) {
@@ -13,5 +14,7 @@ export function useRecentView(auctionId: string | number) {
 
     if (callRef.current === auctionId) return;
     callRef.current = auctionId;
+
+    recordRecentView(auctionId).catch(() => {});
   }, [auctionId, user]);
 }
