@@ -2,7 +2,7 @@ import { AuctionProgress } from "@/entities/auction";
 import { AuctionTickerProvider } from "@/entities/auction/hooks/use-auction-ticker";
 import { AuctionLogList } from "@/features/auction/auction-log";
 import { AuctionViewerProvider } from "@/features/auction/auction-log/provider/use-auction-viewer";
-import { AuctionDetailReview } from "@/features/auction/auction-review";
+import AuctionDetailSellerInfo from "@/features/auction/auction-sale/ui/auction-detail-seller-info";
 import type { AuctionDetailType } from "@/screens/auction/auction-detail/model/types";
 import AuctionDetailErrorScreen from "@/screens/auction/auction-detail/ui/auction-detail-error-screen";
 import {
@@ -35,7 +35,7 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
   return (
     <ScrollArea className="h-[calc(100vh-var(--header-h))] lg:h-[calc(100vh-var(--header-h))]">
       <AuctionViewerProvider initCount={data.viewerCount}>
-        <div className="mx-auto flex w-full max-w-7xl flex-col-reverse lg:flex-row">
+        <div className="mx-auto flex w-full max-w-7xl min-w-0 flex-col-reverse lg:flex-row">
           {/* Left Section */}
           <div className="lg:min-w-125 lg:shrink lg:grow-0 lg:basis-189">
             <div className="flex flex-col gap-8 p-4">
@@ -43,7 +43,7 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
               <Separator />
               <AuctionDetailDescription description={data.description} />
               <Separator />
-              <AuctionDetailReview seller={data.seller} />
+              <AuctionDetailSellerInfo seller={data.seller} />
             </div>
           </div>
 

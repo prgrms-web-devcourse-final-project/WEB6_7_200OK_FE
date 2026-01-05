@@ -25,23 +25,27 @@ export default function AuctionDetailSeller({ seller }: AuctionDetailSellerProps
 
 function AuctionDetailSellerInfo({ sellerId }: { sellerId: number }) {
   const { data, isLoading, error } = useSellerInfo(sellerId);
-  console.log(data);
   if (error) {
-    return <>데이터 없음</>;
+    return <span className="text-muted-foreground text-xs">데이터 없음</span>;
   }
   if (isLoading) {
-    return <>...</>;
+    return <span className="text-muted-foreground text-xs">...</span>;
+  }
+  if (!data) {
+    return <span className="text-muted-foreground text-xs">데이터 없음</span>;
   }
   return (
     <>
       <div className="flex items-center gap-1">
-        <Rating defaultValue={1} readOnly>
+        <Rating defaultValue={data.rating} readOnly>
           <RatingButton className="text-brand" size={24} />
         </Rating>
-        <span className="text-lg">2</span>
+        <span className="text-lg">{data.rating}</span>
       </div>
 
-      <span className="text-muted-foreground cursor-pointer text-lg underline">리뷰</span>
+      <span className="text-muted-foreground cursor-pointer text-lg underline">
+        리뷰 {data.totalReviews}개
+      </span>
     </>
   );
 }
