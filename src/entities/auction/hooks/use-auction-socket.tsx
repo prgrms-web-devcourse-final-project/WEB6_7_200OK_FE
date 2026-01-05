@@ -33,10 +33,6 @@ export default function useAuctionSocket(auctionId: string) {
         // 구독
         client.subscribe(`/topic/auction/${auctionId}`, (frame) => {
           const response = JSON.parse(frame.body) as SocketResponseType;
-
-          if (response.currentPrice) {
-            router.refresh();
-          }
           if (response.status) {
             if (response.status !== "PROCESS" && response.status !== "SCHEDULED") {
               router.refresh();
