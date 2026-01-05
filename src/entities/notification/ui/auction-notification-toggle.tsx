@@ -126,7 +126,7 @@ export default function AuctionNotificationToggle({ auctionId }: AuctionNotifica
               <div className="relative h-9">
                 <Input
                   id="target-price"
-                  type="text"
+                  type="number"
                   inputMode="numeric"
                   pattern="[0-9]*"
                   className="h-9 pr-9"
