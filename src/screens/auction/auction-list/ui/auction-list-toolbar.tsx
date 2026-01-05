@@ -2,8 +2,7 @@
 
 import { SlidersHorizontal } from "lucide-react";
 
-import { AuctionFiltersSheet } from "@/features/auction/filters";
-import { AuctionSortDropdown } from "@/features/auction/filters/ui/auction-sort-dropdown";
+import { AuctionFiltersSheet, AuctionSortDropdown } from "@/features/auction/filters";
 import QuickFilterButtons from "@/screens/auction/auction-list/ui/quick-filter-buttons";
 import { Button } from "@/shared/ui";
 
