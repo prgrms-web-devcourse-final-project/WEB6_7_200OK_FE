@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { Client } from "@stomp/stompjs";
+import { Client, type IFrame } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 import { type ChatMessage, type ChatRoomListItem, type WebSocketResponse } from "@/features/chat";
@@ -135,6 +135,51 @@ export function useChatListSocket(
     });
   }, []);
 
+  const handleQueueError = useCallback(
+    (frame: IFrame) => {
+      const errorResponse: WebSocketResponse = JSON.parse(frame.body);
+      const { code } = errorResponse;
+
+      switch (code) {
+        case WS_QUEUE_ERROR_CODES.FORBIDDEN_CHAT_ROOM:
+          showToast.error("접근 권한이 없는 채팅방입니다.");
+          router.push("/auth/login");
+          break;
+        case WS_QUEUE_ERROR_CODES.INVALID_TRADE_STATUS_FOR_CHAT:
+          showToast.error("거래 상태가 유효하지 않아 채팅을 할 수 없습니다.");
+          break;
+        case WS_QUEUE_ERROR_CODES.NOT_FOUND_CHAT_ROOM:
+          showToast.error("존재하지 않는 채팅방입니다.");
+          break;
+        default:
+          showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+      }
+    },
+    [router]
+  );
+
+  const handleStompError = useCallback(
+    (frame: IFrame) => {
+      if (!frame.body) return;
+
+      const errorResponse: WebSocketResponse = JSON.parse(frame.body);
+      const { code } = errorResponse;
+
+      switch (code) {
+        case WS_STOMP_ERROR_CODES.AUTH_REQUIRED:
+        case WS_STOMP_ERROR_CODES.TOKEN_INVALID:
+        case WS_STOMP_ERROR_CODES.TOKEN_EXPIRED:
+        case WS_STOMP_ERROR_CODES.TOKEN_MISSING:
+          showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+          router.push("/auth/login");
+          return;
+        default:
+          showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+      }
+    },
+    [router]
+  );
+
   useEffect(() => {
     if (!accessToken) return;
 
@@ -162,44 +207,9 @@ export function useChatListSocket(
         });
 
         // 에러 큐
-        client.subscribe(API_ENDPOINTS.wsUserQueueErrors, (frame) => {
-          const errorResponse: WebSocketResponse = JSON.parse(frame.body);
-          const { code } = errorResponse;
-
-          switch (code) {
-            case WS_QUEUE_ERROR_CODES.FORBIDDEN_CHAT_ROOM:
-              showToast.error("접근 권한이 없는 채팅방입니다.");
-              router.push("/auth/login");
-              break;
-            case WS_QUEUE_ERROR_CODES.INVALID_TRADE_STATUS_FOR_CHAT:
-              showToast.error("거래 상태가 유효하지 않아 채팅을 할 수 없습니다.");
-              break;
-            case WS_QUEUE_ERROR_CODES.NOT_FOUND_CHAT_ROOM:
-              showToast.error("존재하지 않는 채팅방입니다.");
-              break;
-            default:
-              showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
-          }
-        });
+        client.subscribe(API_ENDPOINTS.wsUserQueueErrors, handleQueueError);
       },
-      onStompError: (frame) => {
-        if (frame.body) {
-          const errorResponse: WebSocketResponse = JSON.parse(frame.body);
-          const { code } = errorResponse;
-
-          switch (code) {
-            case WS_STOMP_ERROR_CODES.AUTH_REQUIRED:
-            case WS_STOMP_ERROR_CODES.TOKEN_INVALID:
-            case WS_STOMP_ERROR_CODES.TOKEN_EXPIRED:
-            case WS_STOMP_ERROR_CODES.TOKEN_MISSING:
-              showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
-              router.push("/auth/login");
-              return;
-            default:
-              showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
-          }
-        }
-      },
+      onStompError: handleStompError,
     });
 
     client.activate();
@@ -209,7 +219,14 @@ export function useChatListSocket(
       client.deactivate();
       clientRef.current = null;
     };
-  }, [accessToken, chatRoomIdsString, router, handleChatRoomUpdate, handleMessageUpdate]);
+  }, [
+    accessToken,
+    chatRoomIdsString,
+    handleChatRoomUpdate,
+    handleMessageUpdate,
+    handleQueueError,
+    handleStompError,
+  ]);
 
   return { chatRooms, markRoomAsRead };
 }
