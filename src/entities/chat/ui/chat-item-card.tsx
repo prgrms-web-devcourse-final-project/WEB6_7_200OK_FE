@@ -1,34 +1,48 @@
 import Image from "next/image";
 
-import type { ChatRoomAuction } from "@/features/chat";
+import { dayjs } from "@/shared/lib/utils/dayjs";
+import { formatPriceKRW } from "@/shared/lib/utils/price/formatPriceKRW";
 
 interface ChatItemCardProps {
-  auction: ChatRoomAuction;
+  auction: {
+    title: string;
+    imageUrl: string;
+  };
+  trade: {
+    finalPrice: number;
+    purchasedAt: string;
+  };
 }
 
-export function ChatItemCard({ auction }: ChatItemCardProps) {
+export function ChatItemCard({ auction, trade }: ChatItemCardProps) {
+  const formattedPrice = formatPriceKRW(trade.finalPrice);
+  const formattedDate = dayjs(trade.purchasedAt).format("YYYY-MM-DD");
+
   return (
-    <div className="border-border rounded-md border p-4">
-      <div className="flex gap-4">
-        {/* TODO: 상품 이미지 표시 추후 작업 필요 */}
-        <Image
-          src={auction.imageUrl}
-          alt={auction.title}
-          width={112}
-          height={112}
-          className="h-28 w-28 shrink-0 rounded-md object-cover"
-        />
-        <div className="flex h-28 flex-1 flex-col justify-center">
-          <p className="mb-3 font-medium">{auction.title}</p>
-          <div className="space-y-2">
+    <div className="flex gap-3 sm:gap-4">
+      <Image
+        src={auction.imageUrl}
+        alt={auction.title}
+        width={128}
+        height={128}
+        className="size-20 shrink-0 rounded-md object-cover sm:size-28 md:size-32"
+      />
+      <div className="flex flex-1 flex-col justify-center">
+        <p className="mb-1.5 line-clamp-2 text-sm font-medium sm:mb-3 sm:text-base">
+          {auction.title}
+        </p>
+        <div className="space-y-1 sm:space-y-2">
+          {formattedPrice && (
             <p
-              className="text-base dark:text-[oklch(0.65_0.2_145)]"
+              className="text-sm sm:text-base dark:text-[oklch(0.65_0.2_145)]"
               style={{ color: "oklch(0.55 0.2 145)" }}
             >
-              구매가: ₩280,000
+              구매가: {formattedPrice}
             </p>
-            <p className="text-foreground text-base">구매일: 2024.11.30</p>
-          </div>
+          )}
+          {formattedDate && (
+            <p className="text-foreground text-sm sm:text-base">구매일: {formattedDate}</p>
+          )}
         </div>
       </div>
     </div>

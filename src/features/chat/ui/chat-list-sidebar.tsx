@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
 import { MessageSquareOff, Package, ShoppingBag, type LucideIcon } from "lucide-react";
 
@@ -53,20 +53,6 @@ export function ChatListSidebar({
     []
   );
 
-  const handleFilterChange = useCallback(
-    (filterValue: ListFilter) => () => {
-      onFilterChange(filterValue);
-    },
-    [onFilterChange]
-  );
-
-  const handleChatChange = useCallback(
-    (chatId: string) => () => {
-      onChatSelect(chatId);
-    },
-    [onChatSelect]
-  );
-
   return (
     <div
       className={cn(
@@ -85,7 +71,7 @@ export function ChatListSidebar({
               key={option.value}
               type="button"
               variant="ghost"
-              onClick={handleFilterChange(option.value)}
+              onClick={() => onFilterChange(option.value)}
               className={cn(
                 "border-border rounded-md border px-3 py-2 text-sm font-medium",
                 option.icon ? "flex items-center justify-center gap-1" : "",
@@ -129,7 +115,7 @@ export function ChatListSidebar({
                   key={chatRoom.chatRoomId}
                   chatRoom={chatRoom}
                   isSelected={selectedChatId === String(chatRoom.chatRoomId)}
-                  onClick={handleChatChange(String(chatRoom.chatRoomId))}
+                  onSelect={onChatSelect}
                 />
               ))}
             </div>
