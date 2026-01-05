@@ -5,7 +5,7 @@ import {
   AUCTION_SORT_DIRECTION,
   type AuctionFilters,
 } from "@/features/auction/filters/model/types";
-import { SearchParamsType } from "@/screens/auction/auction-list/model/types";
+import type { SearchParamsType } from "@/screens/auction/auction-list/model/types";
 
 const getFirst = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
