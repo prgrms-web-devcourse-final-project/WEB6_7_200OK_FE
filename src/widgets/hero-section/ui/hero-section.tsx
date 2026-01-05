@@ -39,8 +39,8 @@ export function HeroSection() {
             src={HeroAuction}
             alt="경매 일러스트레이션"
             fill
+            sizes="268px"
             className="object-cover"
-            priority
           />
         </div>
       </div>

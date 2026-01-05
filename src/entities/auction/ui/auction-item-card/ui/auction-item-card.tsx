@@ -1,19 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { AuctionType } from "@/entities/auction/model/types";
+import { type AuctionType } from "@/entities/auction/model/types";
 import { LiveBadge } from "@/entities/auction/ui/auction-badge/live-badge";
 import { UpcomingBadge } from "@/entities/auction/ui/auction-badge/upcoming-badge";
 import { VARIANT_CONFIG } from "@/entities/auction/ui/auction-item-card/model/constants";
-import { AuctionCardVariantType } from "@/entities/auction/ui/auction-item-card/model/types";
+import { type AuctionCardVariantType } from "@/entities/auction/ui/auction-item-card/model/types";
+import AuctionEndTimer from "@/entities/auction/ui/auction-item-card/ui/auction-end-timer";
 import AuctionPrice from "@/entities/auction/ui/auction-item-card/ui/auction-price";
 import AuctionTimer from "@/entities/auction/ui/auction-item-card/ui/auction-timer";
 import BuyCtaButton from "@/entities/auction/ui/auction-item-card/ui/buy-cta-button";
 import CtaButton from "@/entities/auction/ui/auction-item-card/ui/cta-button";
+import EndedCtaButton from "@/entities/auction/ui/auction-item-card/ui/ended-cta-button";
 import LikeButton from "@/entities/auction/ui/auction-item-card/ui/like-button";
 import RankingBadge from "@/entities/auction/ui/auction-item-card/ui/ranking-badge";
 import UpcomingInfo from "@/entities/auction/ui/auction-item-card/ui/upcoming-info";
 import { ROUTES } from "@/shared/config/routes";
+import { ImageLabelOverlay } from "@/shared/ui";
 
 export interface AuctionItemCardProps extends AuctionType {
   variant: AuctionCardVariantType;
@@ -38,8 +41,15 @@ export function AuctionItemCard({
     <article className="bg-card h-fit w-full overflow-hidden rounded-xl border select-none">
       <Link href={ROUTES.auctionDetail(auctionId)}>
         <div className="relative aspect-square">
-          <Image src={imageUrl} alt={title} fill className="object-cover" />
-          {config.badge === "ranking" && rank != null && <RankingBadge rank={rank} />}
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 500px) 100vw, 500px"
+          />
+          {variant === "ended" && <ImageLabelOverlay label="낙찰 완료" />}
+          {config.badge === "ranking" && rank && <RankingBadge rank={rank} />}
           {config.badge === "live" && <LiveBadge />}
           {config.badge === "upcoming" && <UpcomingBadge />}
           {config.like && <LikeButton isLiked={isLiked} />}
@@ -60,7 +70,10 @@ export function AuctionItemCard({
             <UpcomingInfo startedAt={startedAt} startPrice={startPrice} />
           )}
 
-          {config.timer && <AuctionTimer type={config.timer} startedAt={startedAt} />}
+          {config.timer === "ended" && <AuctionEndTimer />}
+          {config.timer && config.timer !== "ended" && (
+            <AuctionTimer type={config.timer} startedAt={startedAt} />
+          )}
         </div>
       </Link>
 
@@ -68,6 +81,7 @@ export function AuctionItemCard({
         <div className="w-full px-4 pb-4">
           {config.cta === "buy" && <BuyCtaButton href={ROUTES.auctionDetail(auctionId)} />}
           {config.cta === "notify" && <CtaButton type={config.cta} />}
+          {config.cta === "ended" && <EndedCtaButton />}
         </div>
       )}
     </article>

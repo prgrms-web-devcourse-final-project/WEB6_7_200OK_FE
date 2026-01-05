@@ -1,1 +1,1 @@
-export { PurchaseList } from "./ui/purchase-list";
+export { UserPurchaseList } from "./ui/user-purchase-list";

@@ -32,4 +32,11 @@ export const VARIANT_CONFIG: Record<AuctionCardVariantType, AuctionCardVariant> 
     timer: null,
     cta: null,
   },
+  ended: {
+    badge: null,
+    like: false,
+    content: "auction",
+    timer: "ended",
+    cta: "ended",
+  },
 } as const;

@@ -2,7 +2,7 @@
 
 import { Settings, BellRing } from "lucide-react";
 
-import { ItemBadge, ItemCard } from "@/entities/item";
+import { UserItemBadge, UserItemCard } from "@/entities/auction";
 
 import { NotificationPreferenceItemType } from "../model/types";
 
@@ -20,7 +20,7 @@ export function NotificationPreferenceItemCard({
   const isScheduled = item.status === "경매 예정";
 
   return (
-    <ItemCard
+    <UserItemCard
       name={item.name}
       imageUrl={item.imageUrl}
       date={item.date}
@@ -29,7 +29,7 @@ export function NotificationPreferenceItemCard({
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
-      badgeNode={<ItemBadge status={item.status} />}
+      badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         <button
           type="button"

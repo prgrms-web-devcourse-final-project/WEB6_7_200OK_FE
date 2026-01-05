@@ -1,17 +1,17 @@
-import { AuctionTimerType } from "@/entities/auction/ui/auction-item-card/ui/auction-timer";
-import { CtaButtonType } from "@/entities/auction/ui/auction-item-card/ui/cta-button";
-
-export type AuctionCardVariantType = "live" | "ranking" | "upcoming" | "compact";
+export type AuctionCardVariantType = "live" | "ranking" | "upcoming" | "compact" | "ended";
 
 export type AuctionCardBadgeType = "live" | "ranking" | "upcoming" | null;
+
 export type AuctionCardContentType = "auction" | "upcoming" | null;
-export type AuctionCardCtaType = CtaButtonType | null;
-export type AuctionCardTimerType = AuctionTimerType | null;
+
+export type AuctionCardCtaButtonType = "buy" | "notify" | "ended" | null;
+
+export type AuctionCardTimerType = "drop" | "start" | "ended" | null;
 
 export interface AuctionCardVariant {
   badge: AuctionCardBadgeType;
   like: boolean;
   content: AuctionCardContentType;
   timer: AuctionCardTimerType;
-  cta: AuctionCardCtaType;
+  cta: AuctionCardCtaButtonType;
 }

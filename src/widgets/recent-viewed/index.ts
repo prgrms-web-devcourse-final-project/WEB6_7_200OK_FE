@@ -1,1 +1,1 @@
-export { RecentViewedList } from "./ui/recent-viewed-list";
+export { UserRecentViewedList } from "./ui/user-recent-viewed-list";

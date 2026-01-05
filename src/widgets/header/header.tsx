@@ -51,7 +51,10 @@ export function Header() {
 
           {/* TODO: 로그인 연결 후 유저 아바타 */}
           <Button aria-label="프로필" size="icon-lg" variant="ghost">
-            <User className="size-5" />
+            {/* 임시로 users/me/calendar로 이동하도록 삽입 */}
+            <Link href="/users/me/calendar">
+              <User className="size-5" />
+            </Link>
           </Button>
         </div>
       </div>

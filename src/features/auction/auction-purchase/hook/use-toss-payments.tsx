@@ -11,7 +11,7 @@ import { useAuctionPriceStore } from "@/widgets/auction/auction-detail/provider/
 // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
 const clientKey = "test_ck_PBal2vxj81NqeKXKeQPK35RQgOAN";
 
-export const useTossPayments = (auctionId: string, title: string, userName: string) => {
+export const useTossPayments = () => {
   const [payment, setPayment] = useState<TossPaymentsPayment | null>(null);
   const price = useAuctionPriceStore((state) => state.price);
   const customerKey = nanoid();
@@ -34,7 +34,7 @@ export const useTossPayments = (auctionId: string, title: string, userName: stri
 
   // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
   // @docs https://docs.tosspayments.com/sdk/v2/js#paymentrequestpayment
-  async function requestPayment() {
+  async function requestPayment(auctionId: string, title: string, userName: string) {
     // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
     // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
     if (payment === null) return;

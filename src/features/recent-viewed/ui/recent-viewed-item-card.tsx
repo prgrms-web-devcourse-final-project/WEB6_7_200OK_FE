@@ -2,21 +2,25 @@
 
 import { X } from "lucide-react";
 
-import { ItemBadge, ItemCard, RecentlyViewedItemType } from "@/entities/item";
+import { UserItemBadge, UserItemCard, UserRecentlyViewedItemType } from "@/entities/auction";
 
-interface RecentViewedItemCardProps {
-  item: RecentlyViewedItemType;
-  onClick?: (item: RecentlyViewedItemType) => void;
-  onRemove?: (item: RecentlyViewedItemType) => void;
+interface UserRecentViewedItemCardProps {
+  item: UserRecentlyViewedItemType;
+  onClick?: (item: UserRecentlyViewedItemType) => void;
+  onRemove?: (item: UserRecentlyViewedItemType) => void;
 }
 
-export function RecentViewedItemCard({ item, onClick, onRemove }: RecentViewedItemCardProps) {
+export function UserRecentViewedItemCard({
+  item,
+  onClick,
+  onRemove,
+}: UserRecentViewedItemCardProps) {
   const isSoldOut = item.status === "판매 완료";
   const isAuctionEnded = item.status === "경매 종료";
   const isScheduled = item.status === "경매 예정";
 
   return (
-    <ItemCard
+    <UserItemCard
       name={item.name}
       imageUrl={item.imageUrl}
       date={item.date}
@@ -25,7 +29,7 @@ export function RecentViewedItemCard({ item, onClick, onRemove }: RecentViewedIt
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
-      badgeNode={<ItemBadge status={item.status} />}
+      badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         <button
           type="button"

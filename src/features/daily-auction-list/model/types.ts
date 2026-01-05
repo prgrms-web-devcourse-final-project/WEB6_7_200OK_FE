@@ -1,7 +1,10 @@
 import {
-  SellingItemType,
-  WishlistItemType,
-  RecentlyViewedItemType,
-} from "@/entities/item/model/types";
+  UserSellingItemType,
+  UserAuctionLikeItemType,
+  UserRecentlyViewedItemType,
+} from "@/entities/auction";
 
-export type DashboardItemType = SellingItemType | WishlistItemType | RecentlyViewedItemType;
+export type DashboardItemType =
+  | UserSellingItemType
+  | UserAuctionLikeItemType
+  | UserRecentlyViewedItemType;

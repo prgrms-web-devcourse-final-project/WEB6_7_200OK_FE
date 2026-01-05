@@ -2,24 +2,40 @@
 
 import { useState, useMemo } from "react";
 
-import { MOCK_SELLING_ITEMS, MOCK_WISHLIST_ITEMS } from "@/entities/item";
+import { useUserAuctionLike } from "@/features/auction/auction-like";
+import { useUserSalesList } from "@/features/auction/auction-sale";
 import {
   DailyAuctionCalendar,
   transformItemsToCalendarEvents,
 } from "@/features/daily-auction-calendar";
 import { DailyAuctionList } from "@/features/daily-auction-list";
 import { DashboardContentLayout } from "@/shared/ui";
+import { CalendarTabSkeleton } from "@/widgets/user/ui/skeletons";
 
 interface UserDashboardCalendarProps {
-  label?: React.ReactNode;
+  label: React.ReactNode;
 }
 
 export function UserDashboardCalendar({ label }: UserDashboardCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const allItems = useMemo(() => [...MOCK_SELLING_ITEMS, ...MOCK_WISHLIST_ITEMS], []);
+  const { data: salesItems = [], isLoading: isSalesLoading } = useUserSalesList();
+  const { data: auctionLikeItems = [], isLoading: isAuctionLikeLoading } = useUserAuctionLike();
+
+  const allItems = useMemo(
+    () => [...salesItems, ...auctionLikeItems],
+    [salesItems, auctionLikeItems]
+  );
 
   const calendarEvents = useMemo(() => transformItemsToCalendarEvents(allItems), [allItems]);
+
+  if (isSalesLoading || isAuctionLikeLoading) {
+    return (
+      <DashboardContentLayout label={label} className="flex w-full flex-col">
+        <CalendarTabSkeleton />
+      </DashboardContentLayout>
+    );
+  }
 
   return (
     <DashboardContentLayout label={label} className="flex w-full flex-col">

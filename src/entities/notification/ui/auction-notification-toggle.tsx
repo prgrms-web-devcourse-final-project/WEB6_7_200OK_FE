@@ -4,12 +4,26 @@ import { useState } from "react";
 
 import { Bell, BellRing } from "lucide-react";
 
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import { Button, Popover, PopoverContent, PopoverTrigger, Switch, Input } from "@/shared/ui";
 
-export default function AuctionNotificationToggle() {
+interface AuctionNotificationToggleProps {
+  userId: string | undefined;
+}
+
+export default function AuctionNotificationToggle({ userId }: AuctionNotificationToggleProps) {
   const [open, setOpenChange] = useState(false);
+
+  const handleToggleButton = () => {
+    if (typeof userId === "string") {
+      setOpenChange((prev) => !prev);
+    } else {
+      showToast.error("로그인 후 이용 가능합니다.");
+    }
+  };
+
   return (
-    <Popover open={open} onOpenChange={setOpenChange}>
+    <Popover open={open} onOpenChange={handleToggleButton}>
       <PopoverTrigger asChild>
         <Button variant="ghost" className="h-auto flex-col gap-2 py-2 text-xs" size="sm">
           <Bell className="text-zinc-800 dark:text-zinc-300" />

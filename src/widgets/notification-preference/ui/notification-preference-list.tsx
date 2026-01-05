@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 
-import { ItemCardFilter } from "@/entities/item";
+import { UserItemCardFilter } from "@/entities/auction";
 import {
   MOCK_NOTIFICATIONS,
   NotificationPreferenceItemType,
@@ -48,7 +48,11 @@ export function NotificationPreferenceList({ label }: NotificationPreferenceList
       <DashboardContentLayout
         label={label}
         filters={
-          <ItemCardFilter value={filterStatus} options={filterOptions} onChange={setFilterStatus} />
+          <UserItemCardFilter
+            value={filterStatus}
+            options={filterOptions}
+            onChange={setFilterStatus}
+          />
         }
       >
         {filteredNotificationPreference.map((item) => (

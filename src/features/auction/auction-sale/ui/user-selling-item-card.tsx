@@ -2,24 +2,24 @@
 
 import { MessageCircle, X } from "lucide-react";
 
-import { ItemBadge, ItemCard, SellingItemType } from "@/entities/item";
+import { UserItemBadge, UserItemCard, UserSellingItemType } from "@/entities/auction";
 import { Button } from "@/shared/ui";
 
-interface SellingItemCardProps {
-  item: SellingItemType;
-  onClick?: (item: SellingItemType) => void;
-  onDelete?: (item: SellingItemType) => void;
-  onChatClick?: (item: SellingItemType) => void;
+interface UserSellingItemCardProps {
+  item: UserSellingItemType;
+  onClick?: (item: UserSellingItemType) => void;
+  onDelete?: (item: UserSellingItemType) => void;
+  onChatClick?: (item: UserSellingItemType) => void;
   isOwn?: boolean;
 }
 
-export function SellingItemCard({
+export function UserSellingItemCard({
   item,
   onClick,
   onDelete,
   onChatClick,
   isOwn = false,
-}: SellingItemCardProps) {
+}: UserSellingItemCardProps) {
   const isSoldOut = item.status === "판매 완료";
   const isAuctionEnded = item.status === "경매 종료";
   const isOnSale = item.status === "판매중";
@@ -27,7 +27,7 @@ export function SellingItemCard({
   const hasUnreadMessages = item.unreadMessageCount && item.unreadMessageCount > 0;
 
   return (
-    <ItemCard
+    <UserItemCard
       name={item.name}
       imageUrl={item.imageUrl}
       date={item.date}
@@ -36,7 +36,7 @@ export function SellingItemCard({
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
-      badgeNode={<ItemBadge status={item.status} />}
+      badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         isOwn &&
         !isOnSale &&

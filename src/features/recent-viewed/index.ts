@@ -1,1 +1,1 @@
-export { RecentViewedItemCard } from "./ui/recent-viewed-item-card";
+export { UserRecentViewedItemCard } from "./ui/recent-viewed-item-card";

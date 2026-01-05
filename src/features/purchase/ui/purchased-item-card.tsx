@@ -2,27 +2,27 @@
 
 import { MessageCircle, Check, Star } from "lucide-react";
 
-import { ItemBadge, ItemCard, PurchaseItemType } from "@/entities/item";
+import { UserItemBadge, UserItemCard, UserPurchaseItemType } from "@/entities/auction";
 import { Button } from "@/shared/ui";
 
-interface PurchasedItemCardProps {
-  item: PurchaseItemType;
-  onReviewClick?: (item: PurchaseItemType) => void;
-  onConfirm?: (item: PurchaseItemType) => void;
-  onChatClick?: (item: PurchaseItemType) => void;
+interface UserPurchasedItemCardProps {
+  item: UserPurchaseItemType;
+  onReviewClick?: (item: UserPurchaseItemType) => void;
+  onConfirm?: (item: UserPurchaseItemType) => void;
+  onChatClick?: (item: UserPurchaseItemType) => void;
 }
 
-export function PurchasedItemCard({
+export function UserPurchasedItemCard({
   item,
   onReviewClick,
   onConfirm,
   onChatClick,
-}: PurchasedItemCardProps) {
+}: UserPurchasedItemCardProps) {
   const isConfirmed = item.status === "구매 확정";
   const hasUnreadMessages = item.unreadMessageCount && item.unreadMessageCount > 0;
 
   return (
-    <ItemCard
+    <UserItemCard
       name={item.name}
       imageUrl={item.imageUrl}
       date={item.date}
@@ -30,7 +30,7 @@ export function PurchasedItemCard({
       originalPrice={item.originalPrice}
       discountRate={item.discountRate}
       isPriceGray={!isConfirmed}
-      badgeNode={<ItemBadge status={item.status} />}
+      badgeNode={<UserItemBadge status={item.status} />}
       footerNode={
         <div className="-mt-1 flex w-full items-center gap-2">
           {isConfirmed ? (
