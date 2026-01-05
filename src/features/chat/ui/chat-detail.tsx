@@ -88,7 +88,10 @@ function ChatDetailComponent({
       prevScrollHeightRef.current = scrollHeight;
       onLoadMore();
     }
-    const isBottom = scrollHeight - scrollTop - clientHeight < 100;
+    const remainingScroll = scrollHeight - scrollTop - clientHeight;
+    const bottomThreshold = scrollHeight * 0.05;
+    const isBottom = remainingScroll <= bottomThreshold;
+
     isAtBottomRef.current = isBottom;
   };
 
@@ -137,16 +140,20 @@ function ChatDetailComponent({
         >
           <ChevronLeft className="size-5" />
         </Button>
-        <Image
-          src={displayPartner!.profileImageUrl}
-          alt={displayPartner!.username}
-          width={40}
-          height={40}
-          className="size-10 shrink-0 rounded-full object-cover"
-        />
-        <div className="flex-1">
-          <p className="text-md font-semibold sm:text-base">{displayPartner!.username}</p>
-        </div>
+        {displayPartner && (
+          <>
+            <Image
+              src={displayPartner.profileImageUrl}
+              alt={displayPartner.username}
+              width={40}
+              height={40}
+              className="size-10 shrink-0 rounded-full object-cover"
+            />
+            <div className="flex-1">
+              <p className="text-md font-semibold sm:text-base">{displayPartner.username}</p>
+            </div>
+          </>
+        )}
       </div>
 
       {/* 상품 정보 카드 (상단 고정) */}
@@ -161,9 +168,9 @@ function ChatDetailComponent({
       {/* 메시지 영역 */}
       <ScrollArea className="min-h-0 flex-1 p-4" onScroll={handleScroll} viewportRef={viewportRef}>
         <div className="flex flex-col gap-4 pb-4">
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <ChatBubble
-              key={`${message.messageId}-${message.createdAt}`}
+              key={message.messageId ? String(message.messageId) : `${message.createdAt}-${index}`}
               message={message}
               partner={displayPartner}
             />
@@ -181,6 +188,7 @@ function ChatDetailComponent({
             onChange={(e) => setMessageInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.nativeEvent.isComposing && hasMessage) {
+                e.preventDefault();
                 handleSend();
               }
             }}
@@ -203,6 +211,7 @@ function ChatDetailComponent({
             className="hidden"
             ref={fileInputRef}
             onChange={handleImageUpload}
+            aria-label="이미지 업로드"
           />
           <Button
             aria-label="채팅 전송"
@@ -212,7 +221,6 @@ function ChatDetailComponent({
             disabled={!hasMessage}
             className="flex items-center justify-center rounded-full"
           >
-            {/* 전송 로딩 중일 때 표시할 수도 있음 */}
             <Send className="size-5" />
           </Button>
         </div>

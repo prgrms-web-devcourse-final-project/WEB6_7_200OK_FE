@@ -46,7 +46,7 @@ export function ChatListScreen({ initialData, accessToken }: ChatListScreenProps
 
   // 채팅방 상세 웹소켓 연결
   const { messages, tradeInfo, sendMessage, sendImageMessage, loadMore, hasNextPage, isLoading } =
-    useChatRoomSocket(selectedChatId, accessToken, userId!);
+    useChatRoomSocket(selectedChatId, accessToken, userId ?? null);
 
   const selectedChatRoom = selectedChatId
     ? chatRooms.find((room) => String(room.chatRoomId) === selectedChatId) || null

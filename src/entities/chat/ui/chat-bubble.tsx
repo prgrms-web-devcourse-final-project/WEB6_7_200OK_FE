@@ -61,7 +61,7 @@ function ChatBubbleComponent({ message, partner }: ChatBubbleProps) {
                 <div key={url} className="relative w-72 max-w-full overflow-hidden rounded-lg">
                   <Image
                     src={url}
-                    alt="채팅 이미지"
+                    alt=""
                     width={600}
                     height={600}
                     className="h-auto w-full object-contain"
