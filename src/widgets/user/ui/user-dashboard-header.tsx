@@ -28,7 +28,7 @@ export function UserDashboardHeader({ targetUserId }: { targetUserId: number }) 
 
   return (
     <>
-      <UserProfileCard profile={profile} isOwn={isOwner} />
+      <UserProfileCard userId={targetUserId} />
       <ActivityTabs
         activeTab={activeTab}
         tabs={visibleTabs}

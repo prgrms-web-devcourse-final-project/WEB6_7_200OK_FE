@@ -12,6 +12,8 @@ export const API_ENDPOINTS = {
   auctionRecentView: (auctionId: number | string) => `/api/v1/recentview/${auctionId}`,
 
   userInfo: (userid: number) => `/api/v1/users/${userid}`,
+  userImageUpdate: "/api/v1/users/images", // PUT, Multipart
+  userNameUpdate: "/api/v1/users/names", // PUT, JSON
 
   tagSearch: "/api/v1/tags/search",
 
