@@ -4,10 +4,10 @@ import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { toast } from "sonner";
 
 import { type ChatRoomTradeInfo, type ChatMessage } from "@/features/chat";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MESSAGE_PAGE_SIZE = 20;
@@ -191,7 +191,7 @@ export function useChatRoomSocket(
 
       // 이미지 URL 유효성 검증
       if (!imageUrls || imageUrls.length === 0) {
-        toast.error("전송할 이미지가 없습니다.");
+        showToast.error("전송할 이미지가 없습니다.");
         return;
       }
 
@@ -259,7 +259,7 @@ export function useChatRoomSocket(
 
         client.subscribe(API_ENDPOINTS.wsUserQueueErrors, (frame) => {
           console.error("[WS] Error:", frame.body);
-          toast.error("채팅방 연결 중 에러가 발생했습니다.");
+          showToast.error("채팅방 연결 중 에러가 발생했습니다.");
         });
 
         client.publish({

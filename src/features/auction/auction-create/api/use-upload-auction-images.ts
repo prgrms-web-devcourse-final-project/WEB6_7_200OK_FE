@@ -1,9 +1,9 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 import { httpClient } from "@/shared/api/client";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 import type { UploadImageResponse } from "../model/types";
 
@@ -27,7 +27,7 @@ export function useUploadAuctionImages() {
       return response.data;
     },
     onError: (error) => {
-      toast.error("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+      showToast.error("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
       console.error("이미지 업로드 실패:", error);
     },
   });
