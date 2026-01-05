@@ -70,6 +70,7 @@ function ChatDetailComponent({
     const fileList = Array.from(files);
     uploadImages(fileList, {
       onSuccess: (data) => {
+        if (!data) return;
         const imageUrls = data.map((item) => item.imageUrl);
         onSendImageMessage(imageUrls);
         isAtBottomRef.current = true;

@@ -38,11 +38,7 @@ export function ChatListScreen({ initialData, accessToken }: ChatListScreenProps
   const filter = (searchParams?.get("scope") as ListFilter) || "ALL";
 
   // 채팅방 목록 웹소켓 연결
-  const { chatRooms, markRoomAsRead } = useChatListSocket(
-    initialData || [],
-    accessToken,
-    selectedChatId
-  );
+  const { chatRooms, markRoomAsRead } = useChatListSocket(initialData, accessToken, selectedChatId);
 
   // 채팅방 상세 웹소켓 연결
   const { messages, tradeInfo, sendMessage, sendImageMessage, loadMore, hasNextPage, isLoading } =
