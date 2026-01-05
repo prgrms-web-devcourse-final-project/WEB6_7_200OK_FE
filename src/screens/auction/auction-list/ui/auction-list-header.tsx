@@ -1,7 +1,7 @@
 "use client";
 
 import { CATEGORY_LABEL } from "@/entities/auction/model/category";
-import { useAuctionFilters } from "@/screens/auction/auction-list/model/use-auction-filters";
+import { useAuctionFilters } from "@/features/auction/filters/model/use-auction-filters";
 
 export default function AuctionListHeader() {
   const { filters } = useAuctionFilters();

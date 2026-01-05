@@ -5,7 +5,6 @@ import AuctionsClient from "@/screens/main/ui/auctions-client";
 
 export async function Auctions() {
   const queryClient = new QueryClient();
-
   await queryClient.prefetchQuery(auctionsQuery);
 
   return (

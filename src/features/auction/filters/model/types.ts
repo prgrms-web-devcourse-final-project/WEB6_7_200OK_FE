@@ -1,7 +1,7 @@
-import { ItemCategory } from "@/entities/auction";
-import { AuctionPublicStatusType } from "@/entities/auction/model/status";
+import type { ItemCategory } from "@/entities/auction";
+import type { AuctionPublicStatusType } from "@/entities/auction/model/status";
 
-export const AUCTION_SORT_BY = ["createDate, startedAt"] as const;
+export const AUCTION_SORT_BY = ["createDate", "startedAt", "viewCount"] as const;
 
 export type AuctionSortByType = (typeof AUCTION_SORT_BY)[number];
 

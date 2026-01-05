@@ -7,7 +7,7 @@ import {
 } from "@/features/auction/filters/model/types";
 import type { SearchParamsType } from "@/screens/auction/auction-list/model/types";
 
-const getFirst = (value: string | string[] | undefined) =>
+const getFirstValue = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
 
 const parseNumber = (value: string | undefined) => {
@@ -28,11 +28,11 @@ const validateEnum = <T extends readonly string[]>(
 };
 
 export const parseFilters = (searchParams: SearchParamsType): AuctionFilters => ({
-  query: getFirst(searchParams.query),
-  category: validateEnum(getFirst(searchParams.category), ITEM_CATEGORIES),
-  status: validateEnum(getFirst(searchParams.status), AUCTION_PUBLIC_STATUS_KEYS),
-  minPrice: parseNumber(getFirst(searchParams.minPrice)),
-  maxPrice: parseNumber(getFirst(searchParams.maxPrice)),
-  sortBy: validateEnum(getFirst(searchParams.sortBy), AUCTION_SORT_BY),
-  sortDirection: validateEnum(getFirst(searchParams.sortDirection), AUCTION_SORT_DIRECTION),
+  query: getFirstValue(searchParams.query),
+  category: validateEnum(getFirstValue(searchParams.category), ITEM_CATEGORIES),
+  status: validateEnum(getFirstValue(searchParams.status), AUCTION_PUBLIC_STATUS_KEYS),
+  minPrice: parseNumber(getFirstValue(searchParams.minPrice)),
+  maxPrice: parseNumber(getFirstValue(searchParams.maxPrice)),
+  sortBy: validateEnum(getFirstValue(searchParams.sortBy), AUCTION_SORT_BY),
+  sortDirection: validateEnum(getFirstValue(searchParams.sortDirection), AUCTION_SORT_DIRECTION),
 });

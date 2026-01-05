@@ -1,5 +1,5 @@
-import { AuctionType } from "@/entities/auction/model/types";
-import { AuctionFilters } from "@/features/auction/filters/model/types";
+import type { AuctionType } from "@/entities/auction/model/types";
+import type { AuctionFilters } from "@/features/auction/filters/model/types";
 
 export type SearchParamsType = Record<string, string | string[] | undefined>;
 

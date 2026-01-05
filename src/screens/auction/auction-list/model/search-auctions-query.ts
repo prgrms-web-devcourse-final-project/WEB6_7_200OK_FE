@@ -6,7 +6,7 @@ import type { AuctionFilters } from "./types";
 
 export const searchAuctionsQuery = (filters: AuctionFilters, size = 15) =>
   infiniteQueryOptions({
-    queryKey: ["auctions", "search", filters] as const,
+    queryKey: ["auctions", "search", { ...filters, size }] as const,
     initialPageParam: 1,
     queryFn: ({ pageParam }) => searchAuctions({ ...filters, page: pageParam, size }),
     getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
