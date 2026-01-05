@@ -3,7 +3,9 @@ import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 export async function toggleAuctionLike(auctionId: string | number): Promise<LikeType> {
-  return httpClient<LikeType>(API_ENDPOINTS.auctionLike(auctionId), {
+  const response = await httpClient<LikeType>(API_ENDPOINTS.auctionLike(auctionId), {
     method: "POST",
-  }).then((r) => r.data);
+  });
+  if (response.code === 200) return response.data;
+  throw new Error("like is error");
 }
