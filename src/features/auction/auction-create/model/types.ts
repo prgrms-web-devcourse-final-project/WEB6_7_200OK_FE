@@ -4,7 +4,6 @@ import type { ApiResponseType } from "@/shared/api/types/response";
 import { type Dayjs } from "@/shared/lib/utils/dayjs";
 
 export interface ItemFormSubmitData {
-  sellerId: string;
   title: string;
   description: string;
   category: ItemCategory;
@@ -17,7 +16,6 @@ export interface ItemFormSubmitData {
 }
 
 export interface CreateAuctionRequest {
-  sellerId: number;
   title: string;
   description: string;
   category: ItemCategory;
@@ -31,7 +29,6 @@ export interface CreateAuctionRequest {
 
 export interface CreateAuctionResponseData {
   auctionId: number;
-  sellerId: number;
   title: string;
   description: string;
   category: ItemCategory;

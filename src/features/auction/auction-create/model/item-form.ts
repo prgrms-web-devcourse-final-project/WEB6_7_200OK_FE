@@ -85,7 +85,7 @@ export function useItemForm() {
   };
 
   // 폼 제출 데이터 생성
-  const getSubmitData = (sellerId: string, imageIds: number[]): ItemFormSubmitData | null => {
+  const getSubmitData = (imageIds: number[]): ItemFormSubmitData | null => {
     if (
       !formValid ||
       !selectedDate ||
@@ -100,7 +100,6 @@ export function useItemForm() {
     const values = getValues();
 
     return {
-      sellerId,
       title: values.productName || "",
       description: values.description || "",
       category: values.category as ItemCategory,

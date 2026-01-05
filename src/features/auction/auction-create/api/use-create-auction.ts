@@ -28,7 +28,6 @@ const transformFormDataToApiRequest = ({
   formData,
   selectedTime,
 }: CreateAuctionParams): CreateAuctionRequest => ({
-  sellerId: Number(formData.sellerId),
   title: formData.title,
   description: formData.description,
   category: formData.category,
