@@ -4,9 +4,8 @@ import { useMemo } from "react";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { parseFilters } from "@/screens/auction/auction-list/model/parse-filters";
-
-import type { AuctionFilters } from "./types";
+import { parseFilters } from "@/features/auction/filters/model/parse-filters";
+import type { AuctionFilters } from "@/features/auction/filters/model/types";
 
 export function useAuctionFilters() {
   const router = useRouter();
