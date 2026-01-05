@@ -44,9 +44,6 @@ export function AuctionCreateScreen() {
   const uploadImagesMutation = useUploadAuctionImages();
   const createAuctionMutation = useCreateAuction();
 
-  // TODO: sellerId는 추후 삭제될 예정이지만 테스트를 위해 임시로 기입
-  const TEMP_SELLER_ID = "1";
-
   // 이미지 업로드 (return imageIds)
   const uploadImages = async (files: File[]): Promise<number[]> => {
     if (files.length === 0) {
@@ -59,7 +56,7 @@ export function AuctionCreateScreen() {
 
   // 경매 생성
   const createAuction = async (imageIds: number[]): Promise<void> => {
-    const submitData = form.getSubmitData(TEMP_SELLER_ID, imageIds);
+    const submitData = form.getSubmitData(imageIds);
     if (!submitData) {
       return;
     }
