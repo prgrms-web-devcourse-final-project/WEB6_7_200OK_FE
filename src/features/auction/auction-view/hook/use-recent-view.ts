@@ -15,6 +15,6 @@ export function useRecentView(auctionId: string | number) {
     if (callRef.current === auctionId) return;
     callRef.current = auctionId;
 
-    recordRecentView(auctionId).catch(() => {});
+    recordRecentView(auctionId);
   }, [auctionId, user]);
 }
