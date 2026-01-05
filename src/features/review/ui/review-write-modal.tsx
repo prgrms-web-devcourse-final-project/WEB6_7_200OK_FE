@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { UserPurchaseItemType } from "@/entities/auction";
+import type { UserPurchaseItemType } from "@/entities/auction";
 import { ReviewModalBase, ReviewModalActions } from "@/entities/review";
 import { ConfirmDeleteModal } from "@/shared/ui";
 
