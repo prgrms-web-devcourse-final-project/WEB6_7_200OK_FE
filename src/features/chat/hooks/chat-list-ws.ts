@@ -89,9 +89,16 @@ export function useChatListSocket(
         unreadCount: newUnreadCount,
       };
 
-      // 최신순 정렬
-      const otherRooms = prev.filter((_, idx) => idx !== targetIndex);
-      return [updatedRoom, ...otherRooms];
+      // 마지막 메시지 시간이 변경되었을 때만 정렬되도록
+      if (targetRoom.lastMessage?.lastMessageAt !== event.lastMessageAt) {
+        const otherRooms = prev.filter((_, idx) => idx !== targetIndex);
+        return [updatedRoom, ...otherRooms];
+      }
+
+      // 마지막 메시지 시간 변경 없을 시 그대로 유지
+      const newRooms = [...prev];
+      newRooms[targetIndex] = updatedRoom;
+      return newRooms;
     });
   }, []);
 
@@ -109,7 +116,7 @@ export function useChatListSocket(
       const type = message.messageType === "IMAGE" ? "IMAGE" : "TEXT";
 
       const isSelected = String(id) === selectedChatIdRef.current;
-      const newUnreadCount = isSelected ? 0 : targetRoom.unreadCount + 1;
+      const newUnreadCount = isSelected ? 0 : targetRoom.unreadCount;
 
       const updatedRoom: ChatRoomListItem = {
         ...targetRoom,
