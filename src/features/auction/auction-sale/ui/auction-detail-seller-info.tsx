@@ -39,7 +39,7 @@ export default function AuctionDetailSellerInfo({ seller }: AuctionDetailSellerI
   return (
     <div className="flex w-full flex-col gap-4">
       <AuctionDetailSellerReviewHeader reviewCount={data.totalReviews} rating={data.rating} />
-      <AuctionDetailSellerReviewList buyers={data.buyers} />
+      <AuctionDetailSellerReviewList buyers={data.buyers} sellerId={data.sellerId} />
       <AuctionDetailSellerSales auctions={data.auctions} />
     </div>
   );

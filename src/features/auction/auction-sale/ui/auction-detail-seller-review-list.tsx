@@ -1,11 +1,17 @@
-"use client";
+import Link from "next/link";
 
 import { MessageSquareOff } from "lucide-react";
 
 import type { BuyersType } from "@/features/auction/auction-sale/model/types";
 import { EmptyState, Button } from "@/shared/ui";
 
-export default function AuctionDetailSellerReviewList({ buyers }: { buyers: BuyersType[] }) {
+export default function AuctionDetailSellerReviewList({
+  buyers,
+  sellerId,
+}: {
+  buyers: BuyersType[];
+  sellerId: number;
+}) {
   if (buyers.length === 0) {
     return (
       <EmptyState
@@ -28,7 +34,7 @@ export default function AuctionDetailSellerReviewList({ buyers }: { buyers: Buye
         ))}
       </div>
       <Button className="flex-1" variant="outline" size="default">
-        리뷰 보러가기
+        <Link href={`/users/${sellerId}/reviews`}>리뷰 보러가기</Link>
       </Button>
     </div>
   );
