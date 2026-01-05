@@ -10,7 +10,7 @@ import {
   getAuctionNotificationSettings,
   updateAuctionNotificationSettings,
 } from "@/entities/notification/api/notification-setting";
-import { NotificationSettingsType } from "@/entities/notification/model/types";
+import type { NotificationSettingsType } from "@/entities/notification/model/types";
 import { auctionNotificationSettingsKey } from "@/entities/notification/model/use-auction-notification-setting-query";
 import { useIsAuthenticated } from "@/features/auth/api/use-is-authenticated";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
