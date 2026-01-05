@@ -1,20 +1,30 @@
+import { useId } from "react";
+
 import { RadioGroup, RadioGroupItem } from "@/shared/ui";
 
-export default function FilterRadioGroup<K extends string>({
+export function FilterRadioGroup<K extends string>({
   name,
-  defaultValue,
+  value,
   options,
   getLabel,
+  onChange,
 }: {
   name: string;
-  defaultValue: K;
+  value: K;
   options: readonly K[];
   getLabel: (key: K) => string;
+  onChange?: (value: K) => void;
 }) {
+  const itemId = useId();
+
   return (
-    <RadioGroup defaultValue={defaultValue} className="gap-4">
+    <RadioGroup
+      value={value}
+      onValueChange={(newValue) => onChange?.(newValue as K)}
+      className="gap-4"
+    >
       {options.map((key) => {
-        const id = `${name}-${key}`;
+        const id = `${itemId}-${name}-${key}`;
 
         return (
           <div key={key} className="flex items-center gap-2">
