@@ -20,5 +20,6 @@ export const chatRoomsLoader = async (params?: GetChatRoomsParams) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn("Failed to fetch chat rooms:", message);
+    throw error;
   }
 };
