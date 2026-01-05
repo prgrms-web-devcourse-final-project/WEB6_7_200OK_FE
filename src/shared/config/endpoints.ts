@@ -11,10 +11,20 @@ export const API_ENDPOINTS = {
 
   tagSearch: "/api/v1/tags/search",
 
+  // 채팅 API
   chatRooms: "/api/v1/chat-rooms",
   chatRoom: (chatRoomId: number | string) => `/api/v1/chat-rooms/${chatRoomId}`,
   chatRoomMessages: (chatRoomId: number | string) => `/api/v1/chat-rooms/${chatRoomId}/messages`,
   chatRoomRead: (chatRoomId: number | string) => `/api/v1/chat-rooms/${chatRoomId}/messages/read`,
+  chatImages: "/api/v1/chat-images",
+
+  // 채팅 웹소켓
+  wsStomp: "/ws-stomp",
+  wsChatSend: "/app/chat.send",
+  wsChatRead: "/app/chat.read",
+  wsChatRoom: (chatRoomId: number | string) => `/topic/chat.rooms.${chatRoomId}`,
+  wsUserQueueChatRooms: "/user/queue/chat.rooms",
+  wsUserQueueErrors: "/user/queue/errors",
 
   auth: "/api/v1/auth",
   authValidateTokens: "/api/v1/auth/validate-tokens",

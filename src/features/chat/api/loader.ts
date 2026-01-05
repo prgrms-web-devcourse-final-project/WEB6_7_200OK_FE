@@ -4,20 +4,21 @@ import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 interface GetChatRoomsParams {
   scope?: ListFilter;
+  accessToken: string;
 }
 
 export const chatRoomsLoader = async (params?: GetChatRoomsParams) => {
   const scope = params?.scope ?? "ALL";
-  const userId = "11";
+  const { accessToken } = params!;
   try {
-    const response = await fetch<ChatRoomListItem[]>(
-      `${API_ENDPOINTS.chatRooms}?scope=${scope}&userId=${userId}`
-    );
-    console.warn("응답값", response);
+    const response = await fetch<ChatRoomListItem[]>(`${API_ENDPOINTS.chatRooms}?scope=${scope}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn("Failed to fetch chat rooms:", message);
-    throw new Error(`채팅방 목록을 불러오는 도중 에러가 발생했습니다: ${message}`);
   }
 };
