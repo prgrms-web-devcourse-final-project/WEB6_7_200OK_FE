@@ -15,8 +15,8 @@ interface ChatItemCardProps {
 }
 
 export function ChatItemCard({ auction, trade }: ChatItemCardProps) {
-  const formattedPrice = formatPriceKRW(trade.finalPrice);
-  const formattedDate = dayjs(trade.purchasedAt).format("YYYY-MM-DD");
+  const formattedPrice = trade.finalPrice ? formatPriceKRW(trade.finalPrice) : null;
+  const formattedDate = trade.purchasedAt ? dayjs(trade.purchasedAt).format("YYYY-MM-DD") : null;
 
   return (
     <div className="flex gap-3 sm:gap-4">
