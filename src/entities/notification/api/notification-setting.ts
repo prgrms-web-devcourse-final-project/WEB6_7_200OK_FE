@@ -1,9 +1,10 @@
 import type { NotificationSettingsType } from "@/entities/notification/model/types";
-import { fetch } from "@/shared/api/server";
+import { httpClient } from "@/shared/api/client";
+import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 export async function getAuctionNotificationSettings(auctionId: string | number) {
-  const res = await fetch<NotificationSettingsType>(
-    `/api/v1/auctions/${auctionId}/notification-settings`,
+  const res = await httpClient<NotificationSettingsType>(
+    API_ENDPOINTS.auctionNotificationSetting(auctionId),
     {
       method: "GET",
       credentials: "include",
@@ -21,7 +22,7 @@ export async function updateAuctionNotificationSettings(
   auctionId: string | number,
   body: NotificationSettingsType
 ) {
-  const res = await fetch(`api/v1/auctions/${auctionId}/notification-settings`, {
+  const res = await httpClient(API_ENDPOINTS.auctionNotificationSetting(auctionId), {
     method: "PUT",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
