@@ -33,12 +33,12 @@ export const PRICE_FILTERS: Record<PriceFilterValueType, string> = {
 
 export type PriceFilterLabelType = (typeof PRICE_FILTERS)[PriceFilterValueType];
 
-export interface PriceRange {
+export interface PriceRangeType {
   minPrice?: number;
   maxPrice?: number;
 }
 
-export const PRICE_RANGES: Record<PriceFilterValueType, PriceRange> = {
+export const PRICE_RANGES: Record<PriceFilterValueType, PriceRangeType> = {
   ALL: {},
   "0-10000": { minPrice: 0, maxPrice: 10_000 },
   "10000-50000": { minPrice: 10_000, maxPrice: 50_000 },
@@ -46,7 +46,7 @@ export const PRICE_RANGES: Record<PriceFilterValueType, PriceRange> = {
   "100000-500000": { minPrice: 100_000, maxPrice: 500_000 },
   "500000-1000000": { minPrice: 500_000, maxPrice: 1_000_000 },
   "1000000+": { minPrice: 1_000_000 },
-};
+} as const;
 
 export interface AuctionFilters {
   query?: string;
