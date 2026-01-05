@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { toast } from "sonner";
 
-import { type ChatRoomTradeInfo, type Message } from "@/features/chat";
+import { type ChatRoomTradeInfo, type ChatMessage } from "@/features/chat";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -27,7 +28,7 @@ interface ChatRoomResponse {
       trade: ChatRoomTradeInfo;
     };
     messages: {
-      content: Message[];
+      content: ChatMessage[];
       nextCursor: number | null;
       hasNext: boolean;
       size: number;
@@ -39,9 +40,9 @@ interface ChatRoomResponse {
 export function useChatRoomSocket(
   chatRoomId: string | null,
   accessToken: string | undefined,
-  userId?: number
+  userId: number | null
 ) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [tradeInfo, setTradeInfo] = useState<ChatRoomTradeInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [nextCursor, setNextCursor] = useState<number | null>(null);
@@ -50,19 +51,21 @@ export function useChatRoomSocket(
   const clientRef = useRef<Client | null>(null);
   const userIdRef = useRef(userId);
 
+  // userIdRef 업데이트
   useEffect(() => {
     userIdRef.current = userId;
-    if (userId) {
-      setMessages((prev) =>
-        prev.map((msg) => {
-          if (msg.isMine === (msg.senderId === userId)) return msg;
-          return { ...msg, isMine: msg.senderId === userId };
-        })
-      );
-    }
   }, [userId]);
 
-  // 메시지 로드 함수
+  // 메시지 미리보기
+  const displayMessages = useMemo(
+    () =>
+      messages.map((msg) => ({
+        ...msg,
+        isMine: msg.senderId === userId,
+      })),
+    [messages, userId]
+  );
+
   const loadMessages = useCallback(
     async (cursor: number | null = null) => {
       if (!chatRoomId || !accessToken) return;
@@ -92,14 +95,7 @@ export function useChatRoomSocket(
             setTradeInfo(chatRoomMeta.trade);
           }
 
-          const currentUserId = userIdRef.current;
-          const newMessages = (messageData.content || []).map((msg) => {
-            if (!currentUserId) return msg;
-            return {
-              ...msg,
-              isMine: msg.senderId === currentUserId,
-            };
-          });
+          const newMessages = messageData.content || [];
 
           // 메시지 오름차순 정렬
           const sortedMessages = [...newMessages].sort(
@@ -129,13 +125,13 @@ export function useChatRoomSocket(
     [chatRoomId, accessToken]
   );
 
-  // 읽음 처리 함수
+  // 읽음 처리
   const markAsRead = useCallback(() => {
     if (!chatRoomId || !accessToken) return;
 
     if (clientRef.current?.connected) {
       clientRef.current.publish({
-        destination: "/app/chat.read",
+        destination: API_ENDPOINTS.wsChatRead,
         body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
       });
     } else {
@@ -156,7 +152,6 @@ export function useChatRoomSocket(
     }
   }, [chatRoomId, accessToken, loadMessages]);
 
-  // 더 불러오기 (무한 스크롤)
   const loadMore = useCallback(() => {
     if (!isLoading && hasNextPage && nextCursor) {
       loadMessages(nextCursor);
@@ -179,22 +174,37 @@ export function useChatRoomSocket(
       };
 
       clientRef.current.publish({
-        destination: "/app/chat.send",
+        destination: API_ENDPOINTS.wsChatSend,
         body: JSON.stringify(payload),
       });
     },
     [chatRoomId]
   );
 
-  // // TODO:메시지 전송 (이미지)
-  // const sendImageMessage = useCallback((imageUrls: string[]) => {
-  //   if (!clientRef.current?.connected || !chatRoomId) {
-  //     console.error("Socket not connected or no chat room selected");
-  //     return;
-  //   }
-  // }, [chatRoomId]);
+  // 메시지 전송 (이미지)
+  const sendImageMessage = useCallback(
+    (imageUrls: string[]) => {
+      if (!clientRef.current?.connected || !chatRoomId) {
+        console.error("Socket not connected or no chat room selected");
+        return;
+      }
 
-  // 채팅방 변경 시 초기화 및 첫 로드
+      const payload: ChatSendRequest = {
+        chatRoomId: Number(chatRoomId),
+        messageType: "IMAGE",
+        content: "사진을 보냈습니다.",
+        imageUrls,
+      };
+
+      clientRef.current.publish({
+        destination: API_ENDPOINTS.wsChatSend,
+        body: JSON.stringify(payload),
+      });
+    },
+    [chatRoomId]
+  );
+
+  // 초기 데이터 로드
   useEffect(() => {
     if (chatRoomId) {
       setMessages([]);
@@ -202,8 +212,6 @@ export function useChatRoomSocket(
       setNextCursor(null);
       setHasNextPage(true);
       loadMessages(null);
-
-      // 채팅방 진입 시 읽음 처리
       markAsRead();
     } else {
       setMessages([]);
@@ -216,27 +224,18 @@ export function useChatRoomSocket(
     if (!chatRoomId || !accessToken) return;
 
     const client = new Client({
-      webSocketFactory: () => new SockJS(`${API_URL}/ws-stomp`),
+      webSocketFactory: () => new SockJS(`${API_URL}${API_ENDPOINTS.wsStomp}`),
       connectHeaders: {
         Authorization: `Bearer ${accessToken}`,
       },
       reconnectDelay: 2000,
       onConnect: () => {
         console.warn(`[ChatRoom WS] Connected to room ${chatRoomId}`);
-        client.subscribe(`/topic/chat.rooms.${chatRoomId}`, (frame) => {
+        client.subscribe(API_ENDPOINTS.wsChatRoom(chatRoomId), (frame) => {
           try {
             const parsedBody = JSON.parse(frame.body);
-            console.warn("parsedBody", parsedBody);
-
-            // 일반 채팅 메시지
             if (parsedBody.messageId) {
-              const message: Message = parsedBody;
-
-              const currentUserId = userIdRef.current;
-              if (currentUserId) {
-                message.isMine = message.senderId === currentUserId;
-              }
-
+              const message: ChatMessage = parsedBody;
               setMessages((prev) => {
                 const existingIndex = prev.findIndex((m) => m.messageId === message.messageId);
                 if (existingIndex !== -1) {
@@ -247,25 +246,24 @@ export function useChatRoomSocket(
                 return [...prev, message];
               });
             }
-
-            // TODO: 실시간 메시지 읽음 이벤트 처리 (BE측에서 기능 추가 예정)
           } catch (error) {
             console.error("[WS] Failed to parse message:", error);
           }
         });
 
-        client.subscribe("/user/queue/errors", (frame) => {
+        client.subscribe(API_ENDPOINTS.wsUserQueueErrors, (frame) => {
           console.error("[WS] Error:", frame.body);
+          toast.error("채팅방 연결 중 에러가 발생했습니다.");
         });
 
         client.publish({
-          destination: "/app/chat.read",
+          destination: API_ENDPOINTS.wsChatRead,
           body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
         });
       },
       onStompError: (frame) => {
-        // TODO: 웹소켓 연결 에러 처리
-        console.error("[WS] Stomp error:", frame.headers.message);
+        const errorMessage = frame.headers.message;
+        console.error("[ROOM WS] Stomp error:", errorMessage);
       },
     });
 
@@ -279,5 +277,13 @@ export function useChatRoomSocket(
     };
   }, [chatRoomId, accessToken]);
 
-  return { messages, tradeInfo, sendMessage, loadMore, hasNextPage, isLoading };
+  return {
+    messages: displayMessages,
+    tradeInfo,
+    sendMessage,
+    sendImageMessage,
+    loadMore,
+    hasNextPage,
+    isLoading,
+  };
 }
