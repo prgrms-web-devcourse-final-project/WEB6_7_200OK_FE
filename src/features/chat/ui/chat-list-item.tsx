@@ -9,15 +9,23 @@ import { Button } from "@/shared/ui";
 interface ChatListItemProps {
   chatRoom: ChatRoomListItem;
   isSelected: boolean;
-  onClick: () => void;
+  onSelect: (chatRoomId: string) => void;
 }
 
-function ChatListItemComponent({ chatRoom, isSelected, onClick }: ChatListItemProps) {
+function ChatListItemComponent({ chatRoom, isSelected, onSelect }: ChatListItemProps) {
+  const handleClick = () => {
+    onSelect(String(chatRoom.chatRoomId));
+  };
+
+  if (!chatRoom.partner || !chatRoom.auction) {
+    return null;
+  }
+
   return (
     <Button
       type="button"
       variant="ghost"
-      onClick={onClick}
+      onClick={handleClick}
       className={cn(
         "border-border rounded-y-md hover:bg-accent border-b-border relative h-auto w-full justify-start rounded-t-none rounded-b-none border-b p-4 text-left",
         isSelected && "bg-accent"
@@ -44,7 +52,7 @@ function ChatListItemComponent({ chatRoom, isSelected, onClick }: ChatListItemPr
               )}
             </div>
             <p className="text-muted-foreground text-xs leading-relaxed">
-              {chatRoom.lastMessage.preview}
+              {chatRoom.lastMessage?.preview}
             </p>
           </div>
         </div>
