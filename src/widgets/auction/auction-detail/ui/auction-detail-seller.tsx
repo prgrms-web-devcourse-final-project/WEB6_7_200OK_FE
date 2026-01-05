@@ -18,12 +18,12 @@ export default function AuctionDetailSeller({ seller }: AuctionDetailSellerProps
         </Avatar>
         <span className="text-lg">{seller.username}</span>
       </div>
-      <AuctionDetailSellerInfo sellerId={seller.sellerId} />
+      <SellerInfoSummary sellerId={seller.sellerId} />
     </div>
   );
 }
 
-function AuctionDetailSellerInfo({ sellerId }: { sellerId: number }) {
+function SellerInfoSummary({ sellerId }: { sellerId: number }) {
   const { data, isLoading, error } = useSellerInfo(sellerId);
   if (error) {
     return <span className="text-muted-foreground text-xs">데이터 없음</span>;
