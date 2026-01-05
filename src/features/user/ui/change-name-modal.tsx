@@ -69,7 +69,7 @@ export function ChangeNameModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="변경할 이름을 입력해주세요"
-            maxLength={20}
+            maxLength={10}
             className="w-full"
             autoFocus
             disabled={isLoading}

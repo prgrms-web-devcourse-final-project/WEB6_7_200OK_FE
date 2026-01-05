@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { UserProfile } from "@/entities/user";
 import { ChangeNameModal } from "@/features/user/ui/change-name-modal";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 import { useUserProfile, useUpdateUserImage, useUpdateUserName } from "../api/use-my-profile";
 
@@ -28,6 +29,10 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   };
 
   const handleAvatarChange = (file: File) => {
+    if (!file.type || !file.type.startsWith("image/")) {
+      showToast.error("이미지 파일만 업로드할 수 있습니다.");
+      return;
+    }
     changeImage(file);
   };
 
