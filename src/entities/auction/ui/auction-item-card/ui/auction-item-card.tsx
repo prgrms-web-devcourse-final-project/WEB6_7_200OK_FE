@@ -12,7 +12,7 @@ import AuctionEndTimer from "@/entities/auction/ui/auction-item-card/ui/auction-
 import AuctionPrice from "@/entities/auction/ui/auction-item-card/ui/auction-price";
 import AuctionTimer from "@/entities/auction/ui/auction-item-card/ui/auction-timer";
 import BuyCtaButton from "@/entities/auction/ui/auction-item-card/ui/buy-cta-button";
-import CtaButton from "@/entities/auction/ui/auction-item-card/ui/cta-button";
+import NotifyCtaButton from "@/entities/auction/ui/auction-item-card/ui/cta-button";
 import EndedCtaButton from "@/entities/auction/ui/auction-item-card/ui/ended-cta-button";
 import { LikeButton } from "@/entities/auction/ui/auction-item-card/ui/like-button";
 import RankingBadge from "@/entities/auction/ui/auction-item-card/ui/ranking-badge";
@@ -82,7 +82,7 @@ function AuctionItemCardComponent({
       {config.cta && (
         <div className="w-full px-4 pb-4">
           {config.cta === "buy" && <BuyCtaButton href={ROUTES.auctionDetail(auctionId)} />}
-          {config.cta === "notify" && <CtaButton type={config.cta} />}
+          {config.cta === "notify" && <NotifyCtaButton auctionId={auctionId} />}
           {config.cta === "ended" && <EndedCtaButton />}
         </div>
       )}
