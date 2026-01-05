@@ -17,6 +17,10 @@ export default async function Page({
     redirect("/auth/login");
   }
 
+  if (!scope) {
+    redirect("/dm?scope=ALL");
+  }
+
   const data = await chatRoomsLoader({
     scope,
     accessToken,

@@ -52,9 +52,9 @@ export interface ChatRoomLastMessage {
 export interface ChatRoomListItem {
   chatRoomId: number;
   tradeId: number;
-  partner: ChatRoomPartner;
-  auction: ChatRoomAuction;
-  lastMessage: ChatRoomLastMessage;
+  partner?: ChatRoomPartner;
+  auction?: ChatRoomAuction;
+  lastMessage?: ChatRoomLastMessage;
   unreadCount: number;
 }
 
