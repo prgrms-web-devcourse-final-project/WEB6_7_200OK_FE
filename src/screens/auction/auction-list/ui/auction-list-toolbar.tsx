@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowDownUp, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 
 import { AuctionFiltersSheet } from "@/features/auction/filters";
+import { AuctionSortDropdown } from "@/features/auction/filters/ui/auction-sort-dropdown";
 import QuickFilterButtons from "@/screens/auction/auction-list/ui/quick-filter-buttons";
 import { Button } from "@/shared/ui";
 
@@ -11,9 +12,7 @@ export default function AuctionListToolbar() {
     <div className="flex w-full flex-col justify-between gap-4 md:flex-row">
       <QuickFilterButtons />
       <div className="flex gap-2">
-        <Button variant="outline">
-          <ArrowDownUp /> 최신순
-        </Button>
+        <AuctionSortDropdown />
         <AuctionFiltersSheet
           trigger={
             <Button variant="outline">
