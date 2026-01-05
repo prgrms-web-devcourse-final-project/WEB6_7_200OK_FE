@@ -7,9 +7,11 @@ import { useRouter } from "next/navigation";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-import type { ChatMessage, ChatRoomListItem } from "@/features/chat";
+import { type ChatMessage, type ChatRoomListItem, type WebSocketResponse } from "@/features/chat";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
+
+import { WS_QUEUE_ERROR_CODES, WS_STOMP_ERROR_CODES } from "../model/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -171,25 +173,55 @@ export function useChatListSocket(
 
         // 에러 큐
         client.subscribe(API_ENDPOINTS.wsUserQueueErrors, (frame) => {
-          console.error("[LIST WS] Error:", frame.body);
-          // TODO: 추후 error 큐 처리 로직 추가 예정
-          // toast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+          console.error("[LIST WS] Queue Error:", frame.body);
+          try {
+            const errorResponse: WebSocketResponse = JSON.parse(frame.body);
+            const { code, message } = errorResponse;
+
+            console.error(`[LIST WS] Queue Error: ${code} - ${message}`);
+
+            switch (code) {
+              case WS_QUEUE_ERROR_CODES.FORBIDDEN_CHAT_ROOM:
+                showToast.error("접근 권한이 없는 채팅방입니다.");
+                router.push("/auth/login");
+                break;
+              case WS_QUEUE_ERROR_CODES.INVALID_TRADE_STATUS_FOR_CHAT:
+                showToast.error("거래 상태가 유효하지 않아 채팅을 할 수 없습니다.");
+                break;
+              case WS_QUEUE_ERROR_CODES.NOT_FOUND_CHAT_ROOM:
+                showToast.error("존재하지 않는 채팅방입니다.");
+                break;
+              default:
+                showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+            }
+          } catch (error) {
+            console.error("[LIST WS] Failed to parse queue error:", error);
+          }
         });
       },
       onStompError: (frame) => {
-        const errorMessage = frame.headers.message;
-        console.error("[LIST WS] Stomp error:", errorMessage);
+        console.error("[LIST WS] Stomp error:", frame);
+        try {
+          if (frame.body) {
+            const errorResponse: WebSocketResponse = JSON.parse(frame.body);
+            const { code, message } = errorResponse;
 
-        // TODO: 에러 임시 처리 (토큰 만료시 ExecutorSubscribableChannel[clientInboundChannel] 에러 발생)
-        // 채팅방에 접속시에도 채팅 리스트 ws는 연결중이니 여기서 처리하는 게 중복 에러 처리 방지
-        const isAuthError =
-          errorMessage === "Unauthorized" || errorMessage.includes("[clientInboundChannel]");
+            console.error(`[LIST WS] Error: ${code} - ${message}`);
 
-        if (isAuthError) {
-          showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
-          router.push("/auth/login");
-        } else {
-          showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+            switch (code) {
+              case WS_STOMP_ERROR_CODES.AUTH_REQUIRED:
+              case WS_STOMP_ERROR_CODES.TOKEN_INVALID:
+              case WS_STOMP_ERROR_CODES.TOKEN_EXPIRED:
+              case WS_STOMP_ERROR_CODES.TOKEN_MISSING:
+                showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+                router.push("/auth/login");
+                return;
+              default:
+                showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+            }
+          }
+        } catch (error) {
+          console.error("[LIST WS] Failed to parse error frame body:", error);
         }
       },
     });

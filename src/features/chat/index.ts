@@ -11,6 +11,10 @@ export {
   type ChatRoomAuction,
   type ChatRoomLastMessage,
   type ChatRoomTradeInfo,
+  type WebSocketResponse,
+  type ChatReadEvent,
+  WS_STOMP_ERROR_CODES,
+  WS_QUEUE_ERROR_CODES,
 } from "./model/types";
 
 export { useChatListSocket } from "./hooks/chat-list-ws";
