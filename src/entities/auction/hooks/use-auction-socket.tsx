@@ -25,7 +25,7 @@ export default function useAuctionSocket(auctionId: string) {
   const setViewerCount = useAuctionViewer((state) => state.setViewerCount);
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => new SockJS(`${API_URL}/ws-stomp`),
+      webSocketFactory: () => new SockJS(`${API_URL}/ws-stomp-public`),
       reconnectDelay: 3000,
 
       // 연결
@@ -35,7 +35,7 @@ export default function useAuctionSocket(auctionId: string) {
           const response = JSON.parse(frame.body) as SocketResponseType;
 
           if (response.currentPrice) {
-            console.log("금액 변경", response.currentPrice); // TODO: onExpiry 실행 or 서버 타임 diff 계산 및 반영
+            router.refresh();
           }
           if (response.status) {
             if (response.status !== "PROCESS" && response.status !== "SCHEDULED") {
