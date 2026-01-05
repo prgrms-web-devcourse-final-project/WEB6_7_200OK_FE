@@ -8,7 +8,7 @@ interface PageProps {
   }>;
 }
 
-export default async function UserPage({ params }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const { userId } = await params;
   const targetUserId = Number(userId);
 
