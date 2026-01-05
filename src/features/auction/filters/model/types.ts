@@ -57,3 +57,10 @@ export interface AuctionFilters {
   sortBy?: AuctionSortByType;
   sortDirection?: AuctionSortDirectionType;
 }
+
+export interface AuctionSortType {
+  value: string;
+  label: string;
+  sortBy: AuctionSortByType;
+  sortDirection: AuctionSortDirectionType;
+}
