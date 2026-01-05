@@ -7,9 +7,9 @@ interface GetChatRoomsParams {
   accessToken: string;
 }
 
-export const chatRoomsLoader = async (params?: GetChatRoomsParams) => {
-  const scope = params?.scope ?? "ALL";
-  const { accessToken } = params!;
+export const chatRoomsLoader = async (params: GetChatRoomsParams) => {
+  const scope = params.scope ?? "ALL";
+  const { accessToken } = params;
   try {
     const response = await fetch<ChatRoomListItem[]>(`${API_ENDPOINTS.chatRooms}?scope=${scope}`, {
       headers: {
