@@ -332,7 +332,6 @@ export function useChatRoomSocket(
         client.subscribe(API_ENDPOINTS.wsUserQueueErrors, () => {
           showToast.error("채팅방 연결 중 에러가 발생했습니다.");
         });
-
         client.publish({
           destination: API_ENDPOINTS.wsChatRead,
           body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
