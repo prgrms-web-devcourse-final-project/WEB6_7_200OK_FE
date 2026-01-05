@@ -31,38 +31,19 @@ export async function getUserProfile(targetUserId: number): Promise<UserProfileT
   };
 }
 
-// interface UserBasicResponse {
-//   userEmail: string;
-//   username: string;
-//   userProfileUrl: string;
-// }
-
-// export async function getUserBasic(): Promise<UserBasicResponse> {
-//   const result = await httpClient<UserBasicResponse>(API_ENDPOINTS.authBasic, {
-//     method: "GET",
-//   });
-
-//   const { data } = result;
-//   return data;
-// }
-
-export async function updateUserProfileImage(file: File) {
-  const formData = new FormData();
-  formData.append("image", file);
-
-  return httpClient(API_ENDPOINTS.userImageUpdate, {
-    method: "PUT",
-    body: formData,
-  });
+interface UserBasicResponse {
+  userEmail: string;
+  username: string;
+  userProfileUrl: string;
 }
-export async function updateUserName(username: string) {
-  return httpClient(API_ENDPOINTS.userNameUpdate, {
-    method: "PUT",
-    body: { username },
-    headers: {
-      "Content-Type": "application/json",
-    },
+
+export async function getUserBasic(): Promise<UserBasicResponse> {
+  const result = await httpClient<UserBasicResponse>(API_ENDPOINTS.authBasic, {
+    method: "GET",
   });
+
+  const { data } = result;
+  return data;
 }
 
 export async function updateUserProfileImage(file: File) {
