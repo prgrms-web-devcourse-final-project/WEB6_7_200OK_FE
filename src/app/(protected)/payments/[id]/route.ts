@@ -28,6 +28,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         amount,
         auctionId: id,
       },
+      credentials: "include",
     });
     if (response.code === 200) {
       const successUrl = new URL(`/payments/${id}/success`, url.origin);
