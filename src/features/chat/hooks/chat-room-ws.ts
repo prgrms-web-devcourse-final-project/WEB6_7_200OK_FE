@@ -96,12 +96,24 @@ export function useChatRoomSocket(
 
         if (!res.ok) {
           const errorResponse: ApiResponseType<null> = await res.json();
+<<<<<<< HEAD
           const { code, message } = errorResponse;
 
           if (code === 400 || code === 403 || code === 404) {
             showToast.error(message);
           } else {
             showToast.error("메시지를 불러오는데 실패했습니다.");
+=======
+
+          switch (errorResponse.code) {
+            case 400:
+            case 403:
+            case 404:
+              showToast.error(errorResponse.message);
+              break;
+            default:
+              showToast.error("메시지를 불러오는데 실패했습니다.");
+>>>>>>> ce571c6 (refactor(chat): simplify error handling and logging in WebSocket hooks)
           }
           return;
         }
@@ -332,6 +344,7 @@ export function useChatRoomSocket(
         client.subscribe(API_ENDPOINTS.wsUserQueueErrors, () => {
           showToast.error("채팅방 연결 중 에러가 발생했습니다.");
         });
+
         client.publish({
           destination: API_ENDPOINTS.wsChatRead,
           body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
