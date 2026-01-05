@@ -95,20 +95,16 @@ export function useChatRoomSocket(
         );
 
         if (!res.ok) {
-          try {
-            const errorResponse: ApiResponseType<null> = await res.json();
+          const errorResponse: ApiResponseType<null> = await res.json();
 
-            switch (errorResponse.code) {
-              case 400:
-              case 403:
-              case 404:
-                showToast.error(errorResponse.message);
-                break;
-              default:
-                showToast.error("메시지를 불러오는데 실패했습니다.");
-            }
-          } catch (e) {
-            console.error("Failed to parse error response:", e);
+          switch (errorResponse.code) {
+            case 400:
+            case 403:
+            case 404:
+              showToast.error(errorResponse.message);
+              break;
+            default:
+              showToast.error("메시지를 불러오는데 실패했습니다.");
           }
           return;
         }
@@ -138,8 +134,7 @@ export function useChatRoomSocket(
 
         setNextCursor(messageData.nextCursor);
         setHasNextPage(messageData.hasNext);
-      } catch (error) {
-        console.error("Failed to load messages:", error);
+      } catch {
         showToast.error("메시지 목록을 불러올 수 없습니다.");
       } finally {
         setIsLoading(false);
@@ -160,36 +155,23 @@ export function useChatRoomSocket(
       return;
     }
 
-    try {
-      const res = await fetch(`${API_URL}${API_ENDPOINTS.chatRoomRead(chatRoomId)}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+    const res = await fetch(`${API_URL}${API_ENDPOINTS.chatRoomRead(chatRoomId)}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
-      if (!res.ok) {
-        try {
-          const apiError: ApiResponseType<null> = await res.json();
-          switch (apiError.code) {
-            case 403:
-            case 404:
-              showToast.error(apiError.message);
-              break;
-            default:
-              console.error("읽음 처리 서버 에러:", apiError);
-          }
-        } catch (e) {
-          console.error("Failed to parse error response:", e);
-        }
-        return;
+    if (!res.ok) {
+      const apiError: ApiResponseType<null> = await res.json();
+      if (apiError.code === 403 || apiError.code === 404) {
+        showToast.error(apiError.message);
       }
+      return;
+    }
 
-      if (!clientRef.current?.connected) {
-        loadMessages(null);
-      }
-    } catch (error) {
-      console.error("읽음 처리 관련: ", error);
+    if (!clientRef.current?.connected) {
+      loadMessages(null);
     }
   }, [chatRoomId, accessToken, loadMessages]);
 
@@ -203,7 +185,6 @@ export function useChatRoomSocket(
   const sendMessage = useCallback(
     (content: string) => {
       if (!clientRef.current?.connected || !chatRoomId) {
-        console.error("Socket not connected or no chat room selected");
         return;
       }
 
@@ -226,7 +207,6 @@ export function useChatRoomSocket(
   const sendImageMessage = useCallback(
     (imageUrls: string[]) => {
       if (!clientRef.current?.connected || !chatRoomId) {
-        console.error("Socket not connected or no chat room selected");
         return;
       }
 
@@ -277,99 +257,72 @@ export function useChatRoomSocket(
       },
       reconnectDelay: 2000,
       onConnect: () => {
-        console.warn(`[ChatRoom WS] Connected to room ${chatRoomId}`);
-
         client.subscribe(API_ENDPOINTS.wsChatRoom(chatRoomId), (frame) => {
-          try {
-            const parsedBody = JSON.parse(frame.body);
-            if (parsedBody.messageId) {
-              const message: ChatMessage = parsedBody;
-              setMessages((prev) => {
-                const existingIndex = prev.findIndex((m) => m.messageId === message.messageId);
-                if (existingIndex !== -1) {
-                  const newPrev = [...prev];
-                  newPrev[existingIndex] = { ...newPrev[existingIndex], ...message };
-                  return newPrev;
-                }
+          const parsedBody = JSON.parse(frame.body);
+          if (parsedBody.messageId) {
+            const message: ChatMessage = parsedBody;
+            setMessages((prev) => {
+              const existingIndex = prev.findIndex((m) => m.messageId === message.messageId);
+              if (existingIndex !== -1) {
+                const newPrev = [...prev];
+                newPrev[existingIndex] = { ...newPrev[existingIndex], ...message };
+                return newPrev;
+              }
 
-                if (clientRef.current?.connected && message.senderId !== userId) {
-                  const readPayload = { chatRoomId: Number(chatRoomId) };
-                  console.warn("[ChatRoom WS] Read Payload:", JSON.stringify(readPayload));
+              if (clientRef.current?.connected && message.senderId !== userId) {
+                // 실시간 읽음 처리 로직
+                clientRef.current.publish({
+                  destination: API_ENDPOINTS.wsChatRead,
+                  body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
+                });
+              }
 
-                  // 실시간 읽음 처리 로직
-                  clientRef.current.publish({
-                    destination: API_ENDPOINTS.wsChatRead,
-                    body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
-                  });
-                }
-
-                return [...prev, message];
-              });
-            }
-          } catch (error) {
-            console.error("[WS] Failed to parse message:", error);
+              return [...prev, message];
+            });
           }
         });
-
-        console.warn(
-          `[ChatRoom WS] Subscribing to read topic: ${API_ENDPOINTS.wsRealTimeRead(chatRoomId)}`
-        );
 
         // 실시간 읽음 처리 구독
         client.subscribe(API_ENDPOINTS.wsRealTimeRead(chatRoomId), (frame) => {
-          try {
-            console.warn("[ChatRoom WS] Read event frame received:", frame.body);
-            const event: ChatReadEvent = JSON.parse(frame.body);
-            console.warn("REAL TIME READ EVENT:", event);
+          const event: ChatReadEvent = JSON.parse(frame.body);
 
-            if (userId && event.readerId !== userId) {
-              setMessages((prev) =>
-                prev.map((msg) => {
-                  if (msg.messageId <= event.lastReadMessageId && !msg.isRead) {
-                    return { ...msg, isRead: true };
-                  }
-                  return msg;
-                })
-              );
-            }
-          } catch (error) {
-            console.error("[WS] Failed to parse read event:", error);
+          if (userId && event.readerId !== userId) {
+            setMessages((prev) =>
+              prev.map((msg) => {
+                if (msg.messageId <= event.lastReadMessageId && !msg.isRead) {
+                  return { ...msg, isRead: true };
+                }
+                return msg;
+              })
+            );
           }
         });
 
-        client.subscribe(API_ENDPOINTS.wsUserQueueErrors, (frame) => {
-          console.error("[WS] Error:", frame.body);
+        client.subscribe(API_ENDPOINTS.wsUserQueueErrors, () => {
           showToast.error("채팅방 연결 중 에러가 발생했습니다.");
         });
+
         client.publish({
           destination: API_ENDPOINTS.wsChatRead,
           body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
         });
       },
       onStompError: (frame) => {
-        const errorMessage = frame.headers.message;
-        console.error("[ROOM WS] Stomp error:", errorMessage);
-        try {
-          if (frame.body) {
-            const errorResponse: WebSocketResponse = JSON.parse(frame.body);
-            const { code, message } = errorResponse;
+        if (frame.body) {
+          const errorResponse: WebSocketResponse = JSON.parse(frame.body);
+          const { code } = errorResponse;
 
-            console.error(`[ROOM WS] Error: ${code} - ${message}`);
-
-            switch (code) {
-              case WS_STOMP_ERROR_CODES.AUTH_REQUIRED:
-              case WS_STOMP_ERROR_CODES.TOKEN_INVALID:
-              case WS_STOMP_ERROR_CODES.TOKEN_EXPIRED:
-              case WS_STOMP_ERROR_CODES.TOKEN_MISSING:
-                showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
-                router.push("/auth/login");
-                return;
-              default:
-                showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
-            }
+          switch (code) {
+            case WS_STOMP_ERROR_CODES.AUTH_REQUIRED:
+            case WS_STOMP_ERROR_CODES.TOKEN_INVALID:
+            case WS_STOMP_ERROR_CODES.TOKEN_EXPIRED:
+            case WS_STOMP_ERROR_CODES.TOKEN_MISSING:
+              showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+              router.push("/auth/login");
+              return;
+            default:
+              showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
           }
-        } catch (error) {
-          console.error("[LIST WS] Failed to parse error frame body:", error);
         }
       },
     });
@@ -378,7 +331,6 @@ export function useChatRoomSocket(
     clientRef.current = client;
 
     return () => {
-      console.warn(`[ChatRoom WS] Disconnecting from room ${chatRoomId}`);
       client.deactivate();
       clientRef.current = null;
     };
