@@ -12,7 +12,7 @@ import { showToast } from "@/shared/lib/utils/toast/show-toast";
 interface UseAuctionLikeType {
   auctionId: string | number;
   initIsLiked: boolean;
-  initLikeCount: number;
+  initLikeCount?: number;
 }
 
 export const useAuctionLike = ({ auctionId, initIsLiked, initLikeCount }: UseAuctionLikeType) => {
@@ -21,7 +21,7 @@ export const useAuctionLike = ({ auctionId, initIsLiked, initLikeCount }: UseAuc
 
   const [state, setState] = useState<LikeType>({
     isLiked: initIsLiked,
-    likeCount: initLikeCount,
+    likeCount: initLikeCount ?? 0,
   });
 
   const queryKey = ["auction-like", auctionId] as const;
