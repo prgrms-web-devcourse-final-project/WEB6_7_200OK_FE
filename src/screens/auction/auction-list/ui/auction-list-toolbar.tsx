@@ -8,7 +8,7 @@ import { Button } from "@/shared/ui";
 
 export default function AuctionListToolbar() {
   return (
-    <div className="flex w-full justify-between">
+    <div className="flex w-full flex-col justify-between gap-4 md:flex-row">
       <QuickFilterButtons />
       <div className="flex gap-2">
         <Button variant="outline">
