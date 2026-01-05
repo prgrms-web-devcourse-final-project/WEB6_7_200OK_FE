@@ -63,6 +63,6 @@ export const useAuctionLike = ({ auctionId, initIsLiked, initLikeCount }: UseAuc
     isLiked: state.isLiked,
     likeCount: state.likeCount,
     toggleLike,
-    isPending: likeMutation.isPaused,
+    isPending: likeMutation.isPending,
   };
 };
