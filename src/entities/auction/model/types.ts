@@ -10,6 +10,7 @@ export interface AuctionItemType {
   isLiked: boolean;
   startedAt: string;
   status?: AuctionStatusType;
+  isNotification?: boolean;
 }
 
 export interface AuctionPriceType {

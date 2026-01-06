@@ -32,3 +32,18 @@ export async function updateAuctionNotificationSettings(
   if (res.code === 200) return;
   throw new Error("Failed to update notification setting");
 }
+
+export const toggleAuctionNotificationSettingStart = async (
+  auctionId: string | number,
+  body: Pick<NotificationSettingsType, "auctionStart">
+) => {
+  const response = await httpClient(API_ENDPOINTS.auctionNotificationSettingStart(auctionId), {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body,
+  });
+
+  if (response.status === "OK") return;
+  throw new Error("경매 시작 알림 설정에 실패했습니다.");
+};
