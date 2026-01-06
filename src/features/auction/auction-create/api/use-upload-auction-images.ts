@@ -42,10 +42,13 @@ export function useUploadAuctionImages() {
           case 502:
             showToast.error(apiError.message || "이미지 업로드에 실패했습니다.");
             break;
+          // 권한 문제
+          case 403:
+            showToast.error("이미지 업로드 권한이 없습니다.");
+            break;
+          // 파일 크기 문제
           case 413:
-            showToast.error(
-              apiError.message || "이미지 용량이 너무 큽니다. 용량을 줄여 다시 시도해 주세요."
-            );
+            showToast.error("이미지 하나당 최대 10MB를 초과할 수 없습니다.");
             break;
           default:
             showToast.error("이미지 업로드에 실패했습니다.");
