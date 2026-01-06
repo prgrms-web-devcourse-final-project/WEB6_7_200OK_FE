@@ -183,58 +183,58 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
     if (!apiResponse.ok) {
       let errorMessage = "Unknown error";
       let errorData: Record<string, unknown> | null = null;
+      let errorText: string | null = null;
 
       try {
-        errorData = (await apiResponse.clone().json()) as Record<string, unknown>;
-        if (errorData) {
-          errorMessage =
-            (typeof errorData.message === "string" ? errorData.message : null) ||
-            (typeof errorData.error === "string" ? errorData.error : null) ||
-            JSON.stringify(errorData);
+        errorText = await apiResponse.clone().text();
+        try {
+          errorData = JSON.parse(errorText) as Record<string, unknown>;
+          if (errorData) {
+            errorMessage =
+              (typeof errorData.message === "string" ? errorData.message : null) ||
+              (typeof errorData.error === "string" ? errorData.error : null) ||
+              JSON.stringify(errorData);
+          }
+        } catch {
+          errorMessage = errorText || "No error message";
         }
       } catch {
-        try {
-          const errorText = await apiResponse.clone().text();
-          errorMessage = errorText || "No error message";
-        } catch {
-          errorMessage = "Could not read error message";
-        }
+        errorMessage = "Could not read error message";
       }
 
-      const logData = {
-        url: apiUrl,
-        method: req.method,
+      // 클라이언트에서 확인할 수 있도록 상세 정보를 응답에 포함
+      const errorResponse = {
+        error: apiResponse.statusText || "Error",
+        message: errorMessage,
         status: apiResponse.status,
-        contentType: req.headers.get("content-type"),
-        contentLength: headers.get("content-length"),
-        isFormData: requestBody.isFormData,
-        hasBody: requestBody.body !== null,
-        bodySize: requestBody.body instanceof ArrayBuffer ? requestBody.body.byteLength : null,
-        errorMessage,
-        errorData,
-        responseHeaders: Object.fromEntries(apiResponse.headers.entries()),
+        proxyDetails: {
+          url: apiUrl,
+          method: req.method,
+          contentType: req.headers.get("content-type"),
+          contentLength: headers.get("content-length"),
+          isFormData: requestBody.isFormData,
+          hasBody: requestBody.body !== null,
+          bodySize: requestBody.body instanceof ArrayBuffer ? requestBody.body.byteLength : null,
+          actualBodySize:
+            requestBody.body instanceof ArrayBuffer ? requestBody.body.byteLength : null,
+          declaredContentLength: req.headers.get("content-length"),
+        },
+        serverResponse: {
+          errorData,
+          errorText,
+          responseHeaders: Object.fromEntries(apiResponse.headers.entries()),
+        },
         requestHeaders: Object.fromEntries(headers.entries()),
       };
 
-      // 서버 콘솔에 로깅
-      console.error(`[PROXY] ${apiResponse.status} Error:`, JSON.stringify(logData, null, 2));
-
-      // 에러 상태인 경우 클라이언트에도 상세 정보를 포함한 응답 반환
-      return NextResponse.json(
-        {
-          error: apiResponse.statusText || "Error",
-          message: errorMessage,
-          details: {
-            url: apiUrl,
-            method: req.method,
-            contentType: req.headers.get("content-type"),
-            contentLength: headers.get("content-length"),
-            bodySize: requestBody.body instanceof ArrayBuffer ? requestBody.body.byteLength : null,
-            serverError: errorData,
-          },
+      // 클라이언트에서 확인할 수 있도록 응답 반환
+      return NextResponse.json(errorResponse, {
+        status: apiResponse.status,
+        headers: {
+          "X-Error-Details": "true",
+          "X-Proxy-URL": apiUrl,
         },
-        { status: apiResponse.status }
-      );
+      });
     }
 
     return new NextResponse(apiResponse.body, {
