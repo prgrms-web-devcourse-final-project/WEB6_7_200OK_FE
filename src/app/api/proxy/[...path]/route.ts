@@ -59,6 +59,9 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
     if (req.headers.get("content-type")) {
       headers.set("content-type", req.headers.get("content-type")!);
     }
+    if (req.headers.get("content-length")) {
+      headers.set("content-length", req.headers.get("content-length")!);
+    }
   } else {
     headers.delete("content-length");
   }
