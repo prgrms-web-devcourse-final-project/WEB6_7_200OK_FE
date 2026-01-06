@@ -137,22 +137,26 @@ export function useChatListSocket(
 
   const handleQueueError = useCallback(
     (frame: IFrame) => {
-      const errorResponse: WebSocketResponse = JSON.parse(frame.body);
-      const { code } = errorResponse;
+      try {
+        const errorResponse: WebSocketResponse = JSON.parse(frame.body);
+        const { code } = errorResponse;
 
-      switch (code) {
-        case WS_QUEUE_ERROR_CODES.FORBIDDEN_CHAT_ROOM:
-          showToast.error("접근 권한이 없는 채팅방입니다.");
-          router.push("/auth/login");
-          break;
-        case WS_QUEUE_ERROR_CODES.INVALID_TRADE_STATUS_FOR_CHAT:
-          showToast.error("거래 상태가 유효하지 않아 채팅을 할 수 없습니다.");
-          break;
-        case WS_QUEUE_ERROR_CODES.NOT_FOUND_CHAT_ROOM:
-          showToast.error("존재하지 않는 채팅방입니다.");
-          break;
-        default:
-          showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+        switch (code) {
+          case WS_QUEUE_ERROR_CODES.FORBIDDEN_CHAT_ROOM:
+            showToast.error("접근 권한이 없는 채팅방입니다.");
+            router.push("/auth/login");
+            break;
+          case WS_QUEUE_ERROR_CODES.INVALID_TRADE_STATUS_FOR_CHAT:
+            showToast.error("거래 상태가 유효하지 않아 채팅을 할 수 없습니다.");
+            break;
+          case WS_QUEUE_ERROR_CODES.NOT_FOUND_CHAT_ROOM:
+            showToast.error("존재하지 않는 채팅방입니다.");
+            break;
+          default:
+            showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+        }
+      } catch {
+        showToast.error("채팅 목록 연결 중 에러가 발생하였습니다.");
       }
     },
     [router]
