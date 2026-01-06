@@ -1,4 +1,7 @@
-import { type AuctionStatusType } from "@/entities/auction/model/status";
+import {
+  type AuctionPublicStatusType,
+  type AuctionStatusType,
+} from "@/entities/auction/model/status";
 
 export interface AuctionItemType {
   auctionId: number;
@@ -17,3 +20,7 @@ export interface AuctionPriceType {
 }
 
 export type AuctionType = AuctionItemType & AuctionPriceType;
+
+export type AuctionListType = Omit<AuctionType, "status"> & {
+  status: AuctionPublicStatusType;
+};
