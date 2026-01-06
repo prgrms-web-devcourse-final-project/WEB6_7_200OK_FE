@@ -2,18 +2,18 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { auctionsQuery } from "@/screens/main/model/auctions-query";
+import { auctionsQueryClient } from "@/screens/main/model/auctions-query";
 import { SECTIONS } from "@/screens/main/model/sections";
 import { useServerTimeSync } from "@/shared/lib/hooks/use-server-time-sync";
 import { Container } from "@/shared/ui";
 import { AuctionCarouselSection } from "@/widgets/auction/auction-carousel-section";
 
 export default function AuctionsClient() {
-  const { data, isLoading, isError } = useQuery({ ...auctionsQuery });
+  const { data, isLoading, isError } = useQuery({ ...auctionsQueryClient });
 
   useServerTimeSync({
     serverTime: data?.serverAt,
-    queryKey: auctionsQuery.queryKey,
+    queryKey: auctionsQueryClient.queryKey,
   });
 
   return (
