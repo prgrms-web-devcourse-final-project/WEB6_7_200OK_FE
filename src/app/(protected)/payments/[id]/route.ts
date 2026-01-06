@@ -17,18 +17,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.redirect(failUrl);
   }
   const cookieHeader = req.headers.get("cookie") ?? "";
-
-  const accessToken =
-    cookieHeader
-      .split("; ")
-      .find((c) => c.startsWith("accessToken="))
-      ?.split("=")[1] ?? "";
   try {
     const response = await fetch<PaymentsConfirmResponse>("/api/v1/payments/confirm", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${decodeURIComponent(accessToken)}`,
+        Cookie: cookieHeader,
       },
       body: {
         paymentKey,
@@ -37,7 +31,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         auctionId: id,
       },
     });
-    if (response.code === 200) {
+    if (response.data) {
       const successUrl = new URL(`/payments/${id}/success`, url.origin);
       successUrl.searchParams.set("paymentKey", response.data.paymentKey);
       successUrl.searchParams.set("amount", response.data.amount);
