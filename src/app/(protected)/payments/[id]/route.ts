@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import type { PaymentsConfirmResponse } from "@/features/auction/auction-purchase/model/type";
@@ -17,20 +16,20 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     failUrl.searchParams.set("code", "MISS_ACCESS");
     return NextResponse.redirect(failUrl);
   }
+  const cookieHeader = req.headers.get("cookie") ?? "";
 
-  const cookieHeader = (await cookies())
-    .getAll()
-    .map((c) => `${c.name}=${c.value}`)
-    .join("; ");
-
-  if (!cookieHeader) {
-    failUrl.searchParams.set("code", "MISS_COOKIE");
-    return NextResponse.redirect(failUrl);
-  }
+  const accessToken =
+    cookieHeader
+      .split("; ")
+      .find((c) => c.startsWith("accessToken="))
+      ?.split("=")[1] ?? "";
   try {
     const response = await fetch<PaymentsConfirmResponse>("/api/v1/payments/confirm", {
       method: "POST",
-      headers: { "Content-Type": "application/json", cookieHeader },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${decodeURIComponent(accessToken)}`,
+      },
       body: {
         paymentKey,
         orderId,
@@ -47,8 +46,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     }
   } catch (error) {
     console.error(error);
+    failUrl.searchParams.set("code", "confirm");
     return NextResponse.redirect(failUrl);
   }
+  failUrl.searchParams.set("code", "what");
 
   return NextResponse.redirect(failUrl);
 }
