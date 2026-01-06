@@ -232,19 +232,23 @@ export function useChatRoomSocket(
     (frame: IFrame) => {
       if (!frame.body) return;
 
-      const errorResponse: WebSocketResponse = JSON.parse(frame.body);
-      const { code } = errorResponse;
+      try {
+        const errorResponse: WebSocketResponse = JSON.parse(frame.body);
+        const { code } = errorResponse;
 
-      switch (code) {
-        case WS_STOMP_ERROR_CODES.AUTH_REQUIRED:
-        case WS_STOMP_ERROR_CODES.TOKEN_INVALID:
-        case WS_STOMP_ERROR_CODES.TOKEN_EXPIRED:
-        case WS_STOMP_ERROR_CODES.TOKEN_MISSING:
-          showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
-          router.push("/auth/login");
-          return;
-        default:
-          showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+        switch (code) {
+          case WS_STOMP_ERROR_CODES.AUTH_REQUIRED:
+          case WS_STOMP_ERROR_CODES.TOKEN_INVALID:
+          case WS_STOMP_ERROR_CODES.TOKEN_EXPIRED:
+          case WS_STOMP_ERROR_CODES.TOKEN_MISSING:
+            showToast.error("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+            router.push("/auth/login");
+            return;
+          default:
+            showToast.error("채팅 목록 연결 중 오류가 발생했습니다.");
+        }
+      } catch {
+        showToast.error("채팅 연결 중 에러가 발생하였습니다.");
       }
     },
     [router]
@@ -252,26 +256,30 @@ export function useChatRoomSocket(
 
   const handleMessageReceived = useCallback(
     (frame: IFrame) => {
-      const parsedBody = JSON.parse(frame.body);
-      if (parsedBody.messageId) {
-        const message: ChatMessage = parsedBody;
-        setMessages((prev) => {
-          const existingIndex = prev.findIndex((m) => m.messageId === message.messageId);
-          if (existingIndex !== -1) {
-            const newPrev = [...prev];
-            newPrev[existingIndex] = { ...newPrev[existingIndex], ...message };
-            return newPrev;
-          }
+      try {
+        const parsedBody = JSON.parse(frame.body);
+        if (parsedBody.messageId) {
+          const message: ChatMessage = parsedBody;
+          setMessages((prev) => {
+            const existingIndex = prev.findIndex((m) => m.messageId === message.messageId);
+            if (existingIndex !== -1) {
+              const newPrev = [...prev];
+              newPrev[existingIndex] = { ...newPrev[existingIndex], ...message };
+              return newPrev;
+            }
 
-          if (clientRef.current?.connected && message.senderId !== userIdRef.current) {
-            clientRef.current.publish({
-              destination: API_ENDPOINTS.wsChatRead,
-              body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
-            });
-          }
+            if (clientRef.current?.connected && message.senderId !== userIdRef.current) {
+              clientRef.current.publish({
+                destination: API_ENDPOINTS.wsChatRead,
+                body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
+              });
+            }
 
-          return [...prev, message];
-        });
+            return [...prev, message];
+          });
+        }
+      } catch {
+        showToast.error("채팅 메시지 처리 중 에러가 발생하였습니다.");
       }
     },
     [chatRoomId]
