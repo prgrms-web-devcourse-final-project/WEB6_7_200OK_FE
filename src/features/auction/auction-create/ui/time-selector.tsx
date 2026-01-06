@@ -18,7 +18,7 @@ const timeButtonClass = cva("w-full rounded-none border-none shadow-none", {
       true: "bg-brand text-accent dark:text-accent-foreground hover:!bg-brand hover:!text-accent dark:hover:!text-accent-foreground",
     },
     disabled: {
-      true: "cursor-not-allowed opacity-50",
+      true: "text-muted-foreground cursor-not-allowed opacity-50",
     },
   },
 });
