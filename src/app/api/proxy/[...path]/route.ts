@@ -142,6 +142,18 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       return response;
     }
 
+    // 403 에러 발생 시 상세 로깅
+    if (apiResponse.status === 403) {
+      console.error("403 Forbidden Error:", {
+        url: apiUrl,
+        method: req.method,
+        contentType: req.headers.get("content-type"),
+        contentLength: req.headers.get("content-length"),
+        isFormData: requestBody.isFormData,
+        hasBody: requestBody.body !== null,
+      });
+    }
+
     return new NextResponse(apiResponse.body, {
       status: apiResponse.status,
       headers: apiResponse.headers,
