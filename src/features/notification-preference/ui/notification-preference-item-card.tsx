@@ -18,7 +18,6 @@ export function NotificationPreferenceItemCard({
   onSettingClick,
 }: NotificationPreferenceItemProps) {
   const isScheduled = item.status === "경매 예정";
-
   return (
     <UserItemCard
       name={item.name}
@@ -30,6 +29,7 @@ export function NotificationPreferenceItemCard({
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
       badgeNode={<UserItemBadge status={item.status} />}
+      imageHref={`/auctions/${item.id}`}
       actionNode={
         <button
           type="button"

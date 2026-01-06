@@ -25,6 +25,7 @@ export function UserSellingItemCard({
   const isOnSale = item.status === "판매중";
   const isScheduled = item.status === "경매 예정";
   const hasUnreadMessages = item.unreadMessageCount ? item.unreadMessageCount > 0 : false;
+  const canNavigate = !(isSoldOut || isAuctionEnded);
 
   return (
     <UserItemCard
@@ -36,6 +37,7 @@ export function UserSellingItemCard({
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
+      imageHref={canNavigate ? `/auctions/${item.id}` : undefined}
       badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         isOwn &&
