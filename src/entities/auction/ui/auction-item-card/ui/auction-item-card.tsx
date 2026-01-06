@@ -52,7 +52,7 @@ export function AuctionItemCard({
           {config.badge === "ranking" && rank && <RankingBadge rank={rank} />}
           {config.badge === "live" && <LiveBadge />}
           {config.badge === "upcoming" && <UpcomingBadge />}
-          {config.like && <LikeButton isLiked={isLiked} />}
+          {config.like && <LikeButton auctionId={auctionId} initIsLiked={isLiked} />}
         </div>
 
         <div className="flex flex-col gap-4 p-4">
