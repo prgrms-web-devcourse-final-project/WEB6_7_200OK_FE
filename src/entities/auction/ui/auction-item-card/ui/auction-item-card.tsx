@@ -12,9 +12,9 @@ import AuctionEndTimer from "@/entities/auction/ui/auction-item-card/ui/auction-
 import AuctionPrice from "@/entities/auction/ui/auction-item-card/ui/auction-price";
 import AuctionTimer from "@/entities/auction/ui/auction-item-card/ui/auction-timer";
 import BuyCtaButton from "@/entities/auction/ui/auction-item-card/ui/buy-cta-button";
-import NotifyCtaButton from "@/entities/auction/ui/auction-item-card/ui/cta-button";
 import EndedCtaButton from "@/entities/auction/ui/auction-item-card/ui/ended-cta-button";
 import { LikeButton } from "@/entities/auction/ui/auction-item-card/ui/like-button";
+import NotifyCtaButton from "@/entities/auction/ui/auction-item-card/ui/notify-cta-button";
 import RankingBadge from "@/entities/auction/ui/auction-item-card/ui/ranking-badge";
 import UpcomingInfo from "@/entities/auction/ui/auction-item-card/ui/upcoming-info";
 import { ROUTES } from "@/shared/config/routes";
