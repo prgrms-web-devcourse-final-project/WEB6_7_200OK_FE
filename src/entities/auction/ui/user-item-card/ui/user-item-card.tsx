@@ -8,8 +8,8 @@ interface UserItemCardProps {
   imageUrl?: string;
   name: string;
   date: string;
-  price: number;
-  originalPrice?: number;
+  price?: number;
+  originalPrice: number;
   discountRate?: number;
   isPriceGray?: boolean;
   badgeNode?: React.ReactNode;
@@ -83,7 +83,7 @@ export function UserItemCard({
                 {name}
               </h3>
               <div className="mt-1.5">
-                {originalPrice && discountRate ? (
+                {price && discountRate ? (
                   <div className="flex flex-col gap-0.5">
                     <span className="text-muted-foreground text-xs line-through decoration-auto">
                       {originalPrice.toLocaleString()}원
@@ -107,7 +107,7 @@ export function UserItemCard({
                       isPriceGray ? "text-muted-foreground" : "text-brand-text"
                     )}
                   >
-                    {price.toLocaleString()}원
+                    {originalPrice.toLocaleString()}원
                   </p>
                 )}
               </div>
