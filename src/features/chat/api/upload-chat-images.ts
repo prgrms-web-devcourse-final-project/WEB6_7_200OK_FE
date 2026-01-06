@@ -43,6 +43,7 @@ export function useUploadChatImages() {
           case 403:
             showToast.error("이미지 업로드 권한이 없습니다.");
             break;
+          // 파일 크기 문제
           case 413:
             showToast.error("이미지 하나당 최대 10MB를 초과할 수 없습니다.");
             break;
