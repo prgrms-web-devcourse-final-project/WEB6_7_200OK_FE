@@ -1,11 +1,17 @@
 import { z } from "zod";
 
-import { MIN_DROP_PERCENTAGE, MIN_START_PRICE, STOP_LOSS_PERCENTAGE } from "@/entities/auction";
+import {
+  MIN_DROP_PERCENTAGE,
+  MIN_START_PRICE,
+  STOP_LOSS_PERCENTAGE,
+  MAX_START_PRICE,
+} from "@/entities/auction";
 
 // 개별 필드 검증용
 export const startPriceSchema = z
   .number()
-  .min(MIN_START_PRICE, `판매 시작가는 ${MIN_START_PRICE.toLocaleString()}원 이상 설정해주세요.`);
+  .min(MIN_START_PRICE, `판매 시작가는 ${MIN_START_PRICE.toLocaleString()}원 이상 설정해주세요.`)
+  .max(MAX_START_PRICE, `판매 시작가는 ${MAX_START_PRICE.toLocaleString()}원 이하로 설정해주세요.`);
 
 export const stopLossPriceSchema = z.number().positive("최저가를 입력 해주세요.");
 export const dropPriceSchema = z.number().positive("하락단위를 입력 해주세요.");
