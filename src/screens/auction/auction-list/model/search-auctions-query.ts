@@ -1,8 +1,7 @@
 import { infiniteQueryOptions } from "@tanstack/react-query";
 
+import { type AuctionFilters } from "@/features/auction/filters/model/types";
 import { searchAuctions } from "@/screens/auction/auction-list/api/search-auctions";
-
-import type { AuctionFilters } from "./types";
 
 export const searchAuctionsQuery = (filters: AuctionFilters, size = 15) =>
   infiniteQueryOptions({
