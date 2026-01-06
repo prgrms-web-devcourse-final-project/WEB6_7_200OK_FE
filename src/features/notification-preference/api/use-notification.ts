@@ -4,7 +4,7 @@ import type { UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
-import { NotificationPreferenceItemType } from "../model/types";
+import type { NotificationPreferenceItemType } from "../model/types";
 
 interface NotificationInfo {
   alertStart: boolean;
