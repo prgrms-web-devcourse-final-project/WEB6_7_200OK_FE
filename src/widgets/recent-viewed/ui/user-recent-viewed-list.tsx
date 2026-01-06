@@ -1,53 +1,76 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo } from "react";
 
+import { History } from "lucide-react";
+
+import { type UserRecentlyViewedItemType, UserItemCardFilter } from "@/entities/auction";
 import {
-  MOCK_RECENT_ITEMS,
-  UserRecentlyViewedItemType,
-  UserItemCardFilter,
-} from "@/entities/auction";
-import { UserRecentViewedItemCard } from "@/features/recent-viewed";
+  UserRecentViewedItemCard,
+  useRecentViewedItems,
+  useDeleteRecentView,
+} from "@/features/recent-viewed";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout, ConfirmDeleteModal } from "@/shared/ui";
+import { DashboardContentLayout, ConfirmDeleteModal, EmptyState } from "@/shared/ui";
+import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
 
 const RECENT_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
-interface RecentlyViewedListProps {
-  label?: React.ReactNode;
-}
+type RecentItemWithId = UserRecentlyViewedItemType & { recentViewId: number };
 
-export function UserRecentViewedList({ label }: RecentlyViewedListProps) {
+export function UserRecentViewedList({ label }: { label?: React.ReactNode }) {
+  const { data: recentItems = [], isPending, isFetched } = useRecentViewedItems();
+  const { mutate: deleteRecentView } = useDeleteRecentView();
+
   const [filterStatus, setFilterStatus] = useState("전체");
-
-  const [deleteItem, setDeleteItem] = useState<UserRecentlyViewedItemType | null>(null);
-
-  const deleteItemRef = useRef<UserRecentlyViewedItemType | null>(null);
-
-  useEffect(() => {
-    deleteItemRef.current = deleteItem;
-  }, [deleteItem]);
-
-  const filterOptions = useMemo(() => generateFilterOptions(RECENT_STATUSES), []);
+  const [deleteItem, setDeleteItem] = useState<RecentItemWithId | null>(null);
 
   const filteredRecent = useMemo(
-    () => sortItemsByDateAndName(filterItemsByStatus(MOCK_RECENT_ITEMS, filterStatus)),
-    [filterStatus]
+    () => sortItemsByDateAndName(filterItemsByStatus(recentItems, filterStatus)),
+    [recentItems, filterStatus]
   );
 
-  const handleDelete = useCallback(() => {
-    const targetItem = deleteItemRef.current;
-
-    if (!targetItem) return;
-
-    // TODO: API 실제 최근 본 목록 삭제 요청 로직 구현 필요 (targetItem.id 사용)
-
+  const handleDeleteConfirm = () => {
+    if (!deleteItem) return;
+    deleteRecentView(deleteItem.recentViewId);
     setDeleteItem(null);
-  }, []);
+  };
+
+  const hasItems = isFetched && filteredRecent.length > 0;
+  const isEmpty = isFetched && filteredRecent.length === 0;
+
+  const renderContent = () => {
+    if (isPending) {
+      return <CommonItemListSkeleton />;
+    }
+
+    if (hasItems) {
+      return filteredRecent.map((item) => (
+        <UserRecentViewedItemCard
+          key={item.id}
+          item={item}
+          onRemove={() => setDeleteItem(item as RecentItemWithId)}
+        />
+      ));
+    }
+
+    if (isEmpty) {
+      return (
+        <EmptyState
+          Icon={History}
+          title="최근 본 상품이 없습니다."
+          description="다양한 경매 물건들을 둘러보세요."
+          className="py-20"
+        />
+      );
+    }
+
+    return null;
+  };
 
   return (
     <>
@@ -56,26 +79,20 @@ export function UserRecentViewedList({ label }: RecentlyViewedListProps) {
         filters={
           <UserItemCardFilter
             value={filterStatus}
-            options={filterOptions}
+            options={generateFilterOptions(RECENT_STATUSES)}
             onChange={setFilterStatus}
           />
         }
       >
-        {filteredRecent.map((item) => (
-          <UserRecentViewedItemCard
-            key={item.id}
-            item={item}
-            onRemove={(target) => setDeleteItem(target)}
-          />
-        ))}
+        {renderContent()}
       </DashboardContentLayout>
 
       <ConfirmDeleteModal
         open={!!deleteItem}
         onOpenChange={(open) => !open && setDeleteItem(null)}
-        onConfirm={handleDelete}
+        onConfirm={handleDeleteConfirm}
         title="최근 기록 삭제"
-        description="이 상품을 최근 본 목록에서 지우시겠습니까?"
+        description="이 상품을 목록에서 지우시겠습니까?"
         confirmText="지우기"
         variant="destructive"
       />
