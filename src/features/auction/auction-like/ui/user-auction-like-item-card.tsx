@@ -2,7 +2,8 @@
 
 import { X } from "lucide-react";
 
-import { UserItemBadge, UserItemCard, UserAuctionLikeItemType } from "@/entities/auction";
+import { UserItemBadge, UserItemCard, type UserAuctionLikeItemType } from "@/entities/auction";
+import { ROUTES } from "@/shared/config/routes";
 
 interface UserAuctionLikeItemProps {
   item: UserAuctionLikeItemType;
@@ -25,6 +26,7 @@ export function UserAuctionLikeItemCard({ item, onClick, onRemove }: UserAuction
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
+      imageHref={ROUTES.auctionDetail(item.id)}
       badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         <button
@@ -41,10 +43,8 @@ export function UserAuctionLikeItemCard({ item, onClick, onRemove }: UserAuction
       }
       overlayNode={
         (isSoldOut || isAuctionEnded) && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50">
-            <span className="text-background text-base">
-              {isSoldOut ? "판매 완료" : "경매 종료"}
-            </span>
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/50">
+            <span className="text-base text-white">{isSoldOut ? "판매 완료" : "경매 종료"}</span>
           </div>
         )
       }

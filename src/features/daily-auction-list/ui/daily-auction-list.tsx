@@ -5,6 +5,7 @@ import { useState, useMemo } from "react";
 import { PackageOpen } from "lucide-react";
 
 import { UserItemBadge, UserItemCard } from "@/entities/auction";
+import { ROUTES } from "@/shared/config/routes";
 import { dayjs } from "@/shared/lib/utils/dayjs";
 import { filterItemsByStatus } from "@/shared/lib/utils/filter/user-page-item-filter";
 import { cn } from "@/shared/lib/utils/utils";
@@ -24,7 +25,7 @@ export function DailyAuctionList({ items, selectedDate }: DailyAuctionListProps)
 
   const dateFilteredItems = useMemo(() => {
     if (!selectedDate) return items;
-    const dateStr = dayjs(selectedDate).format("YYYY/MM/DD");
+    const dateStr = dayjs(selectedDate).format("YYYY-MM-DD");
     return items.filter((item) => item.date === dateStr);
   }, [items, selectedDate]);
 
@@ -67,6 +68,7 @@ export function DailyAuctionList({ items, selectedDate }: DailyAuctionListProps)
               originalPrice={item.originalPrice}
               discountRate={item.discountRate}
               isPriceGray={item.status === "경매 예정"}
+              imageHref={ROUTES.auctionDetail(item.id)}
               badgeNode={<UserItemBadge status={item.status} />}
             />
           ))

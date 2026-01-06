@@ -4,5 +4,4 @@ export {
   ReviewModalActions,
   ReviewModalThreeActions,
 } from "./ui/review-modal-base";
-export { MOCK_REVIEWS } from "./api/mocks";
 export type { ReviewType } from "./model/types";

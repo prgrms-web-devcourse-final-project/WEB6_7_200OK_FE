@@ -16,13 +16,11 @@ interface UserDashboardCalendarProps {
   label: React.ReactNode;
   userId: number;
 }
-
 export function UserDashboardCalendar({ label, userId }: UserDashboardCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const { data: salesItems = [], isLoading: isSalesLoading } = useUserSalesList(userId);
   const { data: auctionLikeItems = [], isLoading: isAuctionLikeLoading } = useUserAuctionLike();
-
   const allItems = useMemo(
     () => [...salesItems, ...auctionLikeItems],
     [salesItems, auctionLikeItems]
