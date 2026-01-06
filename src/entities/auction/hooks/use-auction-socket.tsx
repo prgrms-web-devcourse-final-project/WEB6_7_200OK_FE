@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
+import type { EmojiType } from "@/entities/auction/model/emoji";
 import type { AuctionStatusType } from "@/entities/auction/model/status";
+import { useEmojiStore } from "@/features/auction/auction-emoji/provider/use-emoji-store-provider";
 import { useAuctionViewer } from "@/features/auction/auction-log/provider/use-auction-viewer";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -17,12 +19,13 @@ interface SocketResponseType {
   viewerCount?: number;
   currentPrice?: number;
   status?: AuctionStatusType;
-  emojiType?: "LIKE" | "FIRE" | "SAD" | "SMILE";
+  emojiType?: EmojiType;
 }
 
 export default function useAuctionSocket(auctionId: string) {
   const router = useRouter();
   const setViewerCount = useAuctionViewer((state) => state.setViewerCount);
+  const addEmoji = useEmojiStore((state) => state.addEmoji);
   useEffect(() => {
     const client = new Client({
       webSocketFactory: () => new SockJS(`${API_URL}/ws-stomp-public`),
@@ -40,6 +43,9 @@ export default function useAuctionSocket(auctionId: string) {
           }
           if (response.viewerCount) {
             setViewerCount(response.viewerCount);
+          }
+          if (response.emojiType) {
+            addEmoji(response.emojiType);
           }
         });
       },
@@ -61,5 +67,5 @@ export default function useAuctionSocket(auctionId: string) {
     return () => {
       client.deactivate();
     };
-  }, [auctionId, setViewerCount, router]);
+  }, [auctionId, setViewerCount, router, addEmoji]);
 }

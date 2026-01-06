@@ -30,6 +30,21 @@
   /* Header Height */
   --header-h: 56px;
   --spacing-header: var(--header-h);
+
+  @keyframes emoji-rise {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--riseY, 1080px))) scale(1.08);
+    }
+  }
+  --animate-emoji-rise: emoji-rise 5s ease-out forwards;
 }
 
 @theme inline {
