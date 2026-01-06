@@ -21,5 +21,6 @@ export interface AuctionDetailType extends Omit<AuctionType, "imageUrl"> {
   seller: SellerType;
   recentPriceHistory: RecentPriceHistoryType[];
   serverTime: string;
+  createdDate: string;
   dropAmount: number;
 }

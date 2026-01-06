@@ -5,7 +5,6 @@ import { fetch } from "@/shared/api/server";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-
   const url = new URL(req.url);
   const paymentKey = url.searchParams.get("paymentKey") ?? "";
   const orderId = url.searchParams.get("orderId") ?? "";
@@ -15,22 +14,25 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
   if (!paymentKey || !orderId || !amount) {
     failUrl.searchParams.set("code", "MISS_ACCESS");
+    failUrl.searchParams.set("message", "결제 정보를 찾을 수 없어요");
     return NextResponse.redirect(failUrl);
   }
-
+  const cookieHeader = req.headers.get("cookie") ?? "";
   try {
     const response = await fetch<PaymentsConfirmResponse>("/api/v1/payments/confirm", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieHeader,
+      },
       body: {
         paymentKey,
         orderId,
         amount,
         auctionId: id,
       },
-      credentials: "include",
     });
-    if (response.code === 200) {
+    if (response.data) {
       const successUrl = new URL(`/payments/${id}/success`, url.origin);
       successUrl.searchParams.set("paymentKey", response.data.paymentKey);
       successUrl.searchParams.set("amount", response.data.amount);
@@ -39,8 +41,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     }
   } catch (error) {
     console.error(error);
+    failUrl.searchParams.set("code", "confirm-error");
+    failUrl.searchParams.set("message", "결제에 실패했어요");
     return NextResponse.redirect(failUrl);
   }
-
+  failUrl.searchParams.set("code", "confirm-error");
+  failUrl.searchParams.set("message", "결제에 실패했어요");
   return NextResponse.redirect(failUrl);
 }
