@@ -79,7 +79,7 @@ export function UserSalesList({
         onOpenChange={(open) => !open && setDeleteItem(null)}
         onConfirm={() => setDeleteItem(null)}
         title="판매글 삭제"
-        description="이 작업은 되돌릴 수 없습니다."
+        description="해당 판매글을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
         confirmText="삭제하기"
         variant="destructive"
       />
