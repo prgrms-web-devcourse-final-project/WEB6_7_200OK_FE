@@ -5,12 +5,17 @@ import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "re
 import { Heart } from "lucide-react";
 
 import { type UserAuctionLikeItemType, UserItemCardFilter } from "@/entities/auction";
-import { UserAuctionLikeItemCard, useUserAuctionLike } from "@/features/auction/auction-like";
+import {
+  UserAuctionLikeItemCard,
+  useUserAuctionLike,
+  useRemoveLike,
+} from "@/features/auction/auction-like";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import { DashboardContentLayout, ConfirmDeleteModal, Skeleton } from "@/shared/ui";
 import EmptyState from "@/shared/ui/empty/empty";
 import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
@@ -23,9 +28,11 @@ interface AuctionLikeProps {
 
 export function UserAuctionLikeList({ label }: AuctionLikeProps) {
   const { data: auctionLikeItems = [], isLoading } = useUserAuctionLike();
+  const { mutate: removeLike } = useRemoveLike();
 
   const [filterStatus, setFilterStatus] = useState("전체");
   const [deleteItem, setDeleteItem] = useState<UserAuctionLikeItemType | null>(null);
+
   const deleteItemRef = useRef<UserAuctionLikeItemType | null>(null);
   useEffect(() => {
     deleteItemRef.current = deleteItem;
@@ -41,9 +48,17 @@ export function UserAuctionLikeList({ label }: AuctionLikeProps) {
   const handleDelete = useCallback(() => {
     const targetItem = deleteItemRef.current;
     if (!targetItem) return;
-    // TODO: API 실제 관심 목록 해제 요청
-    setDeleteItem(null);
-  }, []);
+
+    removeLike(Number(targetItem.id), {
+      onSuccess: () => {
+        showToast.success("관심 목록에서 해제되었습니다.");
+        setDeleteItem(null);
+      },
+      onError: () => {
+        showToast.error("요청에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      },
+    });
+  }, [removeLike]);
 
   if (isLoading) {
     return (

@@ -1,80 +1,206 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
-import { MOCK_PURCHASES, UserPurchaseItemType, UserItemCardFilter } from "@/entities/auction";
-import { MOCK_REVIEWS, ReviewType } from "@/entities/review";
-import { UserPurchasedItemCard } from "@/features/purchase";
-import { ReviewEditModal, ReviewWriteModal } from "@/features/review";
+import { ShoppingBag } from "lucide-react";
+
+import { type UserPurchaseItemType, UserItemCardFilter } from "@/entities/auction";
+import { UserPurchasedItemCard, usePurchases, usePurchaseConfirm } from "@/features/purchase";
+import {
+  ReviewEditModal,
+  ReviewWriteModal,
+  useCreateReview,
+  useUpdateReview,
+  useDeleteReview,
+  useReviewDetail,
+} from "@/features/review";
 import {
   filterItemsByStatus,
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout, ConfirmDeleteModal } from "@/shared/ui";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
+import { DashboardContentLayout, ConfirmDeleteModal, EmptyState } from "@/shared/ui";
+import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
 
 const PURCHASE_STATUSES = ["구매 완료", "구매 확정"];
 
 interface PurchaseListProps {
-  label?: React.ReactNode;
+  label: React.ReactNode;
 }
 
 export function UserPurchaseList({ label }: PurchaseListProps) {
-  const [filterStatus, setFilterStatus] = useState("전체");
+  const { data: purchaseItems = [], isPending, isFetched } = usePurchases();
+  const { mutate: createReview } = useCreateReview();
+  const { mutate: updateReview } = useUpdateReview();
+  const { mutate: deleteReview } = useDeleteReview();
+  const { mutate: confirmPurchase } = usePurchaseConfirm();
 
+  const [filterStatus, setFilterStatus] = useState("전체");
   const [writeModalItem, setWriteModalItem] = useState<UserPurchaseItemType | null>(null);
-  const [editModalReview, setEditModalReview] = useState<ReviewType | null>(null);
+
+  const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
+  const [selectedReviewItem, setSelectedReviewItem] = useState<UserPurchaseItemType | null>(null);
 
   const [confirmItem, setConfirmItem] = useState<UserPurchaseItemType | null>(null);
-
   const confirmItemRef = useRef<UserPurchaseItemType | null>(null);
 
   useEffect(() => {
     confirmItemRef.current = confirmItem;
   }, [confirmItem]);
 
-  const filterOptions = useMemo(() => generateFilterOptions(PURCHASE_STATUSES), []);
+  const { data: reviewDetailData } = useReviewDetail(selectedReviewId);
 
+  const editModalReview = useMemo(() => {
+    if (!reviewDetailData || !selectedReviewItem) return null;
+
+    return {
+      ...reviewDetailData,
+      product: {
+        id: selectedReviewItem.id,
+        name: selectedReviewItem.name,
+        imageUrl: selectedReviewItem.imageUrl,
+      },
+      seller: {
+        id: reviewDetailData.seller?.id,
+        name: reviewDetailData.seller?.name || "판매자",
+        avatarUrl: reviewDetailData.seller?.avatarUrl,
+      },
+    };
+  }, [reviewDetailData, selectedReviewItem]);
+
+  const filterOptions = useMemo(() => generateFilterOptions(PURCHASE_STATUSES), []);
   const filteredPurchases = useMemo(
-    () => sortItemsByDateAndName(filterItemsByStatus(MOCK_PURCHASES, filterStatus)),
-    [filterStatus]
+    () => sortItemsByDateAndName(filterItemsByStatus(purchaseItems, filterStatus)),
+    [purchaseItems, filterStatus]
   );
 
   const handleReviewBtnClick = useCallback((item: UserPurchaseItemType) => {
-    if (item.hasReview) {
-      // TODO: API 연동 - 리뷰 데이터 조회
-      const targetReview =
-        MOCK_REVIEWS.find((r) => r.product.name === item.name) || MOCK_REVIEWS[0];
-      setEditModalReview(targetReview);
-    } else {
-      setWriteModalItem(item);
+    if (item.hasReview && item.reviewId) {
+      setSelectedReviewItem(item);
+      setSelectedReviewId(item.reviewId);
+      return;
     }
+    setWriteModalItem(item);
   }, []);
 
-  const handleWriteSubmit = useCallback((_data: { rating: number; content: string }) => {
-    // TODO: API 연동 - 리뷰 작성
-  }, []);
+  const handleWriteSubmit = useCallback(
+    (data: { rating: number; content: string }) => {
+      if (!writeModalItem) return;
 
-  const handleEditSubmit = useCallback(
-    (_id: string, _data: { rating: number; content: string }) => {
-      // TODO: API 연동 - 리뷰 수정
+      createReview(
+        {
+          tradeId: writeModalItem.tradeId,
+          rating: data.rating,
+          content: data.content,
+        },
+        {
+          onSuccess: () => {
+            showToast.success("리뷰가 등록되었습니다.");
+            setWriteModalItem(null);
+          },
+          onError: (err) => {
+            console.error("리뷰 등록 실패", err);
+            showToast.error("리뷰 등록에 실패했습니다.");
+          },
+        }
+      );
     },
-    []
+    [writeModalItem, createReview]
   );
 
-  const handleReviewDelete = useCallback((_id: string) => {
-    // TODO: API 연동 - 리뷰 삭제
-  }, []);
+  const handleEditSubmit = useCallback(
+    (id: number, data: { rating: number; content: string }) => {
+      updateReview(
+        {
+          reviewId: id,
+          data: {
+            rating: data.rating,
+            content: data.content,
+          },
+        },
+        {
+          onSuccess: () => {
+            showToast.success("리뷰가 수정되었습니다.");
+            setSelectedReviewId(null);
+            setSelectedReviewItem(null);
+          },
+          onError: (error) => {
+            console.error("리뷰 수정 실패:", error);
+            showToast.error("리뷰 수정에 실패했습니다.");
+          },
+        }
+      );
+    },
+    [updateReview]
+  );
+
+  const handleReviewDelete = useCallback(
+    (id: number) => {
+      deleteReview(id, {
+        onSuccess: () => {
+          showToast.success("리뷰가 삭제되었습니다.");
+          setSelectedReviewId(null);
+          setSelectedReviewItem(null);
+        },
+        onError: (error) => {
+          console.error("리뷰 삭제 실패:", error);
+          showToast.error("리뷰 삭제에 실패했습니다.");
+        },
+      });
+    },
+    [deleteReview]
+  );
 
   const handleConfirmPurchase = useCallback(() => {
     const targetItem = confirmItemRef.current;
-
     if (!targetItem) return;
 
-    // TODO: API 연동 - 구매 확정 (targetItem.id 사용)
+    confirmPurchase(targetItem.tradeId, {
+      onSuccess: () => {
+        showToast.success("구매가 확정되었습니다.");
+        setConfirmItem(null);
+      },
+      onError: () => {
+        showToast.error("구매 확정에 실패했습니다.");
+      },
+    });
+  }, [confirmPurchase]);
 
-    setConfirmItem(null);
+  const closeEditModal = useCallback(() => {
+    setSelectedReviewId(null);
+    setSelectedReviewItem(null);
   }, []);
+
+  const purchaseListContent = useMemo(() => {
+    if (isPending) {
+      return <CommonItemListSkeleton />;
+    }
+
+    if (isFetched && filteredPurchases.length > 0) {
+      return filteredPurchases.map((item) => (
+        <UserPurchasedItemCard
+          key={item.id}
+          item={item}
+          onReviewClick={handleReviewBtnClick}
+          onConfirm={setConfirmItem}
+        />
+      ));
+    }
+
+    if (isFetched) {
+      return (
+        <EmptyState
+          Icon={ShoppingBag}
+          title="구매 내역이 없습니다."
+          description="다양한 경매에 참여하여 상품을 구매해보세요."
+          className="py-20"
+        />
+      );
+    }
+
+    return null;
+  }, [isPending, isFetched, filteredPurchases, handleReviewBtnClick]);
 
   return (
     <>
@@ -88,14 +214,7 @@ export function UserPurchaseList({ label }: PurchaseListProps) {
           />
         }
       >
-        {filteredPurchases.map((item) => (
-          <UserPurchasedItemCard
-            key={item.id}
-            item={item}
-            onReviewClick={handleReviewBtnClick}
-            onConfirm={setConfirmItem}
-          />
-        ))}
+        {purchaseListContent}
       </DashboardContentLayout>
 
       <ReviewWriteModal
@@ -107,7 +226,7 @@ export function UserPurchaseList({ label }: PurchaseListProps) {
 
       <ReviewEditModal
         open={!!editModalReview}
-        onOpenChange={(open) => !open && setEditModalReview(null)}
+        onOpenChange={(open) => !open && closeEditModal()}
         review={editModalReview}
         onEdit={handleEditSubmit}
         onDelete={handleReviewDelete}
