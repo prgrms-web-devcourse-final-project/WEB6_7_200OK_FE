@@ -16,6 +16,8 @@ export const API_ENDPOINTS = {
   userNameUpdate: "/api/v1/users/names", // PUT, JSON
   userSales: (userId: number) => `/api/v1/users/${userId}/sales`,
 
+  myNotifications: "/api/v1/me/notifications",
+
   tagSearch: "/api/v1/tags/search",
 
   // 채팅 API
