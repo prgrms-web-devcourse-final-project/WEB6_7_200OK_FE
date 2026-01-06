@@ -124,6 +124,8 @@ export {
 
 export { Skeleton } from "./skeleton/skeleton";
 
+export { Spinner } from "@/shared/ui/spinner/spinner";
+
 export { Switch } from "./switch/switch";
 
 export { Textarea } from "./textarea/textarea";
