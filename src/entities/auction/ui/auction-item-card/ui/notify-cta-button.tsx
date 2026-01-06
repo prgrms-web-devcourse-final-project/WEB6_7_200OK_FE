@@ -15,13 +15,10 @@ interface NotifyCtaButtonProps {
   initialEnabled?: boolean;
 }
 
-export default function NotifyCtaButton({
-  auctionId,
-  initialEnabled = false,
-}: NotifyCtaButtonProps) {
+export default function NotifyCtaButton({ auctionId, initialEnabled }: NotifyCtaButtonProps) {
   const isAuth = useIsAuthenticated();
 
-  const [isEnabled, setIsEnabled] = useState<boolean>(initialEnabled);
+  const [isEnabled, setIsEnabled] = useState<boolean>(initialEnabled ?? false);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (nextEnabled: boolean) =>
