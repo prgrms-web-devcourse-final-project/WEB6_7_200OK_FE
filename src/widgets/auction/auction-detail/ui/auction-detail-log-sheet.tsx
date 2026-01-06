@@ -1,27 +1,30 @@
-import {
-  AuctionDetailThumbnail,
-  AuctionLogChart,
-  AuctionLogList,
-} from "@/features/auction/auction-log";
-import type { RecentPriceHistoryType } from "@/features/auction/auction-log";
+"use client";
+
+import { useState } from "react";
+
+import { type ItemCategory } from "@/entities/auction";
 import { Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui";
+import AuctionDetailLogSheetContent from "@/widgets/auction/auction-detail/ui/auction-detail-log-sheet-content";
 
 interface AuctionDetailLogSheetProps {
-  recentPriceHistory: RecentPriceHistoryType[];
+  title: string;
+  category: ItemCategory;
+  thumbnail: string;
   startPrice: number;
   discountRate: number;
 }
 
 export default function AuctionDetailLogSheet({
-  recentPriceHistory,
+  title,
+  category,
+  thumbnail,
   startPrice,
   discountRate,
 }: AuctionDetailLogSheetProps) {
-  if (recentPriceHistory.length === 0) {
-    return null;
-  }
+  const [open, setOpen] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="outline">하락 내역 더보기</Button>
       </SheetTrigger>
@@ -29,16 +32,13 @@ export default function AuctionDetailLogSheet({
         <SheetHeader>
           <SheetTitle>하락 내역</SheetTitle>
         </SheetHeader>
-        <div className="flex flex-col gap-8 px-4">
-          <AuctionDetailThumbnail />
-          <AuctionLogChart />
-          <AuctionLogList
-            isSheet
-            recentPriceHistory={recentPriceHistory}
-            startPrice={startPrice}
-            discountRate={discountRate}
-          />
-        </div>
+        <AuctionDetailLogSheetContent
+          startPrice={startPrice}
+          discountRate={discountRate}
+          title={title}
+          category={category}
+          thumbnail={thumbnail}
+        />
       </SheetContent>
     </Sheet>
   );
