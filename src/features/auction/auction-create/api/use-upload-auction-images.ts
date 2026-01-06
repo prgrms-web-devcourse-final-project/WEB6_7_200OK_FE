@@ -32,7 +32,6 @@ export function useUploadAuctionImages() {
       return response.data;
     },
     onError: (error) => {
-      showToast.error("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
       console.error("이미지 업로드 실패:", error);
       const apiError = error as unknown as ApiResponseType<null>;
 
