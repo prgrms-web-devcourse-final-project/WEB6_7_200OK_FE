@@ -5,7 +5,7 @@ import { useState, useMemo } from "react";
 import { PackageOpen } from "lucide-react";
 
 import { type UserSellingItemType, UserItemCardFilter } from "@/entities/auction";
-import { UserSellingItemCard, useSales } from "@/features/auction/auction-sale";
+import { UserSellingItemCard, useSales, useCancelSale } from "@/features/auction/auction-sale";
 import {
   filterItemsByStatus,
   generateFilterOptions,
@@ -26,6 +26,7 @@ export function UserSalesList({
   userId: number;
 }) {
   const { data: salesItems = [], isPending, isFetched } = useSales(userId);
+  const { mutate: cancelSale } = useCancelSale(userId);
   const [filterStatus, setFilterStatus] = useState("전체");
   const [deleteItem, setDeleteItem] = useState<UserSellingItemType | null>(null);
 
@@ -33,6 +34,13 @@ export function UserSalesList({
     () => sortItemsByDateAndName(filterItemsByStatus(salesItems, filterStatus)),
     [salesItems, filterStatus]
   );
+
+  const handleDeleteConfirm = () => {
+    if (deleteItem) {
+      cancelSale(deleteItem.id);
+      setDeleteItem(null);
+    }
+  };
 
   const renderContent = () => {
     if (isPending) {
@@ -77,10 +85,10 @@ export function UserSalesList({
       <ConfirmDeleteModal
         open={!!deleteItem}
         onOpenChange={(open) => !open && setDeleteItem(null)}
-        onConfirm={() => setDeleteItem(null)}
-        title="판매글 삭제"
-        description="해당 판매글을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
-        confirmText="삭제하기"
+        onConfirm={handleDeleteConfirm}
+        title="경매 종료"
+        description="해당 경매를 종료하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+        confirmText="종료하기"
         variant="destructive"
       />
     </>

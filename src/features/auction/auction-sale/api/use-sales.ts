@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 import type { UserSellingItemType, UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 interface SalesSliceItem {
   status: "PROCESS" | "SCHEDULED" | "FAILED" | "CANCELED" | "COMPLETED" | string;
@@ -68,6 +69,12 @@ const fetchSalesList = async (userId: number): Promise<UserSellingItemType[]> =>
     });
 };
 
+const cancelAuction = async (auctionId: number) => {
+  await httpClient(API_ENDPOINTS.auctionDetail(auctionId), {
+    method: "PATCH",
+  });
+};
+
 export const saleKeys = {
   all: ["user", "sales"] as const,
   list: (userId: number) => [...saleKeys.all, userId] as const,
@@ -79,5 +86,28 @@ export function useSales(userId: number) {
     queryFn: () => fetchSalesList(userId),
     enabled: !!userId && userId > 0,
     staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useCancelSale(userId?: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: cancelAuction,
+    onSuccess: async () => {
+      if (userId) {
+        await queryClient.invalidateQueries({
+          queryKey: saleKeys.list(userId),
+        });
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: saleKeys.all,
+        });
+      }
+      showToast.success("경매가 종료되었습니다.");
+    },
+    onError: () => {
+      showToast.error("경매 종료가 실패했습니다.");
+    },
   });
 }
