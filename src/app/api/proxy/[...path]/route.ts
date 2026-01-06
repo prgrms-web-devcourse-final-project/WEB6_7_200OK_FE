@@ -44,6 +44,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
+  const requestBody = await getRequestBody(req);
   const headers = new Headers(req.headers);
 
   if (accessToken) {
@@ -52,7 +53,15 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
 
   headers.delete("host");
   headers.delete("cookie");
-  headers.delete("content-length");
+
+  // FormData의 경우 content-length와 content-type을 보존해야 함
+  if (requestBody.isFormData) {
+    if (req.headers.get("content-type")) {
+      headers.set("content-type", req.headers.get("content-type")!);
+    }
+  } else {
+    headers.delete("content-length");
+  }
 
   const requestCookies = [];
   if (accessToken) requestCookies.push(`accessToken=${accessToken}`);
@@ -61,7 +70,6 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
     headers.set("Cookie", requestCookies.join("; "));
   }
 
-  const requestBody = await getRequestBody(req);
   let retryBody: string | ArrayBuffer | null = requestBody.body;
 
   if (requestBody.body instanceof ArrayBuffer) {
