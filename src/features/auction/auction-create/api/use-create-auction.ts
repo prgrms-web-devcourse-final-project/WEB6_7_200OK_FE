@@ -20,7 +20,10 @@ interface CreateAuctionParams {
 
 const formatStartAt = (date: Date, time: TimeSelection | null): string => {
   const targetDate = time ? combineDateTime(date, time) : date;
-  return dayjs(targetDate).tz("Asia/Seoul").format("YYYY-MM-DDTHH:mm:ssZZ");
+  const localDateTimeString = dayjs(targetDate).format("YYYY-MM-DDTHH:mm:ss");
+  return dayjs
+    .tz(localDateTimeString, "YYYY-MM-DDTHH:mm:ss", "Asia/Seoul")
+    .format("YYYY-MM-DDTHH:mm:ssZZ");
 };
 
 const transformFormDataToApiRequest = ({
