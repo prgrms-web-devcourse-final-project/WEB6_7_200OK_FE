@@ -140,15 +140,15 @@ export function useChatRoomSocket(
 
     isReadProcessingRef.current = true;
 
-    if (clientRef.current?.connected) {
-      clientRef.current.publish({
-        destination: API_ENDPOINTS.wsChatRead,
-        body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
-      });
-      return;
-    }
-
     try {
+      if (clientRef.current?.connected) {
+        clientRef.current.publish({
+          destination: API_ENDPOINTS.wsChatRead,
+          body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
+        });
+        return;
+      }
+
       const res = await fetch(`${API_URL}${API_ENDPOINTS.chatRoomRead(chatRoomId)}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${accessToken}` },
