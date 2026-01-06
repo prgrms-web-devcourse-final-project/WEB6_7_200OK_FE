@@ -46,9 +46,7 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
 
       if (validationResult.oversizedFiles.length > 0) {
         const fileNames = validationResult.oversizedFiles.map((file) => file.name).join(", ");
-        showToast.error(
-          `이미지 파일은 하나당 최대 파일 크기는 10MB를 초과할 수 없습니다. (${fileNames})`
-        );
+        showToast.error(`이미지 하나당 최대 10MB를 초과할 수 없습니다. (${fileNames})`);
         return;
       }
 
