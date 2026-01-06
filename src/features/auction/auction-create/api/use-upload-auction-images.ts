@@ -3,6 +3,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { httpClient } from "@/shared/api/client";
+import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 import type { UploadImageResponse } from "../model/types";
@@ -19,10 +20,13 @@ export function useUploadAuctionImages() {
         formData.append("uploadFiles", file);
       });
 
-      const response = await httpClient<UploadImageResponse[], FormData>("/api/v1/auction-images", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await httpClient<UploadImageResponse[], FormData>(
+        API_ENDPOINTS.auctionImages,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       return response.data;
     },
