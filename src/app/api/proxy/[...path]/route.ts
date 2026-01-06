@@ -6,6 +6,9 @@ import { refreshCookie } from "@/shared/lib/utils/auth/refresh-cookie";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Vercel 함수 설정
+export const maxDuration = 60; // 파일 업로드 시 타임아웃 방지 (최대 실행 시간 60초)
+
 async function getRequestBody(req: NextRequest): Promise<{
   body: string | ArrayBuffer | null;
   isFormData: boolean;
@@ -15,7 +18,8 @@ async function getRequestBody(req: NextRequest): Promise<{
   if (contentType?.includes("application/json")) {
     try {
       return { body: JSON.stringify(await req.json()), isFormData: false };
-    } catch {
+    } catch (error) {
+      console.error("JSON 파싱 실패:", error);
       return { body: null, isFormData: false };
     }
   }
@@ -23,15 +27,21 @@ async function getRequestBody(req: NextRequest): Promise<{
   if (contentType?.includes("multipart/form-data")) {
     try {
       const arrayBuffer = await req.arrayBuffer();
+      // FormData 읽기 성공
       return { body: arrayBuffer, isFormData: true };
     } catch (error) {
       console.error("FormData 읽기 실패:", error);
-      return { body: null, isFormData: false };
+      throw new Error("FormData 처리 중 오류가 발생했습니다.");
     }
   }
 
-  const arrayBuffer = await req.arrayBuffer();
-  return { body: arrayBuffer.byteLength > 0 ? arrayBuffer : null, isFormData: false };
+  try {
+    const arrayBuffer = await req.arrayBuffer();
+    return { body: arrayBuffer.byteLength > 0 ? arrayBuffer : null, isFormData: false };
+  } catch (error) {
+    console.error("Request body 읽기 실패:", error);
+    return { body: null, isFormData: false };
+  }
 }
 
 async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
@@ -44,7 +54,20 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  const requestBody = await getRequestBody(req);
+  let requestBody;
+  try {
+    requestBody = await getRequestBody(req);
+  } catch (error) {
+    console.error("[Proxy] Request body 처리 실패:", error);
+    return NextResponse.json(
+      {
+        error: "Request body 처리에 실패했습니다.",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 400 }
+    );
+  }
+
   const headers = new Headers(req.headers);
 
   if (accessToken) {
@@ -59,26 +82,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
     if (req.headers.get("content-type")) {
       headers.set("content-type", req.headers.get("content-type")!);
     }
-
-    // ArrayBuffer의 실제 크기와 content-length가 일치하는지 확인
-    if (requestBody.body instanceof ArrayBuffer) {
-      const actualSize = requestBody.body.byteLength;
-      const declaredSize = req.headers.get("content-length");
-
-      // 실제 크기와 선언된 크기가 다르면 실제 크기로 업데이트
-      if (declaredSize && parseInt(declaredSize, 10) !== actualSize) {
-        console.warn(
-          `Content-Length mismatch: declared=${declaredSize}, actual=${actualSize}. Using actual size.`
-        );
-        headers.set("content-length", String(actualSize));
-      } else if (!declaredSize) {
-        // content-length가 없으면 실제 크기로 설정
-        headers.set("content-length", String(actualSize));
-      } else {
-        // 일치하면 그대로 사용
-        headers.set("content-length", declaredSize);
-      }
-    } else if (req.headers.get("content-length")) {
+    if (req.headers.get("content-length")) {
       headers.set("content-length", req.headers.get("content-length")!);
     }
   } else {
@@ -98,18 +102,6 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
     retryBody = requestBody.body.slice(0);
   }
 
-  // 요청 전 로깅 (FormData인 경우)
-  if (requestBody.isFormData) {
-    console.warn("[PROXY] FormData 요청 시작:", {
-      url: apiUrl,
-      method: req.method,
-      contentType: req.headers.get("content-type"),
-      contentLength: headers.get("content-length"),
-      bodySize: requestBody.body instanceof ArrayBuffer ? requestBody.body.byteLength : null,
-      hasAccessToken: !!accessToken,
-    });
-  }
-
   try {
     let apiResponse = await fetch(apiUrl, {
       method: req.method,
@@ -118,11 +110,18 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       cache: "no-store",
     });
 
-    console.warn("[PROXY] API 응답 받음:", {
-      url: apiUrl,
-      status: apiResponse.status,
-      statusText: apiResponse.statusText,
-    });
+    if (apiResponse.status === 403) {
+      const errorText = await apiResponse.text();
+      console.error(`[Proxy] 403 Forbidden 발생:`, errorText);
+      return NextResponse.json(
+        {
+          error: "접근 권한이 없습니다.",
+          message: errorText,
+          code: 403,
+        },
+        { status: 403 }
+      );
+    }
 
     if (apiResponse.status === 401 && refreshToken) {
       const newAuthData = await refreshCookie(refreshToken);
@@ -179,71 +178,27 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       return response;
     }
 
-    // 모든 응답에 대한 로깅 (에러 상태인 경우)
-    if (!apiResponse.ok) {
-      let errorMessage = "Unknown error";
-      let errorData: Record<string, unknown> | null = null;
-      let errorText: string | null = null;
-
-      try {
-        errorText = await apiResponse.clone().text();
-        try {
-          errorData = JSON.parse(errorText) as Record<string, unknown>;
-          if (errorData) {
-            errorMessage =
-              (typeof errorData.message === "string" ? errorData.message : null) ||
-              (typeof errorData.error === "string" ? errorData.error : null) ||
-              JSON.stringify(errorData);
-          }
-        } catch {
-          errorMessage = errorText || "No error message";
-        }
-      } catch {
-        errorMessage = "Could not read error message";
-      }
-
-      // 클라이언트에서 확인할 수 있도록 상세 정보를 응답에 포함
-      const errorResponse = {
-        error: apiResponse.statusText || "Error",
-        message: errorMessage,
-        status: apiResponse.status,
-        proxyDetails: {
-          url: apiUrl,
-          method: req.method,
-          contentType: req.headers.get("content-type"),
-          contentLength: headers.get("content-length"),
-          isFormData: requestBody.isFormData,
-          hasBody: requestBody.body !== null,
-          bodySize: requestBody.body instanceof ArrayBuffer ? requestBody.body.byteLength : null,
-          actualBodySize:
-            requestBody.body instanceof ArrayBuffer ? requestBody.body.byteLength : null,
-          declaredContentLength: req.headers.get("content-length"),
-        },
-        serverResponse: {
-          errorData,
-          errorText,
-          responseHeaders: Object.fromEntries(apiResponse.headers.entries()),
-        },
-        requestHeaders: Object.fromEntries(headers.entries()),
-      };
-
-      // 클라이언트에서 확인할 수 있도록 응답 반환
-      return NextResponse.json(errorResponse, {
-        status: apiResponse.status,
-        headers: {
-          "X-Error-Details": "true",
-          "X-Proxy-URL": apiUrl,
-        },
-      });
-    }
-
     return new NextResponse(apiResponse.body, {
       status: apiResponse.status,
       headers: apiResponse.headers,
     });
   } catch (error) {
-    console.error("Proxy Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    console.error("[Proxy] 치명적 오류:", error);
+    console.error("[Proxy] 오류 상세:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      apiUrl,
+      method: req.method,
+    });
+
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+        message: error instanceof Error ? error.message : "Unknown error",
+        code: 500,
+      },
+      { status: 500 }
+    );
   }
 }
 

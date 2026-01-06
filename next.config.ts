@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
       { protocol: "http", hostname: "img1.kakaocdn.net" },
     ],
   },
+  // body size 제한 설정
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "50mb",
+    },
+  },
   async rewrites() {
     return [
       {
