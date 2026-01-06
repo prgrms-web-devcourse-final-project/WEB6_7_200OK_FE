@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { AuctionType } from "@/entities/auction/model/types";
 import { AuctionItemCard } from "@/entities/auction/ui/auction-item-card";
 import { AuctionCardVariantType } from "@/entities/auction/ui/auction-item-card/model/types";
@@ -14,7 +16,7 @@ interface AuctionItemCarouselProps {
   variant: AuctionCardVariantType;
 }
 
-export function AuctionItemCarousel({ items, variant }: AuctionItemCarouselProps) {
+function AuctionItemCarouselComponent({ items, variant }: AuctionItemCarouselProps) {
   return (
     <Carousel
       opts={{
@@ -43,3 +45,6 @@ export function AuctionItemCarousel({ items, variant }: AuctionItemCarouselProps
     </Carousel>
   );
 }
+
+export const AuctionItemCarousel = memo(AuctionItemCarouselComponent);
+AuctionItemCarousel.displayName = "AuctionItemCarousel";

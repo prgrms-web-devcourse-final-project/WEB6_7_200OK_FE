@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentProps } from "react";
+import { memo, type ComponentProps } from "react";
 
 import { Heart } from "lucide-react";
 
@@ -12,12 +12,7 @@ interface LikeButtonProps extends ComponentProps<"button"> {
   initIsLiked: boolean;
 }
 
-export default function LikeButton({
-  auctionId,
-  initIsLiked,
-  className,
-  ...props
-}: LikeButtonProps) {
+function LikeButtonComponent({ auctionId, initIsLiked, className, ...props }: LikeButtonProps) {
   const { isLiked, toggleLike, isPending } = useAuctionLike({
     auctionId,
     initIsLiked,
@@ -35,8 +30,8 @@ export default function LikeButton({
         "absolute right-2 bottom-2 flex size-10 items-center justify-center rounded-full bg-transparent",
         className
       )}
-      {...props}
       disabled={isPending}
+      {...props}
     >
       <Heart
         className={cn(
@@ -47,3 +42,6 @@ export default function LikeButton({
     </button>
   );
 }
+
+export const LikeButton = memo(LikeButtonComponent);
+LikeButton.displayName = "LikeButton";
