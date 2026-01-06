@@ -1,5 +1,6 @@
 import { AuctionItemCard } from "@/entities/auction";
 import { type AuctionListType } from "@/entities/auction/model/types";
+import { STATUS_TO_VARIANT_MAP } from "@/entities/auction/ui/auction-item-card/model/constants";
 
 export function AuctionGrid({ items }: { items: AuctionListType[] }) {
   return (
@@ -9,7 +10,7 @@ export function AuctionGrid({ items }: { items: AuctionListType[] }) {
           <li key={item.auctionId}>
             <AuctionItemCard
               {...item}
-              variant={item.status === "SCHEDULED" ? "upcoming" : "live"}
+              variant={STATUS_TO_VARIANT_MAP[item.status]}
               currentPrice={item.currentPrice}
               discountRate={item.discountRate}
             />
