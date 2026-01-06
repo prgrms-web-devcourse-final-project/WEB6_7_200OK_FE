@@ -5,6 +5,7 @@ import useAuctionSocket from "@/entities/auction/hooks/use-auction-socket";
 import { AuctionNotificationToggle } from "@/entities/notification";
 import { AuctionDetailLikeToggle } from "@/features/auction/auction-like";
 import { PurchaseButton } from "@/features/auction/auction-purchase";
+import AuctionSellerEmojiButton from "@/features/auction/auction-sale/ui/auction-seller-emoji-button";
 import { useRecentView } from "@/features/auction/auction-view/hook/use-recent-view";
 import { useMounted } from "@/shared/lib/hooks/use-mounted";
 
@@ -15,6 +16,7 @@ export default function AuctionDetailUserActions({
   sellerId,
   isLike,
   likeCount,
+  token,
 }: {
   auctionId: string;
   status: AuctionStatusType;
@@ -22,6 +24,7 @@ export default function AuctionDetailUserActions({
   sellerId: number;
   isLike: boolean;
   likeCount: number;
+  token?: string;
 }) {
   const mounted = useMounted();
   useAuctionSocket(auctionId);
@@ -34,18 +37,20 @@ export default function AuctionDetailUserActions({
   const isSeller = userId === String(sellerId);
   return (
     <div className="flex items-center gap-2">
-      <div className="flex items-center gap-1">
-        <AuctionNotificationToggle auctionId={auctionId} />
-        <AuctionDetailLikeToggle
-          auctionId={auctionId}
-          initLikeCount={likeCount}
-          initIsLiked={isLike}
-        />
-      </div>
       {isSeller ? (
-        <button type="button">감정 보내기</button>
+        <AuctionSellerEmojiButton auctionId={auctionId} token={token} />
       ) : (
-        <PurchaseButton status={status} auctionId={auctionId} title={title} />
+        <>
+          <div className="flex items-center gap-1">
+            <AuctionNotificationToggle auctionId={auctionId} />
+            <AuctionDetailLikeToggle
+              auctionId={auctionId}
+              initLikeCount={likeCount}
+              initIsLiked={isLike}
+            />
+          </div>
+          <PurchaseButton status={status} auctionId={auctionId} title={title} />
+        </>
       )}
     </div>
   );
