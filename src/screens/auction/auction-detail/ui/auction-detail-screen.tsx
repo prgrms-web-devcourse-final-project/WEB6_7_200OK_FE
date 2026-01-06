@@ -10,6 +10,7 @@ import AuctionDetailErrorScreen from "@/screens/auction/auction-detail/ui/auctio
 import {
   calculateAuctionStartMs,
   calculateElapsedMsWithin5MinCycle,
+  calculateElapsedMsWithinCreatedToStarted,
 } from "@/shared/lib/utils/time/calc";
 import { Separator, ScrollArea, ScrollBar } from "@/shared/ui";
 import {
@@ -70,12 +71,16 @@ export default function AuctionDetailScreen({
                   dropAmount={data.dropAmount}
                   duration={
                     data.status === "SCHEDULED"
-                      ? calculateAuctionStartMs(data.serverTime, data.startedAt)
+                      ? calculateAuctionStartMs(data.createdDate, data.startedAt)
                       : 5 * 60 * 1000
                   }
                   initDiff={
                     data.status === "SCHEDULED"
-                      ? 0
+                      ? calculateElapsedMsWithinCreatedToStarted(
+                          data.createdDate,
+                          data.serverTime,
+                          data.startedAt
+                        )
                       : calculateElapsedMsWithin5MinCycle(data.serverTime)
                   }
                 >
