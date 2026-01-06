@@ -1,5 +1,5 @@
 export interface ReviewType {
-  id: string;
+  id: number;
   reviewer: {
     name: string;
     avatarUrl?: string;

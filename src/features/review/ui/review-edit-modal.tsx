@@ -9,8 +9,8 @@ interface ReviewEditModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   review: ReviewType | null;
-  onEdit?: (id: string, data: { rating: number; content: string }) => void;
-  onDelete?: (id: string) => void;
+  onEdit?: (id: number, data: { rating: number; content: string }) => void;
+  onDelete?: (id: number) => void;
 }
 
 export function ReviewEditModal({
@@ -31,6 +31,10 @@ export function ReviewEditModal({
     if (open && review) {
       setRating(review.rating);
       setContent(review.content);
+    } else if (!open) {
+      setShowDeleteConfirm(false);
+      setShowEditConfirm(false);
+      setShowWarning(false);
     }
   }, [open, review]);
 

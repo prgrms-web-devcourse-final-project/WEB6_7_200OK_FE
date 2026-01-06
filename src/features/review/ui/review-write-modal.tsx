@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { UserPurchaseItemType } from "@/entities/auction";
 import { ReviewModalBase, ReviewModalActions } from "@/entities/review";
@@ -19,6 +19,15 @@ export function ReviewWriteModal({ open, onOpenChange, item, onSubmit }: ReviewW
 
   const [showWarning, setShowWarning] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      setRating(0);
+      setContent("");
+      setShowWarning(false);
+      setShowConfirm(false);
+    }
+  }, [open]);
 
   if (!item) return null;
 

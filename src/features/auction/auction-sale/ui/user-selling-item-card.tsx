@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { MessageCircle, X } from "lucide-react";
 
 import { UserItemBadge, UserItemCard, UserSellingItemType } from "@/entities/auction";
@@ -9,7 +11,6 @@ interface UserSellingItemCardProps {
   item: UserSellingItemType;
   onClick?: (item: UserSellingItemType) => void;
   onDelete?: (item: UserSellingItemType) => void;
-  onChatClick?: (item: UserSellingItemType) => void;
   isOwn?: boolean;
 }
 
@@ -17,14 +18,13 @@ export function UserSellingItemCard({
   item,
   onClick,
   onDelete,
-  onChatClick,
   isOwn = false,
 }: UserSellingItemCardProps) {
   const isSoldOut = item.status === "판매 완료";
   const isAuctionEnded = item.status === "경매 종료";
   const isOnSale = item.status === "판매중";
   const isScheduled = item.status === "경매 예정";
-  const hasUnreadMessages = item.unreadMessageCount && item.unreadMessageCount > 0;
+  const hasUnreadMessages = item.unreadMessageCount ? item.unreadMessageCount > 0 : false;
 
   return (
     <UserItemCard
@@ -70,21 +70,21 @@ export function UserSellingItemCard({
             <Button
               variant={hasUnreadMessages ? "primary" : "outline"}
               className="h-9 flex-1 gap-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                onChatClick?.(item);
-              }}
+              asChild
             >
-              <MessageCircle className="size-4" />
-              <span className="text-sm">1:1 채팅</span>
-              {hasUnreadMessages && (
-                <span
-                  className="text-2.5 ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 text-white"
-                  aria-label={`${item.unreadMessageCount}개의 읽지 않은 메시지`}
-                >
-                  {item.unreadMessageCount}
-                </span>
-              )}
+              <Link href="/dm" onClick={(e) => e.stopPropagation()}>
+                <MessageCircle className="size-4" />
+                <span className="text-sm">1:1 채팅</span>
+
+                {hasUnreadMessages && (
+                  <span
+                    className="text-2.5 ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 text-white"
+                    aria-label={`${hasUnreadMessages}개의 읽지 않은 메시지`}
+                  >
+                    {hasUnreadMessages}
+                  </span>
+                )}
+              </Link>
             </Button>
           </div>
         )
