@@ -14,6 +14,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
   if (!paymentKey || !orderId || !amount) {
     failUrl.searchParams.set("code", "MISS_ACCESS");
+    failUrl.searchParams.set("message", "결제 정보를 찾을 수 없어요");
     return NextResponse.redirect(failUrl);
   }
   const cookieHeader = req.headers.get("cookie") ?? "";
@@ -40,10 +41,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     }
   } catch (error) {
     console.error(error);
-    failUrl.searchParams.set("code", "confirm");
+    failUrl.searchParams.set("code", "confirm-error");
+    failUrl.searchParams.set("message", "결제에 실패했어요");
     return NextResponse.redirect(failUrl);
   }
-  failUrl.searchParams.set("code", "what");
-
+  failUrl.searchParams.set("code", "confirm-error");
+  failUrl.searchParams.set("message", "결제에 실패했어요");
   return NextResponse.redirect(failUrl);
 }

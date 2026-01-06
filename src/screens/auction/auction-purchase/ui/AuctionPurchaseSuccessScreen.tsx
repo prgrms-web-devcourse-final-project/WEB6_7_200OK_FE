@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+
+import { useNavigation } from "@/shared/lib/utils/navigation/navigation";
 
 export default function AuctionPurchaseSuccessScreen() {
   const searchParams = useSearchParams();
-
+  const { navigateToHome, navigateToPrev } = useNavigation();
   return (
     <div>
       <div
@@ -58,23 +59,21 @@ export default function AuctionPurchaseSuccessScreen() {
           </div>
         </div>
         <div className="flex-1 pr-6">
-          <Link href="https://docs.tosspayments.com/guides/v2/payment-widget/integration">
-            <button
-              className="mt-[30px] w-[250px] max-w-[41.66667%] flex-[0_0_41.66667%] cursor-pointer rounded-[7px] border-0 border-transparent bg-[#3182f6] px-4 py-[11px] text-center text-[15px] leading-[18px] font-semibold whitespace-nowrap text-[#f9fafb] no-underline transition-[background,color] duration-200 ease-in select-none"
-              type="button"
-            >
-              연동 문서
-            </button>
-          </Link>
-          <Link href="https://discord.gg/A4fRFXQhRu">
-            <button
-              type="button"
-              className="mt-[30px] w-[250px] max-w-[41.66667%] flex-[0_0_41.66667%] cursor-pointer rounded-[7px] border-0 border-transparent bg-[#3182f6] px-4 py-[11px] text-center text-[15px] leading-[18px] font-semibold whitespace-nowrap text-[#f9fafb] no-underline transition-[background,color] duration-200 ease-in select-none"
-              style={{ backgroundColor: "#e8f3ff", color: "#1b64da" }}
-            >
-              실시간 문의
-            </button>
-          </Link>
+          <button
+            className="mt-[30px] w-[250px] max-w-[41.66667%] flex-[0_0_41.66667%] cursor-pointer rounded-[7px] border-0 border-transparent bg-[#3182f6] px-4 py-[11px] text-center text-[15px] leading-[18px] font-semibold whitespace-nowrap text-[#f9fafb] no-underline transition-[background,color] duration-200 ease-in select-none"
+            type="button"
+            onClick={() => navigateToPrev()}
+          >
+            이전으로
+          </button>
+          <button
+            type="button"
+            onClick={() => navigateToHome()}
+            className="mt-[30px] w-[250px] max-w-[41.66667%] flex-[0_0_41.66667%] cursor-pointer rounded-[7px] border-0 border-transparent bg-[#3182f6] px-4 py-[11px] text-center text-[15px] leading-[18px] font-semibold whitespace-nowrap text-[#f9fafb] no-underline transition-[background,color] duration-200 ease-in select-none"
+            style={{ backgroundColor: "#e8f3ff", color: "#1b64da" }}
+          >
+            홈으로
+          </button>
         </div>
       </div>
     </div>
