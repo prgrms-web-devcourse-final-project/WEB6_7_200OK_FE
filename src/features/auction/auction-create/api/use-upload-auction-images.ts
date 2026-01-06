@@ -42,6 +42,11 @@ export function useUploadAuctionImages() {
           case 502:
             showToast.error(apiError.message || "이미지 업로드에 실패했습니다.");
             break;
+          case 413:
+            showToast.error(
+              apiError.message || "이미지 용량이 너무 큽니다. 용량을 줄여 다시 시도해 주세요."
+            );
+            break;
           default:
             showToast.error("이미지 업로드에 실패했습니다.");
         }
