@@ -7,10 +7,10 @@ export interface AuctionItemType {
   auctionId: number;
   imageUrl: string;
   title: string;
-  isLiked: boolean;
-  startedAt: string;
   status?: AuctionStatusType;
+  isLiked: boolean;
   isNotification?: boolean;
+  startedAt: string;
 }
 
 export interface AuctionPriceType {
