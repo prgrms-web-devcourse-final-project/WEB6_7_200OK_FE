@@ -11,7 +11,6 @@ import { ServerTimeStoreProvider } from "@/shared/lib/providers/server-time-stor
 import "@/shared/styles/globals.css";
 import { ToastRegistry } from "@/shared/ui/toast/toast-registry";
 import { BottomNav } from "@/widgets/bottom-nav";
-import { CategoryNav } from "@/widgets/category-nav";
 import { Header } from "@/widgets/header/header";
 
 const inter = Inter({
@@ -42,7 +41,6 @@ export default function RootLayout({
             <QueryProvider>
               <div className="flex min-h-full flex-col">
                 <Header />
-                <CategoryNav />
                 <main className="flex-1 select-none">{children}</main>
                 <ToastRegistry />
                 <BottomNav />
