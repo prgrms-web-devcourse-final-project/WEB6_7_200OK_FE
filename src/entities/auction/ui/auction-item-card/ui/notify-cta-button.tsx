@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Bell, BellRing } from "lucide-react";
 
 import { toggleAuctionNotificationSettingStart } from "@/entities/notification/api/notification-setting";
@@ -18,6 +18,9 @@ interface NotifyCtaButtonProps {
 export default function NotifyCtaButton({ auctionId, initialEnabled }: NotifyCtaButtonProps) {
   const isAuth = useIsAuthenticated();
 
+  const queryClient = useQueryClient();
+  const queryKey = ["auction-notify", auctionId] as const;
+
   const [isEnabled, setIsEnabled] = useState<boolean>(initialEnabled ?? false);
 
   const { mutate, isPending } = useMutation({
@@ -30,6 +33,10 @@ export default function NotifyCtaButton({ auctionId, initialEnabled }: NotifyCta
       const prev = isEnabled;
       setIsEnabled(nextEnabled);
       return { prev };
+    },
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey });
     },
 
     onError: (_err, _vars, ctx) => {
