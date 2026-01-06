@@ -22,6 +22,9 @@ import { WS_QUEUE_ERROR_CODES, WS_STOMP_ERROR_CODES } from "../model/types";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MESSAGE_PAGE_SIZE = 20;
 
+// 읽음 처리 딜레이
+const READ_PROCESSING_DELAY_MS = 500;
+
 interface ChatSendRequest {
   chatRoomId: number;
   messageType: "TEXT" | "IMAGE";
@@ -137,15 +140,15 @@ export function useChatRoomSocket(
 
     isReadProcessingRef.current = true;
 
-    try {
-      if (clientRef.current?.connected) {
-        clientRef.current.publish({
-          destination: API_ENDPOINTS.wsChatRead,
-          body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
-        });
-        return;
-      }
+    if (clientRef.current?.connected) {
+      clientRef.current.publish({
+        destination: API_ENDPOINTS.wsChatRead,
+        body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
+      });
+      return;
+    }
 
+    try {
       const res = await fetch(`${API_URL}${API_ENDPOINTS.chatRoomRead(chatRoomId)}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -348,7 +351,7 @@ export function useChatRoomSocket(
       if (!isReadProcessingRef.current) {
         markAsRead();
       }
-    }, 300);
+    }, READ_PROCESSING_DELAY_MS);
 
     return () => clearTimeout(timer);
   }, [chatRoomId, loadMessages, markAsRead]);
