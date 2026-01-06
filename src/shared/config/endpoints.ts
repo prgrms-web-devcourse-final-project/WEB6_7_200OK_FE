@@ -23,6 +23,7 @@ export const API_ENDPOINTS = {
   chatRoomMessages: (chatRoomId: number | string) => `/api/v1/chat-rooms/${chatRoomId}/messages`,
   chatRoomRead: (chatRoomId: number | string) => `/api/v1/chat-rooms/${chatRoomId}/messages/read`,
   chatImages: "/api/v1/chat-images",
+  auctionImages: "/api/v1/auction-images",
 
   // 채팅 웹소켓
   wsStomp: "/ws-stomp",
