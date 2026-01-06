@@ -19,11 +19,12 @@ interface CreateAuctionParams {
 }
 
 const formatStartAt = (date: Date, time: TimeSelection | null): string => {
-  const targetDate = time ? combineDateTime(date, time) : date;
-  const localDateTimeString = dayjs(targetDate).format("YYYY-MM-DDTHH:mm:ss");
-  return dayjs
-    .tz(localDateTimeString, "YYYY-MM-DDTHH:mm:ss", "Asia/Seoul")
-    .format("YYYY-MM-DDTHH:mm:ssZZ");
+  if (time) {
+    const combinedDate = combineDateTime(date, time);
+    const kstDateTime = dayjs(combinedDate).tz("Asia/Seoul");
+    return dayjs.utc(kstDateTime.format("YYYY-MM-DDTHH:mm:ss")).toISOString();
+  }
+  return dayjs(date).tz("Asia/Seoul").utc().toISOString();
 };
 
 const transformFormDataToApiRequest = ({
