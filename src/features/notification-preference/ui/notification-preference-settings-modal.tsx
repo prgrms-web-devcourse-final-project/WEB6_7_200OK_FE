@@ -54,15 +54,22 @@ export function NotificationPreferenceSettingsModal({
   const MAX_PRICE = 10000000;
 
   useEffect(() => {
-    if (open && initialSettings) {
-      setStartAlert(initialSettings.auctionStart);
-      setEndAlert(initialSettings.auctionEnd);
-      setPriceAlert(initialSettings.priceReached);
-      setTargetPrice(initialSettings.price > 0 ? initialSettings.price.toLocaleString() : "");
-    } else if (!open) {
+    if (open) {
+      if (initialSettings) {
+        setStartAlert(initialSettings.auctionStart);
+        setEndAlert(initialSettings.auctionEnd);
+        setPriceAlert(initialSettings.priceReached);
+        setTargetPrice(initialSettings.price > 0 ? initialSettings.price.toLocaleString() : "");
+      } else {
+        setStartAlert(false);
+        setEndAlert(true);
+        setPriceAlert(true);
+        setTargetPrice("");
+      }
+    } else {
       setTargetPrice("");
     }
-  }, [open, initialSettings]);
+  }, [open, initialSettings, item]);
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, "");
@@ -91,11 +98,17 @@ export function NotificationPreferenceSettingsModal({
   };
 
   const handleRealSave = () => {
+    const cleanedPriceString = targetPrice.replace(/,/g, "").trim();
+
+    const hasValidPrice = cleanedPriceString !== "" && !Number.isNaN(Number(cleanedPriceString));
+
+    const priceValue = hasValidPrice ? Number(cleanedPriceString) : 0;
+
     const data: NotificationSettingsData = {
       auctionStart: startAlert,
       auctionEnd: endAlert,
-      priceReached: priceAlert,
-      price: priceAlert ? Number(targetPrice.replace(/,/g, "")) : 0,
+      priceReached: priceAlert && hasValidPrice,
+      price: priceAlert && hasValidPrice ? priceValue : 0,
     };
 
     onSave?.(data);
