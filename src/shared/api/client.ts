@@ -60,6 +60,11 @@ export async function httpClient<TResponse, TRequest = unknown>(
       throw new ApiError(response.status, `HTTP Error: ${response.status}`, response.status);
     }
 
+    // 403 에러인 경우 상세 정보 로깅
+    if (response.status === 403) {
+      console.error("[CLIENT] 403 Forbidden Error Details:", errorData);
+    }
+
     const message = errorData.message || errorData.error || "API Request Failed";
 
     const code = errorData.code || response.status;
