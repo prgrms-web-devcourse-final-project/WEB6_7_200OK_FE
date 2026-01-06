@@ -1,7 +1,7 @@
 import { type AuctionPublicStatusType } from "@/entities/auction/model/status";
 import {
   AuctionCardVariant,
-  AuctionCardVariantType,
+  type AuctionCardVariantType,
 } from "@/entities/auction/ui/auction-item-card/model/types";
 
 export const VARIANT_CONFIG: Record<AuctionCardVariantType, AuctionCardVariant> = {
