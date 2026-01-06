@@ -36,6 +36,7 @@ function AuctionItemCardComponent({
   isLiked,
   startedAt,
   rank,
+  isNotification,
 }: AuctionItemCardProps) {
   const config = VARIANT_CONFIG[variant];
 
@@ -82,7 +83,9 @@ function AuctionItemCardComponent({
       {config.cta && (
         <div className="w-full px-4 pb-4">
           {config.cta === "buy" && <BuyCtaButton href={ROUTES.auctionDetail(auctionId)} />}
-          {config.cta === "notify" && <NotifyCtaButton auctionId={auctionId} />}
+          {config.cta === "notify" && (
+            <NotifyCtaButton auctionId={auctionId} initialEnabled={Boolean(isNotification)} />
+          )}
           {config.cta === "ended" && <EndedCtaButton />}
         </div>
       )}
