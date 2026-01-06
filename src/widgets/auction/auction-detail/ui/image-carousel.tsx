@@ -11,11 +11,6 @@ import {
   CarouselPrevious,
 } from "@/shared/ui";
 
-const images = [
-  "https://picsum.photos/seed/auction--2114285778-1/800/800",
-  "https://picsum.photos/seed/auction--2114285778-2/800/800",
-  "https://picsum.photos/seed/auction--2114285778-3/800/800",
-];
 /* TODO: 임시 주석
 interface ImageCarouselProps {
   images: string[];
@@ -23,9 +18,10 @@ interface ImageCarouselProps {
 interface ImageCarouselProps {
   className?: string;
   status: AuctionStatusType;
+  images: string[];
 }
 
-export default function ImageCarousel({ className, status }: ImageCarouselProps) {
+export default function ImageCarousel({ className, status, images }: ImageCarouselProps) {
   return (
     <div className={cn("relative flex max-w-full", className)}>
       <div className="absolute top-3 left-3 z-2 inline-flex gap-2">
@@ -36,7 +32,7 @@ export default function ImageCarousel({ className, status }: ImageCarouselProps)
       <Carousel className="h-162 w-full shrink">
         <CarouselContent className="h-162">
           {images.map((image) => (
-            <CarouselItem key={image}>
+            <CarouselItem key={`auction-detail:${image}`}>
               <Image
                 src={image}
                 alt="auction image-carousel"
