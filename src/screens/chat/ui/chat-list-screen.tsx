@@ -80,7 +80,7 @@ export function ChatListScreen({ initialData, accessToken }: ChatListScreenProps
   return (
     <div
       className={cn(
-        "bg-background border-border mx-auto flex h-[calc(100vh-var(--header-h)*2)] min-h-0 w-full max-w-7xl overflow-hidden md:py-4"
+        "bg-background border-border mx-auto flex h-[calc(100vh-var(--header-h))] min-h-0 w-full max-w-7xl overflow-hidden md:py-4"
       )}
     >
       <ChatListSidebar
