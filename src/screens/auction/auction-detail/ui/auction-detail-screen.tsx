@@ -49,7 +49,11 @@ export default function AuctionDetailScreen({
           {/* Left Section */}
           <div className="lg:min-w-125 lg:shrink lg:grow-0 lg:basis-189">
             <div className="flex flex-col gap-8 p-4">
-              <ImageCarousel className="hidden lg:block" status={data.status} />
+              <ImageCarousel
+                className="hidden lg:block"
+                status={data.status}
+                images={data.imageUrls}
+              />
               <Separator />
               <AuctionDetailDescription description={data.description} />
               <Separator />
@@ -63,7 +67,11 @@ export default function AuctionDetailScreen({
           {/* Right Section */}
           <div className="overflow-y-auto lg:sticky lg:top-0 lg:max-h-[calc(100vh-var(--header-h))] lg:min-w-131 lg:shrink-0 lg:grow-0 lg:basis-131">
             <div className="flex flex-col gap-8 p-4">
-              <ImageCarousel className="block lg:hidden" status={data.status} />
+              <ImageCarousel
+                className="block lg:hidden"
+                status={data.status}
+                images={data.imageUrls}
+              />
               <AuctionDetailCategory category={data.category} />
               <AuctionPriceStoreProvider price={data.currentPrice} stopLoss={data.stopLoss}>
                 <AuctionTickerProvider
