@@ -19,11 +19,12 @@ export interface UserSellingItemType extends BaseUserItemType {
 export interface UserPurchaseItemType extends BaseUserItemType {
   status: UserPurchaseStatusType;
   unreadMessageCount?: number;
-  hasReview?: boolean;
-  seller?: {
-    name: string;
-    avatarUrl?: string;
+  seller: {
+    sellerId: number;
+    nickname: string;
+    profileImageUrl?: string;
   };
+  hasReview?: boolean;
   reviewId?: number;
   tradeId: number;
 }
