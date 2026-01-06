@@ -22,7 +22,7 @@ export default function AuctionLogList({
 }: AuctionLogListProps) {
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-3">
+      <div className="bg-background sticky top-0 flex items-center gap-3">
         <h3 className={cn(isSheet ? "text-base" : "text-2xl", "font-medium")}>
           하락 {recentPriceHistory.length !== 0 ? recentPriceHistory.length : ""}
         </h3>

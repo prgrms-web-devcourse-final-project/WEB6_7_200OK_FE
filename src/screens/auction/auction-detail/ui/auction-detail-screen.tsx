@@ -118,9 +118,11 @@ export default function AuctionDetailScreen({
                   startPrice={data.startPrice}
                 />
                 <AuctionDetailLogSheet
-                  recentPriceHistory={data.recentPriceHistory}
                   discountRate={data.discountRate}
                   startPrice={data.startPrice}
+                  title={data.title}
+                  thumbnail={data.imageUrls[0] ?? ""}
+                  category={data.category}
                 />
               </div>
             </div>
