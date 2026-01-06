@@ -7,7 +7,7 @@ import { AlertCircle, Inbox } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 
 import { useAuctionFilters } from "@/features/auction/filters/model/use-auction-filters";
-import { searchAuctionsQuery } from "@/screens/auction/auction-list/model/search-auctions-query";
+import { searchAuctionsQueryClient } from "@/screens/auction/auction-list/model/search-auctions-query";
 import AuctionListEmpty from "@/screens/auction/auction-list/ui/auction-list-empty";
 import { useServerTimeSync } from "@/shared/lib/hooks/use-server-time-sync";
 import { Spinner } from "@/shared/ui";
@@ -16,7 +16,8 @@ import { AuctionGridSkeleton } from "@/widgets/auction/auction-grid/ui/auction-g
 
 export default function AuctionList() {
   const { filters } = useAuctionFilters();
-  const queryOptions = searchAuctionsQuery(filters);
+  const queryOptions = searchAuctionsQueryClient(filters);
+
   const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery(queryOptions);
 
