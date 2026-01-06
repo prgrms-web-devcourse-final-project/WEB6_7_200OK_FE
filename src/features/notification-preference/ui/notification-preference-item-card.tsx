@@ -3,6 +3,7 @@
 import { Settings, BellRing } from "lucide-react";
 
 import { UserItemBadge, UserItemCard } from "@/entities/auction";
+import { ROUTES } from "@/shared/config/routes";
 
 import type { NotificationPreferenceItemType } from "../model/types";
 
@@ -17,6 +18,8 @@ export function NotificationPreferenceItemCard({
   onClick,
   onSettingClick,
 }: NotificationPreferenceItemProps) {
+  const isSoldOut = item.status === "판매 완료";
+  const isAuctionEnded = item.status === "경매 종료";
   const isScheduled = item.status === "경매 예정";
 
   return (
@@ -30,6 +33,7 @@ export function NotificationPreferenceItemCard({
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
       badgeNode={<UserItemBadge status={item.status} />}
+      imageHref={ROUTES.auctionDetail(item.id)}
       actionNode={
         <button
           type="button"
@@ -42,6 +46,13 @@ export function NotificationPreferenceItemCard({
         >
           <Settings className="size-4" />
         </button>
+      }
+      overlayNode={
+        (isSoldOut || isAuctionEnded) && (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/50">
+            <span className="text-base text-white">{isSoldOut ? "판매 완료" : "경매 종료"}</span>
+          </div>
+        )
       }
       footerNode={
         item.keywords.length > 0 && (

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MessageCircle, X } from "lucide-react";
 
 import { UserItemBadge, UserItemCard, type UserSellingItemType } from "@/entities/auction";
+import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui";
 
 interface UserSellingItemCardProps {
@@ -36,6 +37,7 @@ export function UserSellingItemCard({
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
+      imageHref={ROUTES.auctionDetail(item.id)}
       badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         isOwn &&
@@ -57,7 +59,7 @@ export function UserSellingItemCard({
       }
       overlayNode={
         (isSoldOut || isAuctionEnded) && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50">
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/50">
             <span className="text-brand-contrast text-base font-medium">
               {isSoldOut ? "판매 완료" : "경매 종료"}
             </span>

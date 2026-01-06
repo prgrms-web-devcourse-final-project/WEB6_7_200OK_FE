@@ -1,6 +1,7 @@
 export interface ReviewType {
-  id: string;
+  id: number;
   reviewer: {
+    id: number;
     name: string;
     avatarUrl?: string;
   };
@@ -8,10 +9,12 @@ export interface ReviewType {
   rating: number;
   content: string;
   product: {
+    id: number;
     name: string;
     imageUrl?: string;
   };
-  seller?: {
+  seller: {
+    id: number;
     name: string;
     avatarUrl?: string;
   };

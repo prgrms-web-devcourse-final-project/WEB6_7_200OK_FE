@@ -1,36 +1,37 @@
 "use client";
 
-import { useMemo } from "react";
+import { MessageSquare } from "lucide-react";
 
-import { MOCK_REVIEWS, ReviewCard } from "@/entities/review";
-import { DashboardContentLayout } from "@/shared/ui";
+import { ReviewCard } from "@/entities/review";
+import { useReviews } from "@/features/review";
+import { DashboardContentLayout, EmptyState } from "@/shared/ui";
+import { ReviewItemListSkeleton } from "@/widgets/user/ui/skeletons";
 
-interface ReviewListProps {
-  label?: React.ReactNode;
-}
+export function ReviewList({ label, userId }: { label: React.ReactNode; userId: number }) {
+  const { data: reviews = [], isPending, isFetched } = useReviews(userId);
 
-export function ReviewList({ label }: ReviewListProps) {
-  // TODO: 나중에 db에서 정렬된 순으로 받아오면 제거
-  const sortedReviews = useMemo(
-    () =>
-      [...MOCK_REVIEWS].sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
+  const renderContent = () => {
+    if (isPending) {
+      return <ReviewItemListSkeleton />;
+    }
 
-        if (dateA !== dateB) {
-          return dateB - dateA;
-        }
+    if (isFetched && reviews.length > 0) {
+      return reviews.map((review) => <ReviewCard key={review.id} review={review} />);
+    }
 
-        return a.reviewer.name.localeCompare(b.reviewer.name);
-      }),
-    []
-  );
+    if (isFetched) {
+      return (
+        <EmptyState
+          Icon={MessageSquare}
+          title="작성된 리뷰가 없습니다."
+          description="거래 완료 후 소중한 후기를 남겨주세요."
+          className="py-20"
+        />
+      );
+    }
 
-  return (
-    <DashboardContentLayout label={label}>
-      {sortedReviews.map((review) => (
-        <ReviewCard key={review.id} review={review} />
-      ))}
-    </DashboardContentLayout>
-  );
+    return null;
+  };
+
+  return <DashboardContentLayout label={label}>{renderContent()}</DashboardContentLayout>;
 }

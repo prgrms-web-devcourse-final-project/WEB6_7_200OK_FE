@@ -20,32 +20,72 @@ import {
 
 import { NotificationPreferenceItemType } from "../model/types";
 
+export interface NotificationSettingsData {
+  auctionStart: boolean;
+  auctionEnd: boolean;
+  priceReached: boolean;
+  price: number;
+}
+
 interface NotificationPreferenceSettingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   item: NotificationPreferenceItemType | null;
+  initialSettings?: NotificationSettingsData;
+  onSave?: (data: NotificationSettingsData) => void;
 }
 
 export function NotificationPreferenceSettingsModal({
   open,
   onOpenChange,
   item,
+  initialSettings,
+  onSave,
 }: NotificationPreferenceSettingsModalProps) {
   const [startAlert, setStartAlert] = useState(false);
   const [endAlert, setEndAlert] = useState(true);
   const [priceAlert, setPriceAlert] = useState(true);
-  const [targetPrice, setTargetPrice] = useState("400000");
+  const [targetPrice, setTargetPrice] = useState("");
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
 
   const isAllOff = !startAlert && !endAlert && !priceAlert;
+  const MAX_PRICE = 10000000;
 
   useEffect(() => {
-    if (open && item) {
-      // API 데이터 연동하면 여기에 초기화 로직
+    if (open) {
+      if (initialSettings) {
+        setStartAlert(initialSettings.auctionStart);
+        setEndAlert(initialSettings.auctionEnd);
+        setPriceAlert(initialSettings.priceReached);
+        setTargetPrice(initialSettings.price > 0 ? initialSettings.price.toLocaleString() : "");
+      } else {
+        setStartAlert(false);
+        setEndAlert(true);
+        setPriceAlert(true);
+        setTargetPrice("");
+      }
+    } else {
+      setTargetPrice("");
     }
-  }, [open, item]);
+  }, [open, initialSettings, item]);
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/[^0-9]/g, "");
+    if (rawValue === "") {
+      setTargetPrice("");
+      return;
+    }
+
+    let numValue = Number(rawValue);
+
+    if (numValue > MAX_PRICE) {
+      numValue = MAX_PRICE;
+    }
+
+    setTargetPrice(numValue.toLocaleString());
+  };
 
   if (!item) return null;
 
@@ -58,15 +98,35 @@ export function NotificationPreferenceSettingsModal({
   };
 
   const handleRealSave = () => {
-    // API 저장 로직 연동
+    const cleanedPriceString = targetPrice.replace(/,/g, "").trim();
+
+    const hasValidPrice = cleanedPriceString !== "" && !Number.isNaN(Number(cleanedPriceString));
+
+    const priceValue = hasValidPrice ? Number(cleanedPriceString) : 0;
+
+    const data: NotificationSettingsData = {
+      auctionStart: startAlert,
+      auctionEnd: endAlert,
+      priceReached: priceAlert && hasValidPrice,
+      price: priceAlert && hasValidPrice ? priceValue : 0,
+    };
+
+    onSave?.(data);
     setShowSaveConfirm(false);
     onOpenChange(false);
   };
 
   const handleRealDelete = () => {
-    // API 삭제 로직 연동
-    onOpenChange(false);
+    const data: NotificationSettingsData = {
+      auctionStart: false,
+      auctionEnd: false,
+      priceReached: false,
+      price: 0,
+    };
+
+    onSave?.(data);
     setShowDeleteConfirm(false);
+    onOpenChange(false);
   };
 
   return (
@@ -132,21 +192,25 @@ export function NotificationPreferenceSettingsModal({
 
               {priceAlert && (
                 <div className="flex flex-col gap-2">
-                  <label
-                    htmlFor="target-price"
-                    className="text-muted-foreground text-xs leading-4 font-medium"
-                  >
-                    희망 가격
-                  </label>
-
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="target-price"
+                      className="text-muted-foreground text-xs leading-4 font-medium"
+                    >
+                      희망 가격
+                    </label>
+                    <span className="text-muted-foreground text-[10px] sm:text-xs">
+                      최대 {MAX_PRICE.toLocaleString()}원
+                    </span>
+                  </div>
                   <div className="relative h-9 w-full">
                     <Input
                       id="target-price"
                       type="text"
                       inputMode="numeric"
-                      pattern="[0-9]*"
                       value={targetPrice}
-                      onChange={(e) => setTargetPrice(e.target.value)}
+                      onChange={handlePriceChange}
+                      placeholder="가격을 입력하세요"
                       className="h-9 pr-9"
                     />
                     <span className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm">
