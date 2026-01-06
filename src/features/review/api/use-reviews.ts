@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
-import { ReviewType } from "@/entities/review";
+import type { ReviewType } from "@/entities/review";
 import { purchaseKeys } from "@/features/purchase/api/use-purchases";
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";

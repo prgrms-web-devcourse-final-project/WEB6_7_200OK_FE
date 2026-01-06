@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { MessageCircle, X } from "lucide-react";
 
-import { UserItemBadge, UserItemCard, UserSellingItemType } from "@/entities/auction";
+import { UserItemBadge, UserItemCard, type UserSellingItemType } from "@/entities/auction";
 import { Button } from "@/shared/ui";
 
 interface UserSellingItemCardProps {

@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 
 import { PackageOpen } from "lucide-react";
 
-import { UserSellingItemType, UserItemCardFilter } from "@/entities/auction";
+import { type UserSellingItemType, UserItemCardFilter } from "@/entities/auction";
 import { UserSellingItemCard, useSales } from "@/features/auction/auction-sale";
 import {
   filterItemsByStatus,

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
-import { UserSellingItemType, UserTradeStatusType } from "@/entities/auction";
+import type { UserSellingItemType, UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
