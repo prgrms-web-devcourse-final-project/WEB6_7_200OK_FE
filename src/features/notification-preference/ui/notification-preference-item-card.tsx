@@ -4,7 +4,7 @@ import { Settings, BellRing } from "lucide-react";
 
 import { UserItemBadge, UserItemCard } from "@/entities/auction";
 
-import { NotificationPreferenceItemType } from "../model/types";
+import type { NotificationPreferenceItemType } from "../model/types";
 
 interface NotificationPreferenceItemProps {
   item: NotificationPreferenceItemType;
