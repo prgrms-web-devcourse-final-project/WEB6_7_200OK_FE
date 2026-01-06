@@ -1,3 +1,4 @@
+import { type AuctionPublicStatusType } from "@/entities/auction/model/status";
 import {
   AuctionCardVariant,
   AuctionCardVariantType,
@@ -40,3 +41,9 @@ export const VARIANT_CONFIG: Record<AuctionCardVariantType, AuctionCardVariant> 
     cta: "ended",
   },
 } as const;
+
+export const STATUS_TO_VARIANT_MAP: Record<AuctionPublicStatusType, AuctionCardVariantType> = {
+  SCHEDULED: "upcoming",
+  PROCESS: "live",
+  COMPLETED: "ended",
+};
