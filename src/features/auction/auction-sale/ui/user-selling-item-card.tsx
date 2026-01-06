@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MessageCircle, X } from "lucide-react";
 
 import { UserItemBadge, UserItemCard, type UserSellingItemType } from "@/entities/auction";
+import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui";
 
 interface UserSellingItemCardProps {
@@ -36,7 +37,7 @@ export function UserSellingItemCard({
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
-      imageHref={`/auctions/${item.id}`}
+      imageHref={ROUTES.auctionDetail(item.id)}
       badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         isOwn &&
