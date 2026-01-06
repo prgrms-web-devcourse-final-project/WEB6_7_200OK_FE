@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { UserPurchaseItemType } from "@/entities/auction";
 import { ReviewModalBase, ReviewModalActions } from "@/entities/review";
@@ -20,10 +20,19 @@ export function ReviewWriteModal({ open, onOpenChange, item, onSubmit }: ReviewW
   const [showWarning, setShowWarning] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  useEffect(() => {
+    if (!open) {
+      setRating(0);
+      setContent("");
+      setShowWarning(false);
+      setShowConfirm(false);
+    }
+  }, [open]);
+
   if (!item) return null;
 
   const handleAttemptSubmit = () => {
-    if (rating < 0.5) {
+    if (rating < 1) {
       setShowWarning(true);
       return;
     }
@@ -46,11 +55,16 @@ export function ReviewWriteModal({ open, onOpenChange, item, onSubmit }: ReviewW
         title="리뷰 작성"
         description="구매하신 상품은 어떠셨나요?"
         product={{
-          imageUrl: item.imageUrl,
-          name: item.name,
+          auctionId: item.id,
+          auctionImageUrl: item.imageUrl,
+          auctionTitle: item.name,
           price: item.price,
         }}
-        seller={item.seller}
+        seller={{
+          sellerId: item.sellerId,
+          sellerProfileImage: item.sellerProfileImage,
+          nickname: item.sellername,
+        }}
         rating={rating}
         onRatingChange={setRating}
         content={content}
@@ -71,7 +85,7 @@ export function ReviewWriteModal({ open, onOpenChange, item, onSubmit }: ReviewW
         onOpenChange={setShowWarning}
         onConfirm={() => setShowWarning(false)}
         title="별점을 선택해주세요"
-        description="최소 0.5점 이상의 별점을 선택해야 리뷰를 등록할 수 있습니다."
+        description="최소 1점 이상의 별점을 선택해야 리뷰를 등록할 수 있습니다."
         confirmText="확인"
         cancelText="취소"
         variant="destructive"

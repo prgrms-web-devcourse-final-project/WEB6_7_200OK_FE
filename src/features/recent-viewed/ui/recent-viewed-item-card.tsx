@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 
 import { UserItemBadge, UserItemCard, UserRecentlyViewedItemType } from "@/entities/auction";
+import { ROUTES } from "@/shared/config/routes";
 
 interface UserRecentViewedItemCardProps {
   item: UserRecentlyViewedItemType;
@@ -29,6 +30,7 @@ export function UserRecentViewedItemCard({
       discountRate={item.discountRate}
       isPriceGray={isScheduled}
       onClick={() => onClick?.(item)}
+      imageHref={ROUTES.auctionDetail(item.id)}
       badgeNode={<UserItemBadge status={item.status} />}
       actionNode={
         <button
@@ -45,10 +47,8 @@ export function UserRecentViewedItemCard({
       }
       overlayNode={
         (isSoldOut || isAuctionEnded) && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50">
-            <span className="text-background text-base">
-              {isSoldOut ? "판매 완료" : "경매 종료"}
-            </span>
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/50">
+            <span className="text-base text-white">{isSoldOut ? "판매 완료" : "경매 종료"}</span>
           </div>
         )
       }

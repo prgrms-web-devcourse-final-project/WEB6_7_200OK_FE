@@ -3,9 +3,11 @@
 import { ReactNode } from "react";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import { Package, Star, User } from "lucide-react";
 
+import { ROUTES } from "@/shared/config/routes";
 import { cn } from "@/shared/lib/utils/utils";
 import {
   Button,
@@ -19,14 +21,16 @@ import {
 } from "@/shared/ui";
 
 interface ProductInfo {
-  imageUrl?: string;
-  name: string;
+  auctionId: number;
+  auctionImageUrl?: string;
+  auctionTitle: string;
   price?: number;
 }
 
 interface SellerInfo {
-  avatarUrl?: string;
-  name: string;
+  sellerId: number;
+  sellerProfileImage?: string;
+  nickname: string;
 }
 
 interface ReviewModalBaseProps {
@@ -35,13 +39,14 @@ interface ReviewModalBaseProps {
   title: string;
   description: string;
   product: ProductInfo;
-  seller?: SellerInfo;
+  seller: SellerInfo;
   rating: number;
   onRatingChange: (rating: number) => void;
   content: string;
   onContentChange: (content: string) => void;
   contentPlaceholder?: string;
   actions: ReactNode;
+  closeOnNavigate?: boolean;
 }
 
 export function ReviewModalBase({
@@ -57,7 +62,12 @@ export function ReviewModalBase({
   onContentChange,
   contentPlaceholder = "리뷰 내용을 입력해주세요.",
   actions,
+  closeOnNavigate = true,
 }: ReviewModalBaseProps) {
+  const handleNavigateClick = () => {
+    if (closeOnNavigate) onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[90%] gap-4 rounded-lg p-6 sm:max-w-lg">
@@ -71,10 +81,19 @@ export function ReviewModalBase({
 
         <div className="flex flex-col gap-3">
           {/* 상품 정보 */}
-          <div className="bg-muted flex w-full items-center gap-3 rounded-lg px-3 py-3">
+          <Link
+            href={ROUTES.auctionDetail(product.auctionId)}
+            onClick={handleNavigateClick}
+            className="bg-muted hover:bg-muted/80 flex w-full items-center gap-3 rounded-lg px-3 py-3 transition-colors"
+          >
             <div className="bg-secondary relative h-16 w-16 shrink-0 overflow-hidden rounded-lg">
-              {product.imageUrl ? (
-                <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
+              {product.auctionImageUrl ? (
+                <Image
+                  src={product.auctionImageUrl}
+                  alt={product.auctionTitle}
+                  fill
+                  className="object-cover"
+                />
               ) : (
                 <div className="flex h-full w-full items-center justify-center">
                   <Package className="text-muted-foreground h-6 w-6" />
@@ -83,7 +102,9 @@ export function ReviewModalBase({
             </div>
 
             <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
-              <span className="text-foreground truncate text-sm font-medium">{product.name}</span>
+              <span className="text-foreground truncate text-sm font-medium">
+                {product.auctionTitle}
+              </span>
               {product.price !== undefined ? (
                 <span className="text-brand text-xs leading-4 font-medium">
                   {product.price.toLocaleString()}원
@@ -94,27 +115,36 @@ export function ReviewModalBase({
                 </span>
               )}
             </div>
-          </div>
+          </Link>
 
           {/* 판매자 정보 */}
-          {seller && (
-            <div className="bg-muted flex w-full items-center gap-3 rounded-lg px-3 py-3">
-              <div className="bg-background ring-border relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-1">
-                {seller.avatarUrl ? (
-                  <Image src={seller.avatarUrl} alt={seller.name} fill className="object-cover" />
-                ) : (
-                  <div className="bg-secondary flex h-full w-full items-center justify-center">
-                    <User className="text-muted-foreground h-6 w-6" />
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col">
-                <span className="text-muted-foreground text-xs font-normal">판매자</span>
-                <span className="text-foreground text-sm leading-5 font-medium">{seller.name}</span>
-              </div>
+          <Link
+            href={ROUTES.userReview(seller.sellerId)}
+            onClick={handleNavigateClick}
+            className="bg-muted hover:bg-muted/80 flex w-full items-center gap-3 rounded-lg px-3 py-3 transition-colors"
+          >
+            <div className="bg-background ring-border relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-1">
+              {seller.sellerProfileImage ? (
+                <Image
+                  src={seller.sellerProfileImage}
+                  alt={seller.nickname}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="bg-secondary flex h-full w-full items-center justify-center">
+                  <User className="text-muted-foreground h-6 w-6" />
+                </div>
+              )}
             </div>
-          )}
+
+            <div className="flex flex-col">
+              <span className="text-muted-foreground text-xs font-normal">판매자</span>
+              <span className="text-foreground text-sm leading-5 font-medium">
+                {seller.nickname}
+              </span>
+            </div>
+          </Link>
         </div>
 
         {/* 별점 및 내용 입력 */}
@@ -150,7 +180,8 @@ export function ReviewModalBase({
                 placeholder={contentPlaceholder}
                 value={content}
                 onChange={(e) => {
-                  if (e.target.value.length <= 500) onContentChange(e.target.value);
+                  const next = e.target.value;
+                  if (next.length <= 500) onContentChange(next);
                 }}
               />
               <div className="text-muted-foreground mt-1.5 text-right text-xs leading-4 font-normal">
@@ -167,7 +198,6 @@ export function ReviewModalBase({
   );
 }
 
-// 공통 액션 컴포넌트들
 interface ReviewModalActionsProps {
   onCancel: () => void;
   onSubmit: () => void;

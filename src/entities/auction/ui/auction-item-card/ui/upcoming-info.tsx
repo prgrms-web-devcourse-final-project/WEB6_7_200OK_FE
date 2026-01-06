@@ -11,7 +11,7 @@ export default function UpcomingInfo({ startedAt, startPrice }: UpcomingInfoProp
       <dt className="text-muted-foreground">경매 시작</dt>
       <dd className="text-muted-foreground text-right">
         <time dateTime={startedAt}>
-          {dayjs.utc(startedAt).tz("Asia/Seoul").format("M월 D일 HH시 mm분")}
+          {dayjs.tz(startedAt, "Asia/Seoul").format("M월 D일 HH시 mm분")}
         </time>
       </dd>
 

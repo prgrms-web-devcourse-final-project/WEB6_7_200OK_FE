@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from "react";
 
-import { ReviewType, ReviewModalBase, ReviewModalThreeActions } from "@/entities/review";
+import { type ReviewType, ReviewModalBase, ReviewModalThreeActions } from "@/entities/review";
 import { ConfirmDeleteModal } from "@/shared/ui";
 
 interface ReviewEditModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   review: ReviewType | null;
-  onEdit?: (id: string, data: { rating: number; content: string }) => void;
-  onDelete?: (id: string) => void;
+  onEdit?: (id: number, data: { rating: number; content: string }) => void;
+  onDelete?: (id: number) => void;
 }
 
 export function ReviewEditModal({
@@ -31,13 +31,17 @@ export function ReviewEditModal({
     if (open && review) {
       setRating(review.rating);
       setContent(review.content);
+    } else if (!open) {
+      setShowDeleteConfirm(false);
+      setShowEditConfirm(false);
+      setShowWarning(false);
     }
   }, [open, review]);
 
   if (!review) return null;
 
   const handleEditClick = () => {
-    if (rating < 0.5) {
+    if (rating < 1) {
       setShowWarning(true);
       return;
     }
@@ -70,12 +74,14 @@ export function ReviewEditModal({
         title="리뷰 수정"
         description="작성하신 리뷰를 수정하거나 삭제할 수 있습니다."
         product={{
-          imageUrl: review.product.imageUrl,
-          name: review.product.name,
+          auctionId: review.product.id,
+          auctionImageUrl: review.product.imageUrl,
+          auctionTitle: review.product.name,
         }}
         seller={{
-          avatarUrl: review.seller?.avatarUrl,
-          name: review.seller?.name || "알 수 없음",
+          sellerId: review.seller?.id || 0,
+          sellerProfileImage: review.seller?.avatarUrl,
+          nickname: review.seller?.name || "알 수 없음",
         }}
         rating={rating}
         onRatingChange={setRating}
@@ -95,7 +101,7 @@ export function ReviewEditModal({
         onOpenChange={setShowWarning}
         onConfirm={() => setShowWarning(false)}
         title="별점을 선택해주세요"
-        description="최소 0.5점 이상의 별점을 선택해야 리뷰를 수정할 수 있습니다."
+        description="최소 1점 이상의 별점을 선택해야 리뷰를 수정할 수 있습니다."
         confirmText="확인"
         cancelText="취소"
         variant="destructive"

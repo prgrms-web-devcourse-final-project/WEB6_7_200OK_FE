@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { httpClient } from "@/shared/api/client";
+import { dayjs } from "@/shared/lib/utils/dayjs";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 import { combineDateTime } from "../utils/date-utils";
@@ -19,9 +20,11 @@ interface CreateAuctionParams {
 
 const formatStartAt = (date: Date, time: TimeSelection | null): string => {
   if (time) {
-    return combineDateTime(date, time).toISOString();
+    const combinedDate = combineDateTime(date, time);
+    const kstDateTime = dayjs(combinedDate).tz("Asia/Seoul");
+    return dayjs.utc(kstDateTime.format("YYYY-MM-DDTHH:mm:ss")).toISOString();
   }
-  return date.toISOString();
+  return dayjs(date).tz("Asia/Seoul").utc().toISOString();
 };
 
 const transformFormDataToApiRequest = ({

@@ -8,6 +8,7 @@ import { ChevronLeft, Image as ImageIcon, MessageSquareOff, Send } from "lucide-
 
 import { ChatBubble, ChatItemCard, ChatItemCardSkeleton } from "@/entities/chat";
 import { type ChatRoomListItem, type ChatRoomTradeInfo, type ChatMessage } from "@/features/chat";
+import { validateImageFiles } from "@/shared/lib/utils/image-validation/image-validation";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import { ScrollArea, Button, EmptyState, Input } from "@/shared/ui";
 
@@ -68,7 +69,31 @@ function ChatDetailComponent({
     }
 
     const fileList = Array.from(files);
-    uploadImages(fileList, {
+
+    // 이미지 파일 검증
+    const validationResult = validateImageFiles(fileList);
+
+    if (validationResult.invalidTypeFiles.length > 0) {
+      const fileNames = validationResult.invalidTypeFiles.map((file) => file.name).join(", ");
+      showToast.error(
+        `지원하지 않는 파일 형식입니다. JPG, PNG, GIF, WEBP 파일만 업로드 가능합니다. (${fileNames})`
+      );
+      return;
+    }
+
+    if (validationResult.oversizedFiles.length > 0) {
+      const fileNames = validationResult.oversizedFiles.map((file) => file.name).join(", ");
+      showToast.error(`이미지 하나당 최대 파일 크기는 10MB를 초과할 수 없습니다. (${fileNames})`);
+      return;
+    }
+
+    // 총 크기 검증 (50MB 제한)
+    if (validationResult.totalSizeExceeded) {
+      showToast.error(`전체 이미지 파일 크기는 50MB를 초과할 수 없습니다.`);
+      return;
+    }
+
+    uploadImages(validationResult.validFiles, {
       onSuccess: (data) => {
         if (!data) return;
         const imageUrls = data.map((item) => item.imageUrl);

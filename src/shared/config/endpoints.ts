@@ -9,11 +9,28 @@ export const API_ENDPOINTS = {
   auctionSellerInfo: (sellerId: number | string) => `/api/v1/auctions/${sellerId}/seller`,
   auctionNotificationSetting: (auctionId: string | number) =>
     `/api/v1/auctions/${auctionId}/notification-settings`,
+  auctionNotificationSettingStart: (auctionId: string | number) =>
+    `/api/v1/auctions/${auctionId}/notification-settings/start`,
   auctionRecentView: (auctionId: number | string) => `/api/v1/recentview/${auctionId}`,
 
   userInfo: (userid: number) => `/api/v1/users/${userid}`,
   userImageUpdate: "/api/v1/users/images", // PUT, Multipart
   userNameUpdate: "/api/v1/users/names", // PUT, JSON
+  userSales: (userId: number) => `/api/v1/users/${userId}/sales`,
+  userReviews: (userId: number) => `/api/v1/users/${userId}/reviews`,
+
+  // 리뷰 생성, 수정 및 삭제 API
+  reviews: "/api/v1/reviews",
+  reviewDetail: (reviewId: number) => `/api/v1/reviews/${reviewId}`,
+
+  // 마이페이지 관련 API
+  myPurchases: "/api/v1/me/purchases",
+  purchaseConfirm: (tradeId: number) => `/api/v1/trades/${tradeId}/confirm`,
+  myLikes: "/api/v1/me/likes",
+  removeMyLike: (auctionId: number) => `/api/v1/auctions/${auctionId}/like`,
+  myNotifications: "/api/v1/me/notifications",
+  myRecentViews: "/api/v1/me/recentviews",
+  deleteRecentView: (recentViewId: number) => `/api/v1/recentview/${recentViewId}`,
 
   tagSearch: "/api/v1/tags/search",
 

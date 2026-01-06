@@ -2,10 +2,10 @@ export type UserTradeStatusType = "판매중" | "판매 완료" | "경매 예정
 export type UserPurchaseStatusType = "구매 완료" | "구매 확정";
 
 export interface BaseUserItemType {
-  id: string;
+  id: number;
   name: string;
-  price: number;
-  originalPrice?: number;
+  price?: number;
+  originalPrice: number;
   discountRate?: number;
   date: string;
   imageUrl?: string;
@@ -19,11 +19,12 @@ export interface UserSellingItemType extends BaseUserItemType {
 export interface UserPurchaseItemType extends BaseUserItemType {
   status: UserPurchaseStatusType;
   unreadMessageCount?: number;
+  sellerId: number;
+  sellername: string;
+  sellerProfileImage?: string;
   hasReview?: boolean;
-  seller?: {
-    name: string;
-    avatarUrl?: string;
-  };
+  reviewId?: number;
+  tradeId: number;
 }
 
 export interface UserAuctionLikeItemType extends BaseUserItemType {
@@ -32,4 +33,5 @@ export interface UserAuctionLikeItemType extends BaseUserItemType {
 
 export interface UserRecentlyViewedItemType extends BaseUserItemType {
   status: UserTradeStatusType;
+  recentViewId: number;
 }

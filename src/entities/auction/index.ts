@@ -59,10 +59,6 @@ export { UserItemBadge, type UserItemStatusType } from "@/entities/auction/ui/us
 export {
   UserItemCard,
   UserItemCardFilter,
-  MOCK_SELLING_ITEMS,
-  MOCK_PURCHASES,
-  MOCK_AUCTIONLIKE_ITEMS,
-  MOCK_RECENT_ITEMS,
   type UserSellingItemType,
   type UserPurchaseItemType,
   type UserAuctionLikeItemType,
