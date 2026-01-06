@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { httpClient } from "@/shared/api/client";
 import { ApiResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
+import { compressImages } from "@/shared/lib/utils/image/compress-image";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 import type { UploadImageResponse } from "../model/types";
@@ -16,8 +17,10 @@ export function useUploadAuctionImages() {
         return [];
       }
 
+      const compressedFiles = await compressImages(files);
+
       const formData = new FormData();
-      files.forEach((file) => {
+      compressedFiles.forEach((file) => {
         formData.append("uploadFiles", file);
       });
 
