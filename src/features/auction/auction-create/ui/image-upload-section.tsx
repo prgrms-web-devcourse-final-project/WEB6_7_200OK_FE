@@ -10,7 +10,10 @@ import {
   ImagePreviewItem,
   ImageCarouselView,
 } from "@/entities/auction";
-import { validateImageFiles } from "@/shared/lib/utils/image-validation/image-validation";
+import {
+  validateImageFiles,
+  MAX_TOTAL_IMAGE_SIZE,
+} from "@/shared/lib/utils/image-validation/image-validation";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import FileInput from "@/shared/ui/input/file-input";
 
@@ -43,7 +46,27 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
 
       if (validationResult.oversizedFiles.length > 0) {
         const fileNames = validationResult.oversizedFiles.map((file) => file.name).join(", ");
-        showToast.error(`파일 크기는 50MB를 초과할 수 없습니다. (${fileNames})`);
+        showToast.error(
+          `이미지 파일은 하나당 최대 파일 크기는 10MB를 초과할 수 없습니다. (${fileNames})`
+        );
+        return;
+      }
+
+      // 기존 이미지들의 총 크기 계산
+      const existingImagesTotalSize = currentImages.reduce(
+        (sum, image) => sum + (image.file?.size || 0),
+        0
+      );
+
+      // 새로 추가할 파일들의 총 크기
+      const newFilesTotalSize = validationResult.validFiles.reduce(
+        (sum, file) => sum + file.size,
+        0
+      );
+
+      // 이미지의 총 크기가 50MB를 초과하는지 검증
+      if (existingImagesTotalSize + newFilesTotalSize > MAX_TOTAL_IMAGE_SIZE) {
+        showToast.error(`전체 이미지 파일 크기는 50MB를 초과할 수 없습니다.`);
         return;
       }
 
