@@ -1,5 +1,7 @@
 import { AuctionProgress } from "@/entities/auction";
 import { AuctionTickerProvider } from "@/entities/auction/hooks/use-auction-ticker";
+import { EmojiStoreProvider } from "@/features/auction/auction-emoji/provider/use-emoji-store-provider";
+import EmojiLayer from "@/features/auction/auction-emoji/ui/emoji-layer";
 import { AuctionLogList } from "@/features/auction/auction-log";
 import { AuctionViewerProvider } from "@/features/auction/auction-log/provider/use-auction-viewer";
 import AuctionDetailSellerInfo from "@/features/auction/auction-sale/ui/auction-detail-seller-info";
@@ -23,7 +25,15 @@ import {
 } from "@/widgets/auction/auction-detail";
 import { AuctionPriceStoreProvider } from "@/widgets/auction/auction-detail/provider/auction-price-store-provider";
 
-export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailType; id: string }) {
+export default function AuctionDetailScreen({
+  data,
+  id,
+  token,
+}: {
+  data: AuctionDetailType;
+  id: string;
+  token?: string;
+}) {
   if (!data || !id) {
     return (
       <AuctionDetailErrorScreen
@@ -75,14 +85,18 @@ export default function AuctionDetailScreen({ data, id }: { data: AuctionDetailT
                   <AuctionDetailSeller seller={data.seller} />
                   <AuctionProgress status={data.status} />
                 </AuctionTickerProvider>
-                <AuctionDetailUserActions
-                  auctionId={id}
-                  status={data.status}
-                  title={data.title}
-                  isLike={data.isLiked}
-                  likeCount={data.likeCount}
-                  sellerId={data.seller.sellerId}
-                />
+                <EmojiStoreProvider>
+                  <AuctionDetailUserActions
+                    auctionId={id}
+                    status={data.status}
+                    title={data.title}
+                    isLike={data.isLiked}
+                    likeCount={data.likeCount}
+                    sellerId={data.seller.sellerId}
+                    token={token}
+                  />
+                  <EmojiLayer />
+                </EmojiStoreProvider>
               </AuctionPriceStoreProvider>
               <div className="flex flex-col gap-3">
                 <AuctionLogList
