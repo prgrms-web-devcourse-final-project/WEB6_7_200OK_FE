@@ -1,12 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { UserTradeStatusType } from "@/entities/auction";
+import type { UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 import { NotificationPreferenceItemType } from "../model/types";
 
-// 1. DTO & Interfaces
 interface NotificationInfo {
   alertStart: boolean;
   alertEnd: boolean;
@@ -15,7 +14,7 @@ interface NotificationInfo {
 }
 
 interface NotificationSliceItem {
-  status: string; // "PROCESS" | "SCHEDULED" ...
+  status: string;
   auctionId: number;
   title: string;
   auctionImageUrl: string;
@@ -51,14 +50,14 @@ interface UpdateNotificationRequest {
   price: number;
 }
 
-// 2. Query Keys (Factory Pattern)
+// Query Keys (Factory Pattern)
 export const notificationKeys = {
   all: ["user", "notifications"] as const,
   list: () => [...notificationKeys.all, "list"] as const,
   settings: (auctionId: number) => [...notificationKeys.all, "settings", auctionId] as const,
 };
 
-// 3. Helper Functions
+// Helper Functions
 const mapStatusToTradeStatus = (status: string): UserTradeStatusType => {
   switch (status) {
     case "SCHEDULED":
@@ -83,7 +82,7 @@ const generateKeywords = (info: NotificationInfo): string[] => {
   return keywords;
 };
 
-// 4. API Fetchers
+// API Fetchers
 const fetchNotifications = async (): Promise<NotificationPreferenceItemType[]> => {
   const response = await httpClient<NotificationData>(API_ENDPOINTS.myNotifications, {
     method: "GET",
@@ -116,12 +115,10 @@ const fetchNotificationSettings = async (
     API_ENDPOINTS.notificationSettings(auctionId),
     { method: "GET" }
   );
-  // httpClient가 감싸고 있는 응답 구조에 따라 response.data 반환
-  // 만약 httpClient가 data 필드를 바로 반환하면 return response;
   return response.data;
 };
 
-// 5. Custom Hooks
+// Custom Hooks
 export function useNotificationList() {
   return useQuery({
     queryKey: notificationKeys.list(),
@@ -143,12 +140,10 @@ export function useUpdateNotificationSettings() {
     mutationFn: ({ auctionId, data }: { auctionId: number; data: UpdateNotificationRequest }) =>
       httpClient(API_ENDPOINTS.notificationSettings(auctionId), {
         method: "PUT",
-        body: data, // JSON.stringify 제거 (httpClient 내부 처리 가정)
+        body: data,
       }),
     onSuccess: (_, vars) => {
-      // 해당 경매의 설정값 갱신
       queryClient.invalidateQueries({ queryKey: notificationKeys.settings(vars.auctionId) });
-      // 알림 목록의 키워드 정보도 바뀔 수 있으므로 목록 갱신
       queryClient.invalidateQueries({ queryKey: notificationKeys.list() });
     },
   });
