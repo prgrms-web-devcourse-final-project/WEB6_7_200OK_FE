@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,7 +14,7 @@ import AuctionTimer from "@/entities/auction/ui/auction-item-card/ui/auction-tim
 import BuyCtaButton from "@/entities/auction/ui/auction-item-card/ui/buy-cta-button";
 import CtaButton from "@/entities/auction/ui/auction-item-card/ui/cta-button";
 import EndedCtaButton from "@/entities/auction/ui/auction-item-card/ui/ended-cta-button";
-import LikeButton from "@/entities/auction/ui/auction-item-card/ui/like-button";
+import { LikeButton } from "@/entities/auction/ui/auction-item-card/ui/like-button";
 import RankingBadge from "@/entities/auction/ui/auction-item-card/ui/ranking-badge";
 import UpcomingInfo from "@/entities/auction/ui/auction-item-card/ui/upcoming-info";
 import { ROUTES } from "@/shared/config/routes";
@@ -23,7 +25,7 @@ export interface AuctionItemCardProps extends AuctionType {
   rank?: number;
 }
 
-export function AuctionItemCard({
+function AuctionItemCardComponent({
   variant,
   auctionId,
   imageUrl,
@@ -87,3 +89,6 @@ export function AuctionItemCard({
     </article>
   );
 }
+
+export const AuctionItemCard = memo(AuctionItemCardComponent);
+AuctionItemCard.displayName = "AuctionItemCard";
