@@ -10,6 +10,8 @@ import {
   ImagePreviewItem,
   ImageCarouselView,
 } from "@/entities/auction";
+import { validateImageFiles } from "@/shared/lib/utils/image-validation/image-validation";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import FileInput from "@/shared/ui/input/file-input";
 
 interface ImageUploadSectionProps {
@@ -26,15 +28,33 @@ export function ImageUploadSection({ images, onImagesChange }: ImageUploadSectio
       const availableSlots = MAX_IMAGES - currentImages.length;
       if (availableSlots <= 0) return;
 
-      const filesToAdd = Array.from(files).slice(0, availableSlots);
+      const filesArray = Array.from(files);
+
+      // 이미지 파일 검증
+      const validationResult = validateImageFiles(filesArray);
+
+      if (validationResult.invalidTypeFiles.length > 0) {
+        const fileNames = validationResult.invalidTypeFiles.map((file) => file.name).join(", ");
+        showToast.error(
+          `지원하지 않는 파일 형식입니다. JPG, PNG, GIF, WEBP 파일만 업로드 가능합니다. (${fileNames})`
+        );
+        return;
+      }
+
+      if (validationResult.oversizedFiles.length > 0) {
+        const fileNames = validationResult.oversizedFiles.map((file) => file.name).join(", ");
+        showToast.error(`파일 크기는 50MB를 초과할 수 없습니다. (${fileNames})`);
+        return;
+      }
+
+      const filesToAdd = validationResult.validFiles.slice(0, availableSlots);
 
       // 이미지 추가 시 검증
       try {
         const newImages = await Promise.all(filesToAdd.map(itemImageFromFile));
         onImagesChange([...currentImages, ...newImages]);
-      } catch (error) {
-        // TODO: 사용자에게 에러 알림 (toast 등)
-        console.error("Failed to load images:", error);
+      } catch {
+        showToast.error("이미지 처리에 실패했습니다. 잠시 후 다시 시도해주세요.");
       }
     },
     [onImagesChange]
