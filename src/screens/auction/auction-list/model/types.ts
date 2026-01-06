@@ -1,4 +1,4 @@
-import type { AuctionType } from "@/entities/auction/model/types";
+import type { AuctionListType } from "@/entities/auction/model/types";
 import type { AuctionFilters } from "@/features/auction/filters/model/types";
 
 export type SearchParamsType = Record<string, string | string[] | undefined>;
@@ -9,7 +9,7 @@ export interface AuctionListParams extends AuctionFilters {
 }
 
 export interface AuctionListData {
-  slice: AuctionType[];
+  slice: AuctionListType[];
   hasNext: boolean;
   page: number;
   size: number;
