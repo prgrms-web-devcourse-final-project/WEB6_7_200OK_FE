@@ -88,7 +88,7 @@ export function UserItemCard({
   };
 
   const renderPrice = () => {
-    if (price != null && discountRate != null) {
+    if (price != null && discountRate != null && discountRate > 0) {
       return (
         <div className="flex flex-col gap-0.5">
           <span className="text-muted-foreground text-xs line-through decoration-auto">
