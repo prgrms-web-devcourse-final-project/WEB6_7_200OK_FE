@@ -57,13 +57,39 @@ export async function httpClient<TResponse, TRequest = unknown>(
     try {
       errorData = await response.json();
     } catch {
+      const errorText = await response.text().catch(() => "Could not read error");
+      console.error("=".repeat(80));
+      console.error("[CLIENT] ❌ API Error Response (non-JSON):");
+      console.error("Status:", response.status, response.statusText);
+      console.error("URL:", url.toString());
+      console.error("Error Text:", errorText);
+      console.error("Headers:", Object.fromEntries(response.headers.entries()));
+      console.error("=".repeat(80));
       throw new ApiError(response.status, `HTTP Error: ${response.status}`, response.status);
     }
 
-    // 403 에러인 경우 상세 정보 로깅
-    if (response.status === 403) {
-      console.error("[CLIENT] 403 Forbidden Error Details:", errorData);
+    // 에러인 경우 상세 정보 로깅 (클라이언트 콘솔에 명확하게 표시)
+    console.error("=".repeat(80));
+    console.error(`[CLIENT] ❌ API Error ${response.status} ${response.statusText}:`);
+    console.error("Request URL:", url.toString());
+    console.error("Response Status:", response.status, response.statusText);
+    console.error("Full Error Data:", errorData);
+    console.error("Response Headers:", Object.fromEntries(response.headers.entries()));
+
+    // 프록시에서 전달한 상세 정보가 있으면 추가 로깅
+    if (errorData.proxyDetails || errorData.serverResponse) {
+      console.error("\n[CLIENT] 📋 Proxy Error Details:");
+      if (errorData.proxyDetails) {
+        console.error("Proxy Details:", errorData.proxyDetails);
+      }
+      if (errorData.serverResponse) {
+        console.error("Server Response:", errorData.serverResponse);
+      }
+      if (errorData.requestHeaders) {
+        console.error("Request Headers:", errorData.requestHeaders);
+      }
     }
+    console.error("=".repeat(80));
 
     const message = errorData.message || errorData.error || "API Request Failed";
 
