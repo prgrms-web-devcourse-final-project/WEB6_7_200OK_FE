@@ -14,12 +14,13 @@ import { CalendarTabSkeleton } from "@/widgets/user/ui/skeletons";
 
 interface UserDashboardCalendarProps {
   label: React.ReactNode;
+  userId: number;
 }
 
-export function UserDashboardCalendar({ label }: UserDashboardCalendarProps) {
+export function UserDashboardCalendar({ label, userId }: UserDashboardCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const { data: salesItems = [], isLoading: isSalesLoading } = useUserSalesList();
+  const { data: salesItems = [], isLoading: isSalesLoading } = useUserSalesList(userId);
   const { data: auctionLikeItems = [], isLoading: isAuctionLikeLoading } = useUserAuctionLike();
 
   const allItems = useMemo(
