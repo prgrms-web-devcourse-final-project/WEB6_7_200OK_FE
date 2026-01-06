@@ -2,7 +2,6 @@ import type { ChatRoomListItem, ListFilter } from "@/features/chat";
 import { fetch } from "@/shared/api/server";
 import { type ApiResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
-import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 interface GetChatRoomsParams {
   scope?: ListFilter;
@@ -23,7 +22,6 @@ export const chatRoomsLoader = async (params: GetChatRoomsParams) => {
     const apiError = error as ApiResponseType<null>;
     if (apiError.code === 404) {
       console.warn("Failed to fetch chat rooms [404]:", apiError.message);
-      showToast.error(apiError.message);
       throw new Error("유저를 찾을 수 없습니다.");
     } else {
       console.warn("Failed to fetch chat rooms:", apiError.message);

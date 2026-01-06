@@ -1,8 +1,8 @@
 import { AuctionListParams, AuctionListData } from "@/screens/auction/auction-list/model/types";
-import { fetch } from "@/shared/api/server";
+import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
-export const searchAuctions = async (params: AuctionListParams): Promise<AuctionListData> => {
+export const searchAuctionsClient = async (params: AuctionListParams): Promise<AuctionListData> => {
   const query = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
@@ -11,7 +11,7 @@ export const searchAuctions = async (params: AuctionListParams): Promise<Auction
     }
   });
 
-  const response = await fetch<AuctionListData>(
+  const response = await httpClient<AuctionListData>(
     `${API_ENDPOINTS.auctionSearch}?${query.toString()}`
   );
 

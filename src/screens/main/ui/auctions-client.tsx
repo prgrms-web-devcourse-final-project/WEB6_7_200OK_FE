@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { auctionsQueryClient } from "@/screens/main/model/auctions-query";
+import { auctionsQueryClient } from "@/screens/main/model/auctions-query.client";
 import { SECTIONS } from "@/screens/main/model/sections";
 import { useServerTimeSync } from "@/shared/lib/hooks/use-server-time-sync";
 import { Container } from "@/shared/ui";

@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { chatRoomsLoader, ListFilter } from "@/features/chat";
+import type { ListFilter } from "@/features/chat";
+import { chatRoomsLoader } from "@/features/chat/api/loader";
 import { ChatListScreen } from "@/screens/chat";
 
 export default async function Page({
