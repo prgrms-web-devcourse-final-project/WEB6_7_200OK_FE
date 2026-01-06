@@ -6,9 +6,6 @@ import { refreshCookie } from "@/shared/lib/utils/auth/refresh-cookie";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// Vercel 함수 설정
-export const maxDuration = 60; // 파일 업로드 시 타임아웃 방지 (최대 실행 시간 60초)
-
 async function getRequestBody(req: NextRequest): Promise<{
   body: string | ArrayBuffer | null;
   isFormData: boolean;
@@ -18,8 +15,7 @@ async function getRequestBody(req: NextRequest): Promise<{
   if (contentType?.includes("application/json")) {
     try {
       return { body: JSON.stringify(await req.json()), isFormData: false };
-    } catch (error) {
-      console.error("JSON 파싱 실패:", error);
+    } catch {
       return { body: null, isFormData: false };
     }
   }
@@ -27,21 +23,15 @@ async function getRequestBody(req: NextRequest): Promise<{
   if (contentType?.includes("multipart/form-data")) {
     try {
       const arrayBuffer = await req.arrayBuffer();
-      // FormData 읽기 성공
       return { body: arrayBuffer, isFormData: true };
     } catch (error) {
       console.error("FormData 읽기 실패:", error);
-      throw new Error("FormData 처리 중 오류가 발생했습니다.");
+      return { body: null, isFormData: false };
     }
   }
 
-  try {
-    const arrayBuffer = await req.arrayBuffer();
-    return { body: arrayBuffer.byteLength > 0 ? arrayBuffer : null, isFormData: false };
-  } catch (error) {
-    console.error("Request body 읽기 실패:", error);
-    return { body: null, isFormData: false };
-  }
+  const arrayBuffer = await req.arrayBuffer();
+  return { body: arrayBuffer.byteLength > 0 ? arrayBuffer : null, isFormData: false };
 }
 
 async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
@@ -54,20 +44,7 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  let requestBody;
-  try {
-    requestBody = await getRequestBody(req);
-  } catch (error) {
-    console.error("[Proxy] Request body 처리 실패:", error);
-    return NextResponse.json(
-      {
-        error: "Request body 처리에 실패했습니다.",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 400 }
-    );
-  }
-
+  const requestBody = await getRequestBody(req);
   const headers = new Headers(req.headers);
 
   if (accessToken) {
@@ -109,19 +86,6 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       body: requestBody.body,
       cache: "no-store",
     });
-
-    if (apiResponse.status === 403) {
-      const errorText = await apiResponse.text();
-      console.error(`[Proxy] 403 Forbidden 발생:`, errorText);
-      return NextResponse.json(
-        {
-          error: "접근 권한이 없습니다.",
-          message: errorText,
-          code: 403,
-        },
-        { status: 403 }
-      );
-    }
 
     if (apiResponse.status === 401 && refreshToken) {
       const newAuthData = await refreshCookie(refreshToken);
@@ -183,22 +147,8 @@ async function proxyHandler(req: NextRequest, { params }: { params: Promise<{ pa
       headers: apiResponse.headers,
     });
   } catch (error) {
-    console.error("[Proxy] 치명적 오류:", error);
-    console.error("[Proxy] 오류 상세:", {
-      message: error instanceof Error ? error.message : "Unknown error",
-      stack: error instanceof Error ? error.stack : undefined,
-      apiUrl,
-      method: req.method,
-    });
-
-    return NextResponse.json(
-      {
-        error: "Internal Server Error",
-        message: error instanceof Error ? error.message : "Unknown error",
-        code: 500,
-      },
-      { status: 500 }
-    );
+    console.error("Proxy Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
