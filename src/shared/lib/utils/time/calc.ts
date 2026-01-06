@@ -54,3 +54,21 @@ export function calculateElapsedMsWithin5MinCycle(dateStr: string) {
 
   return (min * 60 + sec) * 1000 + ms;
 }
+
+export function calculateElapsedMsWithinCreatedToStarted(
+  createdAt: string,
+  now: string,
+  startedAt: string
+) {
+  const createdMs = Date.parse(createdAt);
+  const nowMs = Date.parse(now);
+  const startedMs = Date.parse(startedAt);
+
+  if (!Number.isFinite(createdMs) || !Number.isFinite(nowMs) || !Number.isFinite(startedMs))
+    return 0;
+
+  const duration = Math.max(0, startedMs - createdMs);
+  if (duration === 0) return 0;
+
+  return Math.min(Math.max(nowMs - createdMs, 0), duration); // elapsedMs
+}
