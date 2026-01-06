@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
   userInfo: (userid: number) => `/api/v1/users/${userid}`,
   userImageUpdate: "/api/v1/users/images", // PUT, Multipart
   userNameUpdate: "/api/v1/users/names", // PUT, JSON
+  userSales: (userId: number) => `/api/v1/users/${userId}/sales`,
 
   tagSearch: "/api/v1/tags/search",
 
