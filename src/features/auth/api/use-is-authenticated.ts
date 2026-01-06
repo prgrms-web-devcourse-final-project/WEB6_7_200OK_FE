@@ -1,5 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 export function useIsAuthenticated(): boolean {
-  return document.cookie.includes("userId=");
+  const [isAuthed, setIsAuthed] = useState(false);
+
+  useEffect(() => {
+    setIsAuthed(document.cookie.includes("userId="));
+  }, []);
+
+  return isAuthed;
 }
