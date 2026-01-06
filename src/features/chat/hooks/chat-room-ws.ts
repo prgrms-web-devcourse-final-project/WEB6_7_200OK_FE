@@ -286,17 +286,21 @@ export function useChatRoomSocket(
   );
 
   const handleReadEventReceived = useCallback((frame: IFrame) => {
-    const event: ChatReadEvent = JSON.parse(frame.body);
+    try {
+      const event: ChatReadEvent = JSON.parse(frame.body);
 
-    if (userIdRef.current && event.readerId !== userIdRef.current) {
-      setMessages((prev) =>
-        prev.map((msg) => {
-          if (msg.messageId <= event.lastReadMessageId && !msg.isRead) {
-            return { ...msg, isRead: true };
-          }
-          return msg;
-        })
-      );
+      if (userIdRef.current && event.readerId !== userIdRef.current) {
+        setMessages((prev) =>
+          prev.map((msg) => {
+            if (msg.messageId <= event.lastReadMessageId && !msg.isRead) {
+              return { ...msg, isRead: true };
+            }
+            return msg;
+          })
+        );
+      }
+    } catch {
+      showToast.error("채팅 처리 중 에러가 발생하였습니다.");
     }
   }, []);
 
