@@ -16,8 +16,7 @@ interface SalesSliceItem {
   endPrice?: number;
   discountPercent?: number;
   startedAt: string;
-  chatRoomId?: number;
-  unreadCount?: number;
+  chatInfo?: { roomId: number; unreadCount: number };
 }
 
 interface SalesData {
@@ -63,8 +62,8 @@ const getUserSalesList = async (userId: number): Promise<UserSellingItemType[]> 
         discountRate: item.discountPercent ?? 0,
         status: mapStatusToTradeStatus(item.status),
         date: dayjs(item.startedAt).format("YYYY-MM-DD"),
-        chatRoomId: item.chatRoomId ?? 0,
-        unreadMessageCount: item.unreadCount ?? 0,
+        chatRoomId: item.chatInfo?.roomId,
+        unreadMessageCount: item.chatInfo?.unreadCount,
       };
     });
 };

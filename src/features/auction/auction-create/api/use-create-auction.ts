@@ -1,9 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { httpClient } from "@/shared/api/client";
 import { dayjs } from "@/shared/lib/utils/dayjs";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
+import { userSaleKeys } from "../../auction-sale/api/use-sales"; // users 판매 목록 갱신
 import { combineDateTime } from "../utils/date-utils";
 
 import type {
@@ -43,6 +44,7 @@ const transformFormDataToApiRequest = ({
 });
 
 export function useCreateAuction() {
+  const queryClient = useQueryClient(); // users 판매 목록 갱신
   return useMutation<CreateAuctionResponseData, Error, CreateAuctionParams>({
     mutationFn: async (params) => {
       const requestBody = transformFormDataToApiRequest(params);
@@ -58,6 +60,7 @@ export function useCreateAuction() {
     },
     onSuccess: (_data) => {
       showToast.success("경매가 성공적으로 등록되었습니다.");
+      queryClient.invalidateQueries({ queryKey: userSaleKeys.all }); // users 판매 목록 갱신
     },
     onError: (error) => {
       showToast.error("경매 등록에 실패했습니다. 다시 시도해주세요.");
