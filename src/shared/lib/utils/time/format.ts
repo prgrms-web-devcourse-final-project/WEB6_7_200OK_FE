@@ -1,8 +1,14 @@
 import { dayjs } from "@/shared/lib/utils/dayjs";
 
+export function parseKstLocalDateTime(input: string) {
+  const normalized = input.replace(/(\.\d{3})\d+$/, "$1");
+  return dayjs.tz(normalized, "Asia/Seoul");
+}
+
 export function formatAgo(input: string | Date | number): string {
   const now = dayjs();
-  const t = dayjs(input);
+
+  const t = typeof input === "string" ? parseKstLocalDateTime(input) : dayjs(input);
 
   if (!t.isValid()) return "";
 
