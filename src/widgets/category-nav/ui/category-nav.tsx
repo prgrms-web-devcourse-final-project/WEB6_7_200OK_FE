@@ -18,7 +18,10 @@ export function CategoryNav() {
     : null;
 
   return (
-    <nav aria-label="카테고리" className="bg-background h-header sticky top-0 z-50 border-b">
+    <nav
+      aria-label="카테고리"
+      className="bg-background h-header md:top-header sticky top-0 z-50 border-b"
+    >
       <Container className="p-0">
         <ul className="h-header scrollbar-hide flex overflow-x-auto whitespace-nowrap sm:justify-around sm:overflow-visible">
           {FILTER_CATEGORIES.map((category) => (
