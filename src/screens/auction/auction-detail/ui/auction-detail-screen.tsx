@@ -43,7 +43,6 @@ export default function AuctionDetailScreen({
       />
     );
   }
-  console.log(data.recentPriceHistory);
   return (
     <ScrollArea className="h-[calc(100vh-var(--header-h))] lg:h-[calc(100vh-var(--header-h))]">
       <AuctionViewerProvider initCount={data.viewerCount}>

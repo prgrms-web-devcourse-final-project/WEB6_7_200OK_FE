@@ -38,7 +38,7 @@ export default function AuctionDetailUserActions({
   return (
     <div className="flex items-center gap-2">
       {isSeller ? (
-        <AuctionSellerEmojiButton auctionId={auctionId} token={token} />
+        <AuctionSellerEmojiButton auctionId={auctionId} token={token} status={status} />
       ) : (
         <>
           <div className="flex items-center gap-1">

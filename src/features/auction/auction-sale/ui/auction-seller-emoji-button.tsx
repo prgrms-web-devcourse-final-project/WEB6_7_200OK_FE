@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import type { AuctionStatusType } from "@/entities/auction";
 import useAuctionSellerSocket from "@/features/auction/auction-sale/hook/use-auction-seller-socket";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import { Button, Popover, PopoverTrigger, PopoverContent } from "@/shared/ui";
@@ -9,11 +10,13 @@ import { Button, Popover, PopoverTrigger, PopoverContent } from "@/shared/ui";
 interface AuctionSellerEmojiButtonProps {
   token?: string;
   auctionId: string | number;
+  status: AuctionStatusType;
 }
 
 export default function AuctionSellerEmojiButton({
   auctionId,
   token,
+  status,
 }: AuctionSellerEmojiButtonProps) {
   const { handleSendEmoji } = useAuctionSellerSocket(auctionId, token);
   const [open, setOpen] = useState(false);
@@ -26,7 +29,12 @@ export default function AuctionSellerEmojiButton({
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
-        <Button variant="primary" className="flex-1" size="lg">
+        <Button
+          variant="primary"
+          className="flex-1"
+          size="lg"
+          disabled={status !== "PROCESS" && status !== "SCHEDULED"}
+        >
           감정 보내기
         </Button>
       </PopoverTrigger>
