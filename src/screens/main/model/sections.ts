@@ -11,7 +11,7 @@ export const SECTIONS = [
   {
     key: "processList",
     title: "⚡ 경매 진행 중",
-    description: "실시간 경매가 진행 중인 상품을 모아봤어요!",
+    description: "실시간 경매가 진행 중이에요!",
     variant: "live",
     moreHref: `${ROUTES.auctions}?status=PROCESS`,
   },
