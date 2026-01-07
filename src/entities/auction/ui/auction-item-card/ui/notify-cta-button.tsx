@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Bell, BellRing } from "lucide-react";
 
 import { toggleAuctionNotificationSettingStart } from "@/entities/notification/api/notification-setting";
 import { useIsAuthenticated } from "@/features/auth/api/use-is-authenticated";
+import {
+  getAuctionsCacheSnapshot,
+  restoreAuctionsCache,
+  updateAuctionsCache,
+} from "@/shared/lib/query/update-auctions-cache";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import Button from "@/shared/ui/button/button";
 
@@ -22,6 +27,10 @@ export default function NotifyCtaButton({ auctionId, initialEnabled }: NotifyCta
   const queryKey = ["auction-notify", auctionId] as const;
 
   const [isEnabled, setIsEnabled] = useState<boolean>(initialEnabled ?? false);
+  useEffect(() => {
+    if (initialEnabled === undefined) return;
+    setIsEnabled(initialEnabled);
+  }, [initialEnabled]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (nextEnabled: boolean) =>
@@ -31,8 +40,11 @@ export default function NotifyCtaButton({ auctionId, initialEnabled }: NotifyCta
 
     onMutate: (nextEnabled: boolean) => {
       const prev = isEnabled;
+      const snapshot = getAuctionsCacheSnapshot(queryClient);
+
+      updateAuctionsCache(queryClient, auctionId, { isNotification: nextEnabled });
       setIsEnabled(nextEnabled);
-      return { prev };
+      return { prev, snapshot };
     },
 
     onSuccess: async () => {
@@ -41,6 +53,7 @@ export default function NotifyCtaButton({ auctionId, initialEnabled }: NotifyCta
 
     onError: (_err, _vars, ctx) => {
       if (ctx?.prev !== undefined) setIsEnabled(ctx.prev);
+      restoreAuctionsCache(queryClient, ctx?.snapshot);
       showToast.error("경매 시작 알림 설정에 실패했습니다. 잠시 후 다시 시도해주세요.");
     },
   });
