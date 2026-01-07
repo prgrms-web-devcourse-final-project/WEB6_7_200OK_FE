@@ -1,13 +1,25 @@
 "use client";
 
+import { useEffect } from "react"; // users 구매 목록 갱신
+
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
+import { useQueryClient } from "@tanstack/react-query"; // users 구매 목록 갱신
+
+import { purchaseKeys } from "@/features/purchase/api/use-purchases"; // users 구매 목록 갱신
 import { useNavigation } from "@/shared/lib/utils/navigation/navigation";
 
 export default function AuctionPurchaseSuccessScreen() {
   const searchParams = useSearchParams();
   const { navigateToHome, navigateToPrev } = useNavigation();
+
+  // users 구매 목록 갱신
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: purchaseKeys.all });
+  }, [queryClient]);
+
   return (
     <div>
       <div

@@ -82,9 +82,9 @@ export function UserSellingItemCard({
                 {hasUnreadMessages && (
                   <span
                     className="text-2.5 ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white/20 px-1 text-white"
-                    aria-label={`${hasUnreadMessages}개의 읽지 않은 메시지`}
+                    aria-label={`${item.unreadMessageCount}개의 읽지 않은 메시지`}
                   >
-                    {hasUnreadMessages}
+                    {item.unreadMessageCount}
                   </span>
                 )}
               </Link>

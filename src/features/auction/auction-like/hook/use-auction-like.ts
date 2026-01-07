@@ -9,6 +9,8 @@ import type { LikeType } from "@/features/auction/auction-like/model/types";
 import { useIsAuthenticated } from "@/features/auth/api/use-is-authenticated";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
+import { userAuctionLikeKeys } from "../api/use-auction-like"; // users 찜 목록 갱신
+
 interface UseAuctionLikeType {
   auctionId: string | number;
   initIsLiked: boolean;
@@ -48,6 +50,7 @@ export const useAuctionLike = ({ auctionId, initIsLiked, initLikeCount }: UseAuc
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: userAuctionLikeKeys.all }); // users 찜 목록 갱신
     },
   });
 
