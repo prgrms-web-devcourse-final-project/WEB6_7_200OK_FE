@@ -1,5 +1,3 @@
-import { cache } from "react";
-
 import { cookies } from "next/headers";
 
 import { fetch as apiFetch } from "@/shared/api/server";
@@ -14,7 +12,7 @@ interface UserApiResponse {
   isOwner: boolean;
 }
 
-export const getUserProfileServer = cache(async (targetUserId: number) => {
+export const getUserProfileServer = async (targetUserId: number) => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
@@ -45,4 +43,4 @@ export const getUserProfileServer = cache(async (targetUserId: number) => {
   } catch {
     return null;
   }
-});
+};

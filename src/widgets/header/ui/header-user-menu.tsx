@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -26,6 +27,7 @@ interface HeaderUserMenuProps {
 
 export default function HeaderUserMenu({ avatarUrl, avatarAlt }: HeaderUserMenuProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { resolvedTheme, setTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
   const themeLabel = isDarkMode ? "라이트 모드" : "다크 모드";
@@ -40,6 +42,7 @@ export default function HeaderUserMenu({ avatarUrl, avatarAlt }: HeaderUserMenuP
     } catch {
       showToast.error("로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
+      queryClient.setQueryData(["user", "basic"], null);
       router.refresh();
       router.push(ROUTES.login);
     }

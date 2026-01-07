@@ -1,18 +1,20 @@
+"use client";
+
 import Link from "next/link";
 
 import { Bell, Plus } from "lucide-react";
 
-import { getUserProfileServer } from "@/entities/user/api/user-api.server";
 import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui";
 import HeaderUserMenu from "@/widgets/header/ui/header-user-menu";
 
-export default async function HeaderActions({ userId }: { userId: number }) {
-  const profile = await getUserProfileServer(userId);
-
-  const avatarUrl = profile?.avatarUrl;
-  const avatarAlt = profile?.name ?? "프로필";
-
+export default function HeaderActions({
+  avatarUrl,
+  avatarAlt,
+}: {
+  avatarUrl?: string;
+  avatarAlt: string;
+}) {
   return (
     <div className="flex shrink-0 items-center gap-3">
       <Button asChild aria-label="경매 등록" size="icon-lg" className="min-[960px]:hidden">
@@ -33,7 +35,7 @@ export default async function HeaderActions({ userId }: { userId: number }) {
         <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
       </Button>
 
-      <HeaderUserMenu avatarUrl={avatarUrl ?? undefined} avatarAlt={avatarAlt} />
+      <HeaderUserMenu avatarUrl={avatarUrl} avatarAlt={avatarAlt} />
     </div>
   );
 }

@@ -1,23 +1,12 @@
-import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
-import { LogIn } from "lucide-react";
-
 import Logo from "@/shared/assets/icons/windfall.svg";
-import { ROUTES } from "@/shared/config/routes";
 import { Container } from "@/shared/ui";
-import Button from "@/shared/ui/button/button";
-import HeaderActions from "@/widgets/header/ui/header-actions";
+import HeaderAuthSlot from "@/widgets/header/ui/header-auth-slot";
 import HeaderSearch from "@/widgets/header/ui/header-search";
 
 export async function Header() {
-  const cookieStore = await cookies();
-  const userId = cookieStore.get("userId")?.value;
-
-  const numericUserId = Number(userId);
-  const hasValidUserId = Number.isInteger(numericUserId) && numericUserId > 0;
-
   return (
     <header className="bg-background h-header sticky top-0 z-50 hidden select-none md:flex">
       <Container className="lg:px flex items-center justify-around gap-4 px-2 min-[960px]:px-3 lg:px-5 xl:px-7">
@@ -30,16 +19,7 @@ export async function Header() {
 
         <HeaderSearch />
 
-        {hasValidUserId ? (
-          <HeaderActions userId={numericUserId} />
-        ) : (
-          <Button asChild size="lg">
-            <Link href={ROUTES.login} aria-label="로그인">
-              <LogIn className="size-5" />
-              <span className="font-semibold">로그인</span>
-            </Link>
-          </Button>
-        )}
+        <HeaderAuthSlot />
       </Container>
     </header>
   );
