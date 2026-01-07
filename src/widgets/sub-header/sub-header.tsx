@@ -17,7 +17,7 @@ export function SubHeader({ content = "", className, ...props }: SubHeaderProps)
   const router = useRouter();
 
   return (
-    <header className={cn("w-full md:hidden", className)} {...props}>
+    <header className={cn("w-full lg:hidden", className)} {...props}>
       <div className="h-header flex items-center gap-3 px-2.5">
         <Button variant="ghost" size="icon-lg" aria-label="뒤로가기" onClick={() => router.back()}>
           <ChevronLeft />
