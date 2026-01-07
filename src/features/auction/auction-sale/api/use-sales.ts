@@ -1,8 +1,9 @@
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 import type { UserSellingItemType, UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
+import type { SliceResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
@@ -40,12 +41,28 @@ const mapStatusToTradeStatus = (status: string): UserTradeStatusType => {
   }
 };
 
-const getUserSalesList = async (userId: number): Promise<UserSellingItemType[]> => {
-  const response = await httpClient<SalesData>(API_ENDPOINTS.userSales(userId), { method: "GET" });
+const getUserSalesList = async (
+  userId: number,
+  pageParam: number
+): Promise<SliceResponseType<UserSellingItemType>> => {
+  const response = await httpClient<SalesData>(
+    `${API_ENDPOINTS.userSales(userId)}?page=${pageParam}&size=5`,
+    { method: "GET" }
+  );
 
-  const slice = response.data?.slice ?? [];
+  const { data } = response;
 
-  return slice
+  if (!data) {
+    return {
+      slice: [],
+      hasNext: false,
+      page: pageParam,
+      size: 10,
+      timeStamp: "",
+    } as SliceResponseType<UserSellingItemType>;
+  }
+
+  const mappedSlice = data.slice
     .filter((item): item is SalesSliceItem => item !== null)
     .map((item) => {
       const price =
@@ -66,6 +83,11 @@ const getUserSalesList = async (userId: number): Promise<UserSellingItemType[]> 
         unreadMessageCount: item.chatInfo?.unreadCount,
       };
     });
+
+  return {
+    ...data,
+    slice: mappedSlice,
+  };
 };
 
 const cancelAuction = async (auctionId: number) => {
@@ -78,9 +100,11 @@ export const userSaleKeys = {
 };
 
 export function useUserSalesList(userId: number) {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: userSaleKeys.list(userId),
-    queryFn: () => getUserSalesList(userId),
+    queryFn: ({ pageParam = 0 }) => getUserSalesList(userId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
     enabled: !!userId && userId > 0,
     staleTime: 1000 * 60 * 5,
   });

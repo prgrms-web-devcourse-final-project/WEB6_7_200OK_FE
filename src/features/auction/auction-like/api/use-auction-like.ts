@@ -1,7 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
+
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { UserAuctionLikeItemType, UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
+import type { SliceResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import {
   getAuctionsCacheSnapshot,
@@ -44,14 +47,26 @@ const mapStatusToTradeStatus = (status: string): UserTradeStatusType => {
   }
 };
 
-const fetchAuctionLike = async (): Promise<UserAuctionLikeItemType[]> => {
-  const response = await httpClient<LikeData>(API_ENDPOINTS.myLikes, {
+const fetchAuctionLike = async (
+  pageParam: number
+): Promise<SliceResponseType<UserAuctionLikeItemType>> => {
+  const response = await httpClient<LikeData>(`${API_ENDPOINTS.myLikes}?page=${pageParam}&size=5`, {
     method: "GET",
   });
 
-  const slice = response.data?.slice ?? [];
+  const { data } = response;
 
-  return slice
+  if (!data) {
+    return {
+      slice: [],
+      hasNext: false,
+      page: pageParam,
+      size: 10,
+      timeStamp: "",
+    };
+  }
+
+  const mappedSlice = data.slice
     .filter((item): item is LikeSliceItem => item != null)
     .map((item) => {
       const price =
@@ -70,6 +85,11 @@ const fetchAuctionLike = async (): Promise<UserAuctionLikeItemType[]> => {
         date: item.startedAt,
       };
     });
+
+  return {
+    ...data,
+    slice: mappedSlice,
+  };
 };
 
 const removeLike = async (auctionId: number) => {
@@ -83,9 +103,11 @@ export const userAuctionLikeKeys = {
 };
 
 export function useUserAuctionLike() {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: userAuctionLikeKeys.all,
-    queryFn: fetchAuctionLike,
+    queryFn: ({ pageParam = 0 }) => fetchAuctionLike(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
   });
 }
 

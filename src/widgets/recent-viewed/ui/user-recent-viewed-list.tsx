@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import { History } from "lucide-react";
+import { useInView } from "react-intersection-observer";
 
 import { type UserRecentlyViewedItemType, UserItemCardFilter } from "@/entities/auction";
 import {
@@ -14,7 +15,7 @@ import {
   filterItemsByStatus,
   generateFilterOptions,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout, ConfirmDeleteModal, EmptyState } from "@/shared/ui";
+import { DashboardContentLayout, ConfirmDeleteModal, EmptyState, Spinner } from "@/shared/ui";
 import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
 
 const RECENT_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
@@ -22,11 +23,26 @@ const RECENT_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 
 type RecentItemWithId = UserRecentlyViewedItemType & { recentViewId: number };
 
 export function UserRecentViewedList({ label }: { label?: React.ReactNode }) {
-  const { data: recentItems = [], isPending, isFetched } = useRecentViewedItems();
+  const { data, isPending, isFetched, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useRecentViewedItems();
+
   const { mutate: deleteRecentView } = useDeleteRecentView();
 
   const [filterStatus, setFilterStatus] = useState("전체");
   const [deleteItem, setDeleteItem] = useState<RecentItemWithId | null>(null);
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: "100px",
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const recentItems = useMemo(() => data?.pages.flatMap((page) => page.slice) ?? [], [data]);
 
   const filteredRecent = useMemo(
     () => filterItemsByStatus(recentItems, filterStatus),
@@ -48,13 +64,25 @@ export function UserRecentViewedList({ label }: { label?: React.ReactNode }) {
     }
 
     if (hasItems) {
-      return filteredRecent.map((item) => (
-        <UserRecentViewedItemCard
-          key={item.id}
-          item={item}
-          onRemove={() => setDeleteItem(item as RecentItemWithId)}
-        />
-      ));
+      return (
+        <div className="flex flex-col gap-4">
+          {filteredRecent.map((item) => (
+            <UserRecentViewedItemCard
+              key={item.id}
+              item={item}
+              onRemove={() => setDeleteItem(item as RecentItemWithId)}
+            />
+          ))}
+
+          <div ref={ref} className="h-4 w-full">
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-4">
+                <Spinner className="text-brand-primary size-6" />
+              </div>
+            )}
+          </div>
+        </div>
+      );
     }
 
     if (isEmpty) {

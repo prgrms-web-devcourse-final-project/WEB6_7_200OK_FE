@@ -1,7 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+"use client";
+
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
+import type { SliceResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import {
   getAuctionsCacheSnapshot,
@@ -83,13 +86,27 @@ const generateKeywords = (info: NotificationInfo): string[] => {
   return keywords;
 };
 
-const fetchNotifications = async (): Promise<NotificationPreferenceItemType[]> => {
-  const response = await httpClient<NotificationData>(API_ENDPOINTS.myNotifications, {
-    method: "GET",
-  });
-  const slice = response.data?.slice ?? [];
+const fetchNotifications = async (
+  pageParam: number
+): Promise<SliceResponseType<NotificationPreferenceItemType>> => {
+  const response = await httpClient<NotificationData>(
+    `${API_ENDPOINTS.myNotifications}?page=${pageParam}&size=5`,
+    { method: "GET" }
+  );
 
-  return slice
+  const { data } = response;
+
+  if (!data) {
+    return {
+      slice: [],
+      hasNext: false,
+      page: pageParam,
+      size: 10,
+      timeStamp: "",
+    };
+  }
+
+  const mappedSlice = data.slice
     .filter((item): item is NotificationSliceItem => item != null)
     .map((item) => {
       const finalPrice = item.endPrice || item.currentPrice || item.startPrice;
@@ -106,6 +123,11 @@ const fetchNotifications = async (): Promise<NotificationPreferenceItemType[]> =
         keywords: generateKeywords(item.notificationInfo),
       };
     });
+
+  return {
+    ...data,
+    slice: mappedSlice,
+  };
 };
 
 const fetchNotificationSettings = async (
@@ -119,9 +141,11 @@ const fetchNotificationSettings = async (
 };
 
 export function useNotificationList() {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: notificationKeys.list(),
-    queryFn: fetchNotifications,
+    queryFn: ({ pageParam = 0 }) => fetchNotifications(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
   });
 }
 

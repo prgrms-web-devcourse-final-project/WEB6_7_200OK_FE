@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import { PackageOpen } from "lucide-react";
+import { useInView } from "react-intersection-observer";
 
 import { type UserSellingItemType, UserItemCardFilter } from "@/entities/auction";
 import {
@@ -15,7 +16,7 @@ import {
   generateFilterOptions,
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
-import { DashboardContentLayout, ConfirmDeleteModal, EmptyState } from "@/shared/ui";
+import { DashboardContentLayout, ConfirmDeleteModal, EmptyState, Spinner } from "@/shared/ui";
 import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
 
 const SALES_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
@@ -29,10 +30,25 @@ export function UserSalesList({
   label: React.ReactNode;
   userId: number;
 }) {
-  const { data: salesItems = [], isPending, isFetched } = useUserSalesList(userId);
+  const { data, isPending, isFetched, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useUserSalesList(userId);
+
   const { mutate: cancelSale } = useCancelSale(userId);
   const [filterStatus, setFilterStatus] = useState("전체");
   const [deleteItem, setDeleteItem] = useState<UserSellingItemType | null>(null);
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: "100px",
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const salesItems = useMemo(() => data?.pages.flatMap((page) => page.slice) ?? [], [data]);
 
   const filteredSales = useMemo(
     () => sortItemsByDateAndName(filterItemsByStatus(salesItems, filterStatus)),
@@ -52,9 +68,21 @@ export function UserSalesList({
     }
 
     if (isFetched && filteredSales.length > 0) {
-      return filteredSales.map((item) => (
-        <UserSellingItemCard key={item.id} item={item} onDelete={setDeleteItem} isOwn={isOwn} />
-      ));
+      return (
+        <div className="flex flex-col gap-4">
+          {filteredSales.map((item) => (
+            <UserSellingItemCard key={item.id} item={item} onDelete={setDeleteItem} isOwn={isOwn} />
+          ))}
+
+          <div ref={ref} className="h-4 w-full">
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-4">
+                <Spinner className="text-brand-primary size-6" />
+              </div>
+            )}
+          </div>
+        </div>
+      );
     }
 
     if (isFetched) {
