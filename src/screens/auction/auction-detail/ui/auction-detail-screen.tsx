@@ -117,14 +117,16 @@ export default function AuctionDetailScreen({
                   recentPriceHistory={data.recentPriceHistory}
                   startPrice={data.startPrice}
                 />
-                <AuctionDetailLogSheet
-                  dropAmount={data.dropAmount}
-                  startPrice={data.startPrice}
-                  title={data.title}
-                  thumbnail={data.imageUrls[0] ?? ""}
-                  category={data.category}
-                  auctionId={id}
-                />
+                {data.recentPriceHistory.length !== 0 && (
+                  <AuctionDetailLogSheet
+                    dropAmount={data.dropAmount}
+                    startPrice={data.startPrice}
+                    title={data.title}
+                    thumbnail={data.imageUrls[0] ?? ""}
+                    category={data.category}
+                    auctionId={id}
+                  />
+                )}
               </div>
             </div>
           </div>
