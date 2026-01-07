@@ -7,7 +7,7 @@ export const BOTTOM_NAV_ITEMS = [
   { id: "search", label: "검색", href: "/search", icon: Search },
   { id: "create", label: "등록", href: "/auctions/create", icon: Plus },
   { id: "notification", label: "알림", href: "/notifications", icon: Bell },
-  { id: "profile", label: "내정보", href: "/me", icon: User },
+  { id: "profile", label: "내정보", href: "/users/me", icon: User },
 ] as const;
 
 export type BottomNavIdType = (typeof BOTTOM_NAV_ITEMS)[number]["id"];

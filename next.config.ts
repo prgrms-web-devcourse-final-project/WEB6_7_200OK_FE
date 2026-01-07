@@ -18,6 +18,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "windfall-bucket.s3.ap-northeast-2.amazonaws.com" },
       { protocol: "https", hostname: "wind-fall.store" },
       { protocol: "http", hostname: "img1.kakaocdn.net" },
+      { protocol: "http", hostname: "phinf.pstatic.net", },
+      { protocol: "http", hostname: "ssl.pstatic.net", },
+      { protocol: "http", hostname: "lh3.googleusercontent.com", },
+      { protocol: "https", hostname: "phinf.pstatic.net", },
+      { protocol: "https", hostname: "ssl.pstatic.net", },
+      { protocol: "https", hostname: "lh3.googleusercontent.com", },
     ],
   },
   async rewrites() {
