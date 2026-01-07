@@ -43,11 +43,11 @@ export default function NotifyCtaButton({ auctionId, initialEnabled }: NotifyCta
       const snapshot = getAuctionsCacheSnapshot(queryClient);
 
       updateAuctionsCache(queryClient, auctionId, { isNotification: nextEnabled });
-      setIsEnabled(nextEnabled);
       return { prev, snapshot };
     },
 
-    onSuccess: async () => {
+    onSuccess: async (_data, nextEnabled) => {
+      setIsEnabled(nextEnabled);
       await queryClient.invalidateQueries({ queryKey });
     },
 
