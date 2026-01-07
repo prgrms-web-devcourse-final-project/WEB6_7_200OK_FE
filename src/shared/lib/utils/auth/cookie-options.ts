@@ -64,7 +64,19 @@ export function setAuthCookies(
 }
 
 export function clearAuthCookies(response: NextResponse) {
-  response.cookies.delete(COOKIE_OPTIONS.ACCESS_TOKEN.name);
-  response.cookies.delete(COOKIE_OPTIONS.REFRESH_TOKEN.name);
-  response.cookies.delete(COOKIE_OPTIONS.USER_ID.name);
+  response.cookies.delete({
+    name: COOKIE_OPTIONS.ACCESS_TOKEN.name,
+    path: COOKIE_OPTIONS.ACCESS_TOKEN.options.path,
+    domain: COOKIE_OPTIONS.ACCESS_TOKEN.options.domain,
+  });
+  response.cookies.delete({
+    name: COOKIE_OPTIONS.REFRESH_TOKEN.name,
+    path: COOKIE_OPTIONS.REFRESH_TOKEN.options.path,
+    domain: COOKIE_OPTIONS.REFRESH_TOKEN.options.domain,
+  });
+  response.cookies.delete({
+    name: COOKIE_OPTIONS.USER_ID.name,
+    path: COOKIE_OPTIONS.USER_ID.options.path,
+    domain: COOKIE_OPTIONS.USER_ID.options.domain,
+  });
 }
