@@ -18,7 +18,7 @@ export default function GuideScreen() {
           시작 가격에서 시간이 지날수록 가격이 점점 낮아지는 역경매 방식입니다.
         </p>
         <div className="mb-3 w-90 rounded-md bg-[#F9FAFB] p-4">
-          <p className="text-muted my-4">
+          <p className="my-4 text-zinc-600">
             판매자는 <b className="text-brand font-semibold">기준 금액</b>과<br />
             시간 경과에 따른 <b className="text-brand font-semibold">하락 금액</b>을 설정해요
           </p>
@@ -50,7 +50,7 @@ export default function GuideScreen() {
         </div>
 
         <div className="inline-block rounded-md bg-[#F9FAFB] p-4">
-          <p className="text-muted my-4">
+          <p className="my-4 text-zinc-600">
             시간이 지날수록 가격이 하락하고
             <br />
             구매자는 눈치싸움을 바탕으로
