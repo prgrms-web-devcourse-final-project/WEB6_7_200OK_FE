@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { PaymentsConfirmResponse } from "@/features/auction/auction-purchase/model/type";
-import { fetch } from "@/shared/api/server";
+import { routeFetch as fetch } from "@/shared/api/server";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
