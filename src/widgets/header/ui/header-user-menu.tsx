@@ -7,6 +7,7 @@ import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { ROUTES } from "@/shared/config/routes";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import {
   Avatar,
   AvatarFallback,
@@ -27,15 +28,20 @@ export default function HeaderUserMenu({ avatarUrl, avatarAlt }: HeaderUserMenuP
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
-  const themeLabel = isDarkMode ? "라이트모드" : "다크모드";
+  const themeLabel = isDarkMode ? "라이트 모드" : "다크 모드";
   const ThemeIcon = isDarkMode ? Sun : Moon;
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      const response = await fetch("/api/auth/logout", { method: "POST" });
+      if (!response.ok) {
+        showToast.error("로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      }
+    } catch {
+      showToast.error("로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
-      router.push(ROUTES.login);
       router.refresh();
+      router.push(ROUTES.login);
     }
   };
 
@@ -63,7 +69,7 @@ export default function HeaderUserMenu({ avatarUrl, avatarAlt }: HeaderUserMenuP
         <DropdownMenuItem asChild className="h-10 pl-3">
           <Link href={ROUTES.myPage}>
             <User className="size-4" />
-            마이페이지
+            마이 페이지
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="h-10 pl-3" onSelect={handleToggleTheme}>
