@@ -34,9 +34,11 @@ export default function AuctionDetailSellerReviewList({
           </div>
         ))}
       </div>
-      <Button className="flex-1" variant="outline" size="default">
-        <Link href={ROUTES.userReview(sellerId)}>리뷰 보러가기</Link>
-      </Button>
+      <Link href={ROUTES.userReview(sellerId)}>
+        <Button className="flex-1" variant="outline" size="default">
+          리뷰 보러가기
+        </Button>
+      </Link>
     </div>
   );
 }
