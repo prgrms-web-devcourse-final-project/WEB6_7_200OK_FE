@@ -43,6 +43,7 @@ export default function HeaderUserMenu({ avatarUrl, avatarAlt }: HeaderUserMenuP
     } catch {
       showToast.error("로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
+      queryClient.setQueryData(userKeys.basic(), null);
       queryClient.removeQueries({ queryKey: userKeys.all, exact: false });
       router.refresh();
       router.push(ROUTES.login);

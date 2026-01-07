@@ -12,12 +12,10 @@ import HeaderActions from "@/widgets/header/ui/header-actions";
 export default function HeaderAuthSlot() {
   const { data, isPending } = useUserBasic();
 
-  if (isPending) {
-    return <div className="h-10 w-24" aria-hidden />;
-  }
+  let content = <div className="h-10 w-24" aria-hidden />;
 
-  if (!data) {
-    return (
+  if (!isPending && !data) {
+    content = (
       <Button asChild size="lg">
         <Link href={ROUTES.login} aria-label="로그인">
           <LogIn className="size-5" />
@@ -27,10 +25,14 @@ export default function HeaderAuthSlot() {
     );
   }
 
-  return (
-    <HeaderActions
-      avatarUrl={data.userProfileUrl || undefined}
-      avatarAlt={data.username || "프로필"}
-    />
-  );
+  if (data) {
+    content = (
+      <HeaderActions
+        avatarUrl={data.userProfileUrl || undefined}
+        avatarAlt={data.username || "프로필"}
+      />
+    );
+  }
+
+  return <div className="flex h-full items-center justify-end">{content}</div>;
 }
