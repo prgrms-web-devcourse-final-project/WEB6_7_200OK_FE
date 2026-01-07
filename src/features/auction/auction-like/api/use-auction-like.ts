@@ -3,6 +3,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UserAuctionLikeItemType, UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
+import {
+  getAuctionsCacheSnapshot,
+  restoreAuctionsCache,
+  updateAuctionsCache,
+} from "@/shared/lib/query/update-auctions-cache";
 
 interface LikeSliceItem {
   status: "PROCESS" | "SCHEDULED" | "FAILED" | "CANCELED" | "COMPLETED" | string;
@@ -89,6 +94,14 @@ export function useRemoveLike() {
 
   return useMutation({
     mutationFn: removeLike,
+    onMutate: (auctionId) => {
+      const snapshot = getAuctionsCacheSnapshot(queryClient);
+      updateAuctionsCache(queryClient, auctionId, { isLiked: false });
+      return { snapshot };
+    },
+    onError: (_err, _vars, ctx) => {
+      restoreAuctionsCache(queryClient, ctx?.snapshot);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userAuctionLikeKeys.all });
     },

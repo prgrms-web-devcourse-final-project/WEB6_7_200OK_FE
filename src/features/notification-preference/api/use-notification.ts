@@ -3,6 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
+import {
+  getAuctionsCacheSnapshot,
+  restoreAuctionsCache,
+  updateAuctionsCache,
+} from "@/shared/lib/query/update-auctions-cache";
 
 import type { NotificationPreferenceItemType } from "../model/types";
 
@@ -136,6 +141,15 @@ export function useUpdateNotificationSettings() {
         method: "PUT",
         body: data,
       }),
+    onMutate: ({ auctionId, data }) => {
+      const snapshot = getAuctionsCacheSnapshot(queryClient);
+      const isNotification = data.auctionStart || data.auctionEnd || data.priceReached;
+      updateAuctionsCache(queryClient, auctionId, { isNotification });
+      return { snapshot };
+    },
+    onError: (_err, _vars, ctx) => {
+      restoreAuctionsCache(queryClient, ctx?.snapshot);
+    },
     onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: notificationKeys.settings(vars.auctionId) });
       queryClient.invalidateQueries({ queryKey: notificationKeys.list() });
