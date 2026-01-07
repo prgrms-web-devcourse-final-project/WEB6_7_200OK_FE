@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { ArrowRight, TrendingDown } from "lucide-react";
 
 import HeroAuction from "@/shared/assets/images/hero-auction.svg";
+import { ROUTES } from "@/shared/config/routes";
 
 export function HeroSection() {
   return (
@@ -24,14 +26,15 @@ export function HeroSection() {
               </p>
             </div>
           </div>
-
-          <button
-            type="button"
-            className="text-brand inline-flex w-fit items-center gap-1 rounded-sm bg-white px-3 py-2 hover:bg-zinc-50"
-          >
-            <span className="text-xs">가이드 보기</span>
-            <ArrowRight className="size-4" />
-          </button>
+          <Link href={ROUTES.guide}>
+            <button
+              type="button"
+              className="text-brand inline-flex w-fit items-center gap-1 rounded-sm bg-white px-3 py-2 hover:bg-zinc-50"
+            >
+              <span className="text-xs">가이드 보기</span>
+              <ArrowRight className="size-4" />
+            </button>
+          </Link>
         </div>
 
         <div className="relative hidden h-67 w-67 shrink-0 md:block">

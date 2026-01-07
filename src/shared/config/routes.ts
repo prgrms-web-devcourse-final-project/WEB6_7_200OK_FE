@@ -8,5 +8,6 @@ export const ROUTES = {
   search: "/search",
   payment: "/payments",
   myPage: "/users/me",
+  guide: "/guide",
   userReview: (sellerId: number | string) => `/users/${sellerId}/reviews`,
 } as const;
