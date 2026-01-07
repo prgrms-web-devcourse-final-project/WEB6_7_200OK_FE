@@ -41,7 +41,7 @@ export default function AuctionPurchaseFailScreen() {
         <div className="flex-1 pr-6 text-right" id="code">{`${searchParams.get("code")}`}</div>
       </div>
 
-      <div className="flex-1 pr-6">
+      <div className="flex justify-center gap-2">
         <button
           className="mt-[30px] w-[250px] max-w-[41.66667%] flex-[0_0_41.66667%] cursor-pointer rounded-[7px] border-0 border-transparent bg-[#3182f6] px-4 py-[11px] text-center text-[15px] leading-[18px] font-semibold whitespace-nowrap text-[#f9fafb] no-underline transition-[background,color] duration-200 ease-in select-none"
           type="button"

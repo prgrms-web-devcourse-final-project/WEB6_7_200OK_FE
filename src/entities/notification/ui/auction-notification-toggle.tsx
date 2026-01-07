@@ -13,6 +13,11 @@ import {
 import type { NotificationSettingsType } from "@/entities/notification/model/types";
 import { auctionNotificationSettingsKey } from "@/entities/notification/model/use-auction-notification-setting-query";
 import { useIsAuthenticated } from "@/features/auth/api/use-is-authenticated";
+import {
+  getAuctionsCacheSnapshot,
+  restoreAuctionsCache,
+  updateAuctionsCache,
+} from "@/shared/lib/query/update-auctions-cache";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import { Button, Popover, PopoverContent, PopoverTrigger, Switch, Input } from "@/shared/ui";
 
@@ -48,12 +53,19 @@ export default function AuctionNotificationToggle({ auctionId }: AuctionNotifica
   const updateMutation = useMutation({
     mutationFn: (body: NotificationSettingsType) =>
       updateAuctionNotificationSettings(auctionId, body),
+    onMutate: (body) => {
+      const snapshot = getAuctionsCacheSnapshot(qc);
+      const isNotification = body.auctionStart || body.auctionEnd || body.priceReached;
+      updateAuctionsCache(qc, auctionId, { isNotification });
+      return { snapshot };
+    },
     onSuccess: async () => {
       showToast.success("알림 설정이 저장되었습니다.");
       await qc.invalidateQueries({ queryKey: auctionNotificationSettingsKey(auctionId) });
       setOpenChange(false);
     },
-    onError: () => {
+    onError: (_err, _vars, ctx) => {
+      restoreAuctionsCache(qc, ctx?.snapshot);
       showToast.error("저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     },
   });

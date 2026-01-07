@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
+
 import { SellerType } from "@/features/auction/auction-sale";
 import { useSellerInfo } from "@/features/auction/auction-sale/hook/use-seller-info";
+import { ROUTES } from "@/shared/config/routes";
 import { Avatar, AvatarFallback, AvatarImage, Rating, RatingButton } from "@/shared/ui";
 
 interface AuctionDetailSellerProps {
@@ -42,10 +45,11 @@ function SellerInfoSummary({ sellerId }: { sellerId: number }) {
         </Rating>
         <span className="text-lg">{data.rating}</span>
       </div>
-
-      <span className="text-muted-foreground cursor-pointer text-lg underline">
-        리뷰 {data.totalReviews}개
-      </span>
+      <Link href={ROUTES.userReview(sellerId)}>
+        <span className="text-muted-foreground cursor-pointer text-lg underline">
+          리뷰 {data.totalReviews}개
+        </span>
+      </Link>
     </>
   );
 }
