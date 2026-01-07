@@ -113,16 +113,17 @@ export default function AuctionDetailScreen({
               </AuctionPriceStoreProvider>
               <div className="flex flex-col gap-3">
                 <AuctionLogList
+                  dropAmount={data.dropAmount}
                   recentPriceHistory={data.recentPriceHistory}
-                  discountRate={data.discountRate}
                   startPrice={data.startPrice}
                 />
                 <AuctionDetailLogSheet
-                  discountRate={data.discountRate}
+                  dropAmount={data.dropAmount}
                   startPrice={data.startPrice}
                   title={data.title}
                   thumbnail={data.imageUrls[0] ?? ""}
                   category={data.category}
+                  auctionId={id}
                 />
               </div>
             </div>

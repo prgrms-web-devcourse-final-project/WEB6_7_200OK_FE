@@ -10,7 +10,7 @@ interface HistoryPage {
   timeStamp: string;
 }
 
-async function fetchAuctionHistory(auctionId: string, page: number, size: number) {
+async function fetchAuctionHistory(auctionId: string | number, page: number, size: number) {
   const res = await fetch(`/api/v1/auctions/${auctionId}/history?page=${page}&size=${size}`, {
     credentials: "include",
   });
@@ -20,7 +20,7 @@ async function fetchAuctionHistory(auctionId: string, page: number, size: number
   return json.data as HistoryPage;
 }
 
-export function useAuctionHistoryInfinite(auctionId: string, size = 10) {
+export function useAuctionHistoryInfinite(auctionId: string | number, size = 10) {
   return useInfiniteQuery({
     queryKey: ["auctionHistory", auctionId, size],
     initialPageParam: 0,
