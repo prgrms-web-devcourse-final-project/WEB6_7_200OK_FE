@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import { usePathname, useRouter } from "next/navigation";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 import { useAuctionFilters } from "@/features/auction/filters/model/use-auction-filters";
 import { ROUTES } from "@/shared/config/routes";
 import SearchInput from "@/shared/ui/input/search-input";
@@ -11,6 +13,7 @@ import SearchInput from "@/shared/ui/input/search-input";
 export default function HeaderSearch() {
   const router = useRouter();
   const pathname = usePathname();
+  const queryClient = useQueryClient();
 
   const { filters, setFilters } = useAuctionFilters();
 
@@ -32,6 +35,7 @@ export default function HeaderSearch() {
 
     const params = new URLSearchParams();
     params.set("query", trimmed);
+    queryClient.invalidateQueries({ queryKey: ["search", "history"] });
     router.push(`${ROUTES.auctions}?${params.toString()}`);
   };
 

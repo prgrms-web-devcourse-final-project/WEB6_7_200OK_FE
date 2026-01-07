@@ -33,6 +33,7 @@ export const API_ENDPOINTS = {
   deleteRecentView: (recentViewId: number) => `/api/v1/recentview/${recentViewId}`,
 
   tagSearch: "/api/v1/tags/search",
+  searchHistory: "/api/v1/searches",
 
   // 채팅 API
   chatRooms: "/api/v1/chat-rooms",
