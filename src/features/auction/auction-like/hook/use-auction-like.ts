@@ -65,7 +65,7 @@ export const useAuctionLike = ({ auctionId, initIsLiked, initLikeCount }: UseAuc
     onError: (_err, _vars, ctx) => {
       if (ctx?.prev) setState(ctx.prev);
       restoreAuctionsCache(queryClient, ctx?.snapshot);
-      showToast.error("찜 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      showToast.error("관심 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     },
 
     onSuccess: (data) => {
@@ -80,7 +80,7 @@ export const useAuctionLike = ({ auctionId, initIsLiked, initLikeCount }: UseAuc
 
   const toggleLike = () => {
     if (!user) {
-      showToast.error("찜을 누르려면 로그인이 필요합니다.");
+      showToast.error("관심 목록에 추가하려면 로그인이 필요합니다.");
       return;
     }
     likeMutation.mutate();
