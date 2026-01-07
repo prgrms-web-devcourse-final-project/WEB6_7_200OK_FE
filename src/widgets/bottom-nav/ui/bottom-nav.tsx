@@ -2,16 +2,16 @@
 
 import { usePathname } from "next/navigation";
 
-import { BOTTOM_NAV_ITEMS, BottomNavIdType } from "@/widgets/bottom-nav/model/item";
+import { BOTTOM_NAV_ITEMS } from "@/widgets/bottom-nav/model/item";
 import { BottomNavItem } from "@/widgets/bottom-nav/ui/bottom-nav-item";
 
 export function BottomNav() {
   const pathname = usePathname();
 
-  // TODO: 알림 연결 후 하드 코딩 삭제
-  const hasNotificationsById: Partial<Record<BottomNavIdType, boolean>> = {
-    notification: true,
-  };
+  // // TODO: 알림 연결 후 하드 코딩 삭제
+  // const hasNotificationsById: Partial<Record<BottomNavIdType, boolean>> = {
+  //   notification: true,
+  // };
 
   return (
     <nav
@@ -23,8 +23,10 @@ export function BottomNav() {
           <BottomNavItem
             key={item.id}
             {...item}
-            isActive={pathname === item.href}
-            hasNotification={!!hasNotificationsById[item.id]}
+            isActive={
+              item.id === "mypage" ? pathname.startsWith("/users/me") : pathname === item.href
+            }
+            // hasNotification={!!hasNotificationsById[item.id]}
           />
         ))}
       </ul>
