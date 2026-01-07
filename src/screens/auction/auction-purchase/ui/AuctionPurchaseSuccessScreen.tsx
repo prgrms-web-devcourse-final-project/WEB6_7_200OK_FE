@@ -70,7 +70,7 @@ export default function AuctionPurchaseSuccessScreen() {
             {searchParams?.get("paymentKey") ?? ""}
           </div>
         </div>
-        <div className="flex-1 pr-6">
+        <div className="flex flex-1 justify-center gap-2 pr-6">
           <button
             className="mt-[30px] w-[250px] max-w-[41.66667%] flex-[0_0_41.66667%] cursor-pointer rounded-[7px] border-0 border-transparent bg-[#3182f6] px-4 py-[11px] text-center text-[15px] leading-[18px] font-semibold whitespace-nowrap text-[#f9fafb] no-underline transition-[background,color] duration-200 ease-in select-none"
             type="button"
