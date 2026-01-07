@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 import { BellOff } from "lucide-react";
+import { useInView } from "react-intersection-observer";
 
 import { UserItemCardFilter } from "@/entities/auction";
 import {
@@ -19,13 +20,20 @@ import {
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
-import { DashboardContentLayout, EmptyState } from "@/shared/ui";
+import { DashboardContentLayout, EmptyState, Spinner } from "@/shared/ui";
 import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
 
 const NOTI_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
 export function NotificationPreferenceList({ label }: { label?: React.ReactNode }) {
-  const { data: notifications = [], isPending: isListPending, isFetched } = useNotificationList();
+  const {
+    data,
+    isPending: isListPending,
+    isFetched,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useNotificationList();
 
   const [filterStatus, setFilterStatus] = useState("전체");
   const [selectedNoti, setSelectedNoti] = useState<NotificationPreferenceItemType | null>(null);
@@ -35,16 +43,29 @@ export function NotificationPreferenceList({ label }: { label?: React.ReactNode 
 
   const { mutate: updateSettings } = useUpdateNotificationSettings();
 
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: "100px",
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const notifications = useMemo(() => data?.pages.flatMap((page) => page.slice) ?? [], [data]);
+
   const filteredNotis = useMemo(
     () => sortItemsByDateAndName(filterItemsByStatus(notifications, filterStatus)),
     [notifications, filterStatus]
   );
 
-  const handleSaveSettings = (data: Parameters<typeof updateSettings>[0]["data"]) => {
+  const handleSaveSettings = (settingsData: Parameters<typeof updateSettings>[0]["data"]) => {
     if (!activeAuctionId) return;
 
     updateSettings(
-      { auctionId: activeAuctionId, data },
+      { auctionId: activeAuctionId, data: settingsData },
       {
         onSuccess: () => {
           showToast.success("알림 설정이 저장되었습니다.");
@@ -56,24 +77,46 @@ export function NotificationPreferenceList({ label }: { label?: React.ReactNode 
     );
   };
 
-  let content: React.ReactNode = null;
+  const renderContent = () => {
+    if (isListPending) {
+      return <CommonItemListSkeleton />;
+    }
 
-  if (isListPending) {
-    content = <CommonItemListSkeleton />;
-  } else if (isFetched && filteredNotis.length > 0) {
-    content = filteredNotis.map((item) => (
-      <NotificationPreferenceItemCard key={item.id} item={item} onSettingClick={setSelectedNoti} />
-    ));
-  } else if (isFetched) {
-    content = (
-      <EmptyState
-        Icon={BellOff}
-        title="알림 설정 내역이 없습니다."
-        description="새로운 알림을 등록해보세요"
-        className="py-20"
-      />
-    );
-  }
+    if (isFetched && filteredNotis.length > 0) {
+      return (
+        <div className="flex flex-col gap-4">
+          {filteredNotis.map((item) => (
+            <NotificationPreferenceItemCard
+              key={item.id}
+              item={item}
+              onSettingClick={setSelectedNoti}
+            />
+          ))}
+
+          <div ref={ref} className="h-4 w-full">
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-4">
+                <Spinner className="text-brand-primary size-6" />
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    if (isFetched) {
+      return (
+        <EmptyState
+          Icon={BellOff}
+          title="알림 설정 내역이 없습니다."
+          description="새로운 알림을 등록해보세요"
+          className="py-20"
+        />
+      );
+    }
+
+    return null;
+  };
 
   return (
     <>
@@ -87,7 +130,7 @@ export function NotificationPreferenceList({ label }: { label?: React.ReactNode 
           />
         }
       >
-        {content}
+        {renderContent()}
       </DashboardContentLayout>
 
       <NotificationPreferenceSettingsModal

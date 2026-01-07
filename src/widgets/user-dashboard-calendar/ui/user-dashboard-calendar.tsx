@@ -16,11 +16,24 @@ interface UserDashboardCalendarProps {
   label: React.ReactNode;
   userId: number;
 }
+
 export function UserDashboardCalendar({ label, userId }: UserDashboardCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const { data: salesItems = [], isLoading: isSalesLoading } = useUserSalesList(userId);
-  const { data: auctionLikeItems = [], isLoading: isAuctionLikeLoading } = useUserAuctionLike();
+  const { data: salesData, isLoading: isSalesLoading } = useUserSalesList(userId);
+
+  const { data: auctionLikeData, isLoading: isAuctionLikeLoading } = useUserAuctionLike();
+
+  const salesItems = useMemo(
+    () => salesData?.pages.flatMap((page) => page.slice) ?? [],
+    [salesData]
+  );
+
+  const auctionLikeItems = useMemo(
+    () => auctionLikeData?.pages.flatMap((page) => page.slice) ?? [],
+    [auctionLikeData]
+  );
+
   const allItems = useMemo(
     () => [...salesItems, ...auctionLikeItems],
     [salesItems, auctionLikeItems]

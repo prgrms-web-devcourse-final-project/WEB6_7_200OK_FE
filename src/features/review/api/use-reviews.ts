@@ -1,9 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+"use client";
+
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 import type { ReviewType } from "@/entities/review";
 import { purchaseKeys } from "@/features/purchase/api/use-purchases";
 import { httpClient } from "@/shared/api/client";
+import type { SliceResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 interface ReviewResponseItem {
@@ -58,21 +61,41 @@ export const reviewKeys = {
   detail: (reviewId: number) => [...reviewKeys.all, "detail", reviewId] as const,
 };
 
-const fetchUserReviews = async (userId: number): Promise<ReviewType[]> => {
-  const response = await httpClient<ReviewData>(API_ENDPOINTS.userReviews(userId), {
-    method: "GET",
-  });
-  const slice = response.data?.slice ?? [];
+const fetchUserReviews = async (
+  userId: number,
+  pageParam: number
+): Promise<SliceResponseType<ReviewType>> => {
+  const response = await httpClient<ReviewData>(
+    `${API_ENDPOINTS.userReviews(userId)}?page=${pageParam}&size=5`,
+    { method: "GET" }
+  );
 
-  return slice.map((item) => ({
+  const { data } = response;
+
+  if (!data) {
+    return {
+      slice: [],
+      hasNext: false,
+      page: pageParam,
+      size: 10,
+      timeStamp: "",
+    };
+  }
+
+  const mappedSlice = data.slice.map((item) => ({
     id: item.reviewId,
     rating: item.rating,
     content: item.content,
     date: item.reviewedAt ? dayjs(item.reviewedAt).format("YYYY-MM-DD") : "",
     reviewer: { id: item.buyerId, name: item.nickname, avatarUrl: item.userImageUrl },
     product: { id: item.auctionId, name: item.auctionTitle, imageUrl: item.auctionImageUrl },
-    seller: { id: item.sellerId, name: item.nickname, avatarUrl: item.sellerProfileImage },
+    seller: { id: item.sellerId, name: item.sellerName, avatarUrl: item.sellerProfileImage },
   }));
+
+  return {
+    ...data,
+    slice: mappedSlice,
+  };
 };
 
 const fetchReviewDetail = async (reviewId: number): Promise<ReviewType> => {
@@ -95,9 +118,11 @@ const fetchReviewDetail = async (reviewId: number): Promise<ReviewType> => {
 };
 
 export function useReviews(userId: number) {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: reviewKeys.list(userId),
-    queryFn: () => fetchUserReviews(userId),
+    queryFn: ({ pageParam = 0 }) => fetchUserReviews(userId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
     enabled: !!userId,
   });
 }
@@ -117,6 +142,7 @@ export function useCreateReview() {
       httpClient(API_ENDPOINTS.reviews, { method: "POST", body: data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: purchaseKeys.all });
+      queryClient.invalidateQueries({ queryKey: reviewKeys.all });
     },
   });
 }

@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
 import { ShoppingBag } from "lucide-react";
+import { useInView } from "react-intersection-observer";
 
 import { type UserPurchaseItemType, UserItemCardFilter } from "@/entities/auction";
 import { UserPurchasedItemCard, usePurchases, usePurchaseConfirm } from "@/features/purchase";
@@ -20,7 +21,7 @@ import {
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
-import { DashboardContentLayout, ConfirmDeleteModal, EmptyState } from "@/shared/ui";
+import { DashboardContentLayout, ConfirmDeleteModal, EmptyState, Spinner } from "@/shared/ui";
 import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
 
 const PURCHASE_STATUSES = ["구매 완료", "구매 확정"];
@@ -30,7 +31,9 @@ interface PurchaseListProps {
 }
 
 export function UserPurchaseList({ label }: PurchaseListProps) {
-  const { data: purchaseItems = [], isPending, isFetched } = usePurchases();
+  const { data, isPending, isFetched, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    usePurchases();
+
   const { mutate: createReview } = useCreateReview();
   const { mutate: updateReview } = useUpdateReview();
   const { mutate: deleteReview } = useDeleteReview();
@@ -45,11 +48,24 @@ export function UserPurchaseList({ label }: PurchaseListProps) {
   const [confirmItem, setConfirmItem] = useState<UserPurchaseItemType | null>(null);
   const confirmItemRef = useRef<UserPurchaseItemType | null>(null);
 
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: "100px",
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   useEffect(() => {
     confirmItemRef.current = confirmItem;
   }, [confirmItem]);
 
   const { data: reviewDetailData } = useReviewDetail(selectedReviewId);
+
+  const purchaseItems = useMemo(() => data?.pages.flatMap((page) => page.slice) ?? [], [data]);
 
   const editModalReview = useMemo(() => {
     if (!reviewDetailData || !selectedReviewItem) return null;
@@ -85,14 +101,14 @@ export function UserPurchaseList({ label }: PurchaseListProps) {
   }, []);
 
   const handleWriteSubmit = useCallback(
-    (data: { rating: number; content: string }) => {
+    (reviewData: { rating: number; content: string }) => {
       if (!writeModalItem) return;
 
       createReview(
         {
           tradeId: writeModalItem.tradeId,
-          rating: data.rating,
-          content: data.content,
+          rating: reviewData.rating,
+          content: reviewData.content,
         },
         {
           onSuccess: () => {
@@ -110,13 +126,13 @@ export function UserPurchaseList({ label }: PurchaseListProps) {
   );
 
   const handleEditSubmit = useCallback(
-    (id: number, data: { rating: number; content: string }) => {
+    (id: number, reviewData: { rating: number; content: string }) => {
       updateReview(
         {
           reviewId: id,
           data: {
-            rating: data.rating,
-            content: data.content,
+            rating: reviewData.rating,
+            content: reviewData.content,
           },
         },
         {
@@ -178,14 +194,26 @@ export function UserPurchaseList({ label }: PurchaseListProps) {
     }
 
     if (isFetched && filteredPurchases.length > 0) {
-      return filteredPurchases.map((item) => (
-        <UserPurchasedItemCard
-          key={item.id}
-          item={item}
-          onReviewClick={handleReviewBtnClick}
-          onConfirm={setConfirmItem}
-        />
-      ));
+      return (
+        <div className="flex flex-col gap-4">
+          {filteredPurchases.map((item) => (
+            <UserPurchasedItemCard
+              key={item.id}
+              item={item}
+              onReviewClick={handleReviewBtnClick}
+              onConfirm={setConfirmItem}
+            />
+          ))}
+
+          <div ref={ref} className="h-4 w-full">
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-4">
+                <Spinner className="text-brand-primary size-6" />
+              </div>
+            )}
+          </div>
+        </div>
+      );
     }
 
     if (isFetched) {
@@ -200,7 +228,7 @@ export function UserPurchaseList({ label }: PurchaseListProps) {
     }
 
     return null;
-  }, [isPending, isFetched, filteredPurchases, handleReviewBtnClick]);
+  }, [isPending, isFetched, filteredPurchases, handleReviewBtnClick, isFetchingNextPage, ref]);
 
   return (
     <>

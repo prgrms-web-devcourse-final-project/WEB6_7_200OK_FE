@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect, ReactNode } from "react";
 
 import { Heart } from "lucide-react";
+import { useInView } from "react-intersection-observer";
 
 import { type UserAuctionLikeItemType, UserItemCardFilter } from "@/entities/auction";
 import {
@@ -16,7 +17,7 @@ import {
   sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
-import { DashboardContentLayout, ConfirmDeleteModal, Skeleton } from "@/shared/ui";
+import { DashboardContentLayout, ConfirmDeleteModal, Skeleton, Spinner } from "@/shared/ui";
 import EmptyState from "@/shared/ui/empty/empty";
 import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
 
@@ -27,16 +28,32 @@ interface AuctionLikeProps {
 }
 
 export function UserAuctionLikeList({ label }: AuctionLikeProps) {
-  const { data: auctionLikeItems = [], isLoading } = useUserAuctionLike();
+  const { data, isPending, isFetched, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useUserAuctionLike();
+
   const { mutate: removeLike } = useRemoveLike();
 
   const [filterStatus, setFilterStatus] = useState("전체");
   const [deleteItem, setDeleteItem] = useState<UserAuctionLikeItemType | null>(null);
 
   const deleteItemRef = useRef<UserAuctionLikeItemType | null>(null);
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: "100px",
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   useEffect(() => {
     deleteItemRef.current = deleteItem;
   }, [deleteItem]);
+
+  const auctionLikeItems = useMemo(() => data?.pages.flatMap((page) => page.slice) ?? [], [data]);
 
   const filterOptions = useMemo(() => generateFilterOptions(AUCTIONLIKE_STATUSES), []);
 
@@ -60,13 +77,50 @@ export function UserAuctionLikeList({ label }: AuctionLikeProps) {
     });
   }, [removeLike]);
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <DashboardContentLayout label={label} filters={<Skeleton className="h-10 w-24 rounded-md" />}>
         <CommonItemListSkeleton />
       </DashboardContentLayout>
     );
   }
+
+  const renderContent = () => {
+    if (filteredAuctionLike.length > 0) {
+      return (
+        <div className="flex flex-col gap-4">
+          {filteredAuctionLike.map((item) => (
+            <UserAuctionLikeItemCard
+              key={item.id}
+              item={item}
+              onRemove={(target) => setDeleteItem(target)}
+            />
+          ))}
+
+          <div ref={ref} className="h-4 w-full">
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-4">
+                <Spinner className="text-brand-primary size-6" />
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    if (isFetched) {
+      return (
+        <EmptyState
+          Icon={Heart}
+          title="관심 목록이 비어있습니다."
+          description="마음에 드는 상품을 찜하고 알림을 받아보세요."
+          className="py-20"
+        />
+      );
+    }
+
+    return null;
+  };
 
   return (
     <>
@@ -80,22 +134,7 @@ export function UserAuctionLikeList({ label }: AuctionLikeProps) {
           />
         }
       >
-        {filteredAuctionLike.length > 0 ? (
-          filteredAuctionLike.map((item) => (
-            <UserAuctionLikeItemCard
-              key={item.id}
-              item={item}
-              onRemove={(target) => setDeleteItem(target)}
-            />
-          ))
-        ) : (
-          <EmptyState
-            Icon={Heart}
-            title="관심 목록이 비어있습니다."
-            description="마음에 드는 상품을 찜하고 알림을 받아보세요."
-            className="py-20"
-          />
-        )}
+        {renderContent()}
       </DashboardContentLayout>
 
       <ConfirmDeleteModal

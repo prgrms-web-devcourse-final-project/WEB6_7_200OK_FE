@@ -1,9 +1,10 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { UserRecentlyViewedItemType, UserTradeStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
+import type { SliceResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { dayjs } from "@/shared/lib/utils/dayjs";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
@@ -55,36 +56,57 @@ const deleteRecentViewItem = async (recentViewId: number) => {
   });
 };
 
+const fetchRecentViewedItems = async (
+  pageParam: number
+): Promise<SliceResponseType<UserRecentlyViewedItemType & { recentViewId: number }>> => {
+  const res = await httpClient<RecentViewedData>(
+    `${API_ENDPOINTS.myRecentViews}?page=${pageParam}&size=5`,
+    { method: "GET" }
+  );
+
+  const { data } = res;
+
+  if (!data) {
+    return {
+      slice: [],
+      hasNext: false,
+      page: pageParam,
+      size: 10,
+      timeStamp: "",
+    };
+  }
+
+  const mappedSlice = data.slice
+    .filter((item): item is RecentViewedSliceItem => item != null)
+    .map((item) => {
+      const price = item.endPrice ?? item.currentPrice ?? item.startPrice ?? 0;
+      const hasCurrentPrice = item.endPrice != null || item.currentPrice != null;
+
+      return {
+        id: item.auctionId,
+        recentViewId: item.recentViewId,
+        name: item.title,
+        imageUrl: item.auctionImageUrl ?? undefined,
+        price,
+        originalPrice: item.startPrice,
+        discountRate: hasCurrentPrice ? (item.discountPercent ?? undefined) : undefined,
+        status: mapStatusToTradeStatus(item.status),
+        date: dayjs(item.startedAt).format("YYYY-MM-DD"),
+      };
+    });
+
+  return {
+    ...data,
+    slice: mappedSlice,
+  };
+};
+
 export function useRecentViewedItems() {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: userRecentViewedKeys.all,
-    queryFn: async (): Promise<(UserRecentlyViewedItemType & { recentViewId: number })[]> => {
-      const res = await httpClient<RecentViewedData>(API_ENDPOINTS.myRecentViews, {
-        method: "GET",
-      });
-
-      const slice = res.data?.slice ?? [];
-
-      return slice
-        .filter((item): item is RecentViewedSliceItem => item != null)
-        .map((item) => {
-          const price = item.endPrice ?? item.currentPrice ?? item.startPrice ?? 0;
-
-          const hasCurrentPrice = item.endPrice != null || item.currentPrice != null;
-
-          return {
-            id: item.auctionId,
-            recentViewId: item.recentViewId,
-            name: item.title,
-            imageUrl: item.auctionImageUrl ?? undefined,
-            price,
-            originalPrice: item.startPrice,
-            discountRate: hasCurrentPrice ? (item.discountPercent ?? undefined) : undefined,
-            status: mapStatusToTradeStatus(item.status),
-            date: dayjs(item.startedAt).format("YYYY-MM-DD"),
-          };
-        });
-    },
+    queryFn: ({ pageParam = 0 }) => fetchRecentViewedItems(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
     staleTime: 1000 * 60 * 5,
   });
 }

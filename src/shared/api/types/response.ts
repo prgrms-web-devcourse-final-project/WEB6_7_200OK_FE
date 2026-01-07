@@ -6,3 +6,11 @@ export interface ApiResponseType<T> {
   message: string;
   data: T;
 }
+
+export interface SliceResponseType<T> {
+  slice: T[];
+  hasNext: boolean;
+  page: number;
+  size: number;
+  timeStamp: string;
+}

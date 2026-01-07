@@ -1,9 +1,10 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { UserPurchaseItemType, UserPurchaseStatusType } from "@/entities/auction";
 import { httpClient } from "@/shared/api/client";
+import type { SliceResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 interface PurchaseSliceItem {
@@ -34,11 +35,27 @@ interface PurchaseData {
 const mapPurchaseStatus = (status: PurchaseSliceItem["status"]): UserPurchaseStatusType =>
   status === "PURCHASE_CONFIRMED" ? "구매 확정" : "구매 완료";
 
-const fetchPurchaseList = async (): Promise<UserPurchaseItemType[]> => {
-  const res = await httpClient<PurchaseData>(API_ENDPOINTS.myPurchases, { method: "GET" });
-  const slice = res.data?.slice ?? [];
+const fetchPurchaseList = async (
+  pageParam: number
+): Promise<SliceResponseType<UserPurchaseItemType>> => {
+  const res = await httpClient<PurchaseData>(
+    `${API_ENDPOINTS.myPurchases}?page=${pageParam}&size=5`,
+    { method: "GET" }
+  );
 
-  return slice.map((item) => ({
+  const { data } = res;
+
+  if (!data) {
+    return {
+      slice: [],
+      hasNext: false,
+      page: pageParam,
+      size: 10,
+      timeStamp: "",
+    };
+  }
+
+  const mappedSlice = data.slice.map((item) => ({
     id: item.auctionId,
     name: item.title,
     imageUrl: item.auctionImageUrl,
@@ -56,6 +73,11 @@ const fetchPurchaseList = async (): Promise<UserPurchaseItemType[]> => {
     sellername: item.sellername,
     sellerProfileImage: item.sellerProfileImage,
   }));
+
+  return {
+    ...data,
+    slice: mappedSlice,
+  };
 };
 
 const confirmPurchase = async (tradeId: number) => {
@@ -69,9 +91,11 @@ export const purchaseKeys = {
 };
 
 export function usePurchases() {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: purchaseKeys.all,
-    queryFn: fetchPurchaseList,
+    queryFn: ({ pageParam = 0 }) => fetchPurchaseList(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
     staleTime: 1000 * 60 * 5,
   });
 }

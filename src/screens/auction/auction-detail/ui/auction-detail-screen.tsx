@@ -5,7 +5,6 @@ import EmojiLayer from "@/features/auction/auction-emoji/ui/emoji-layer";
 import { AuctionLogList } from "@/features/auction/auction-log";
 import { AuctionViewerProvider } from "@/features/auction/auction-log/provider/use-auction-viewer";
 import AuctionDetailSellerInfo from "@/features/auction/auction-sale/ui/auction-detail-seller-info";
-import { useRecentView } from "@/features/auction/auction-view/hook/use-recent-view";
 import type { AuctionDetailType } from "@/screens/auction/auction-detail/model/types";
 import AuctionDetailErrorScreen from "@/screens/auction/auction-detail/ui/auction-detail-error-screen";
 import {
@@ -36,7 +35,6 @@ export default function AuctionDetailScreen({
   id: string;
   token?: string;
 }) {
-  useRecentView(id);
   if (!data || !id) {
     return (
       <AuctionDetailErrorScreen
