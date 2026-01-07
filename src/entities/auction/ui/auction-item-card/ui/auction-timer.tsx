@@ -52,8 +52,9 @@ export default function AuctionTimer({ type, startedAt }: AuctionTimerProps) {
       ? calculateNextPriceDropSeconds(now)
       : calculateAuctionStartSeconds(now, startedAt);
 
-  const time = formatRemaining(remainSeconds);
-  const dateTime = `PT${remainSeconds}S`;
+  const displaySeconds = Math.max(remainSeconds - 1, 0);
+  const time = formatRemaining(displaySeconds);
+  const dateTime = `PT${displaySeconds}S`;
 
   return (
     <div
