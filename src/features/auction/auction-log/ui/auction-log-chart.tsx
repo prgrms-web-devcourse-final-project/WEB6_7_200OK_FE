@@ -30,7 +30,7 @@ export default function AuctionLogChart({ item }: { item: RecentPriceHistoryType
           <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
           <Area
             dataKey="viewerCount"
-            type="natural"
+            type="monotone"
             fill="var(--color-brand)"
             fillOpacity={0.4}
             stroke="var(--color-brand)"
