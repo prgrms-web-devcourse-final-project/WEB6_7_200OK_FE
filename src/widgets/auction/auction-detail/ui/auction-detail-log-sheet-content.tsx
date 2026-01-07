@@ -14,7 +14,8 @@ interface AuctionDetailLogSheetProps {
   category: ItemCategory;
   thumbnail: string;
   startPrice: number;
-  discountRate: number;
+  dropAmount: number;
+  auctionId: string | number;
 }
 
 export default function AuctionDetailLogSheetContent({
@@ -22,13 +23,14 @@ export default function AuctionDetailLogSheetContent({
   category,
   thumbnail,
   startPrice,
-  discountRate,
+  dropAmount,
+  auctionId,
 }: AuctionDetailLogSheetProps) {
   const targetRef = useRef(null);
   const scrollRef = useRef(null);
 
   const { data, status, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
-    useAuctionHistoryInfinite("4");
+    useAuctionHistoryInfinite(auctionId);
 
   useEffect(() => {
     const root = scrollRef.current;
@@ -66,7 +68,7 @@ export default function AuctionDetailLogSheetContent({
           isSheet
           recentPriceHistory={items}
           startPrice={startPrice}
-          discountRate={discountRate}
+          dropAmount={dropAmount}
         />
         {hasNextPage && (
           <div ref={targetRef} className="flex h-12 items-center justify-center">

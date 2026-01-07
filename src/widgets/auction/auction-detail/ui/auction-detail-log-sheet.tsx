@@ -11,7 +11,8 @@ interface AuctionDetailLogSheetProps {
   category: ItemCategory;
   thumbnail: string;
   startPrice: number;
-  discountRate: number;
+  dropAmount: number;
+  auctionId: number | string;
 }
 
 export default function AuctionDetailLogSheet({
@@ -19,7 +20,8 @@ export default function AuctionDetailLogSheet({
   category,
   thumbnail,
   startPrice,
-  discountRate,
+  dropAmount,
+  auctionId,
 }: AuctionDetailLogSheetProps) {
   const [open, setOpen] = useState(false);
 
@@ -33,8 +35,9 @@ export default function AuctionDetailLogSheet({
           <SheetTitle>하락 내역</SheetTitle>
         </SheetHeader>
         <AuctionDetailLogSheetContent
+          auctionId={auctionId}
           startPrice={startPrice}
-          discountRate={discountRate}
+          dropAmount={dropAmount}
           title={title}
           category={category}
           thumbnail={thumbnail}

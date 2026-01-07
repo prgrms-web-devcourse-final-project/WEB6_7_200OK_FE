@@ -1,7 +1,7 @@
 import { TrendingDown } from "lucide-react";
 
 import type { RecentPriceHistoryType } from "@/features/auction/auction-log/model/types";
-import { calcPrevPriceFromDiscountRate, calcDiscountRate } from "@/shared/lib/utils/price/calc";
+import { calcDiscountRate } from "@/shared/lib/utils/price/calc";
 import { formatPriceKRW } from "@/shared/lib/utils/price/formatPriceKRW";
 import { formatAgo } from "@/shared/lib/utils/time/format";
 import { cn } from "@/shared/lib/utils/utils";
@@ -10,14 +10,14 @@ import { EmptyState } from "@/shared/ui";
 interface AuctionLogListProps {
   recentPriceHistory: RecentPriceHistoryType[];
   startPrice: number;
-  discountRate: number;
   isSheet?: boolean;
+  dropAmount: number;
 }
 
 export default function AuctionLogList({
   recentPriceHistory,
   startPrice,
-  discountRate,
+  dropAmount,
   isSheet = false,
 }: AuctionLogListProps) {
   return (
@@ -45,7 +45,7 @@ export default function AuctionLogList({
           {recentPriceHistory.map((history) => (
             <ProductLogListItem
               key={history.historyId}
-              prevPrice={calcPrevPriceFromDiscountRate(history.currentPrice, discountRate)}
+              prevPrice={history.currentPrice + dropAmount}
               currentPrice={history.currentPrice}
               time={history.createdAt}
             />
