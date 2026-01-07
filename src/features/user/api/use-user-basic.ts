@@ -3,8 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getUserBasic } from "@/entities/user";
-
-const userBasicKey = ["user", "basic"] as const;
+import { userKeys } from "@/features/user/api/use-my-profile";
 
 async function fetchUserBasic() {
   try {
@@ -16,7 +15,7 @@ async function fetchUserBasic() {
 
 export function useUserBasic() {
   return useQuery({
-    queryKey: userBasicKey,
+    queryKey: userKeys.basic(),
     queryFn: fetchUserBasic,
     retry: false,
     staleTime: 1000 * 60 * 5,

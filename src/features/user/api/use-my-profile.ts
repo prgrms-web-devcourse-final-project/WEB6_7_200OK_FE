@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getUserProfile, updateUserProfileImage, updateUserName } from "@/entities/user";
-import type { UserProfileType } from "@/entities/user"; // 타입 위치에 맞게 수정
+import type { UserProfileType } from "@/entities/user";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 export const userKeys = {
-  profile: (userId: number) => ["user", "profile", userId] as const,
+  all: ["user"] as const,
+  basic: () => [...userKeys.all, "basic"] as const,
+  profile: (userId: number) => [...userKeys.all, "profile", userId] as const,
 };
 
 export function useUserProfile(userId: number, initialData?: UserProfileType) {

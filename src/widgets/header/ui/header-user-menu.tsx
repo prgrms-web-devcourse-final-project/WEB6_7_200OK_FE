@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import { userKeys } from "@/features/user/api/use-my-profile";
 import { ROUTES } from "@/shared/config/routes";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
 import {
@@ -42,7 +43,7 @@ export default function HeaderUserMenu({ avatarUrl, avatarAlt }: HeaderUserMenuP
     } catch {
       showToast.error("로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
-      queryClient.setQueryData(["user", "basic"], null);
+      queryClient.removeQueries({ queryKey: userKeys.all, exact: false });
       router.refresh();
       router.push(ROUTES.login);
     }

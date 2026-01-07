@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,7 +8,7 @@ import { Container } from "@/shared/ui";
 import HeaderAuthSlot from "@/widgets/header/ui/header-auth-slot";
 import HeaderSearch from "@/widgets/header/ui/header-search";
 
-export async function Header() {
+export function Header() {
   return (
     <header className="bg-background h-header sticky top-0 z-50 hidden select-none md:flex">
       <Container className="lg:px flex items-center justify-around gap-4 px-2 min-[960px]:px-3 lg:px-5 xl:px-7">
@@ -17,7 +19,9 @@ export async function Header() {
           </h1>
         </Link>
 
-        <HeaderSearch />
+        <Suspense fallback={<div className="flex-1" aria-hidden />}>
+          <HeaderSearch />
+        </Suspense>
 
         <HeaderAuthSlot />
       </Container>
