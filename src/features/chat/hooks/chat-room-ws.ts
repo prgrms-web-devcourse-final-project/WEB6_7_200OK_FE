@@ -5,14 +5,18 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { Client, type IFrame } from "@stomp/stompjs";
+// sale, purchase unreadCount 갱신용
+import { useQueryClient } from "@tanstack/react-query";
 import SockJS from "sockjs-client";
 
+import { userSaleKeys } from "@/features/auction/auction-sale/api/use-sales";
 import {
   type ChatRoomTradeInfo,
   type ChatMessage,
   type WebSocketResponse,
   type ChatReadEvent,
 } from "@/features/chat";
+import { purchaseKeys } from "@/features/purchase/api/use-purchases";
 import { type ApiResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 import { showToast } from "@/shared/lib/utils/toast/show-toast";
@@ -51,6 +55,7 @@ export function useChatRoomSocket(
   userId: number | null
 ) {
   const router = useRouter();
+  const queryClient = useQueryClient(); // sale, purchase unreadCount 갱신용
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [tradeInfo, setTradeInfo] = useState<ChatRoomTradeInfo | null>(null);
@@ -146,6 +151,9 @@ export function useChatRoomSocket(
           destination: API_ENDPOINTS.wsChatRead,
           body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
         });
+        // sale, purchase unreadCount 갱신용
+        queryClient.invalidateQueries({ queryKey: userSaleKeys.all });
+        queryClient.invalidateQueries({ queryKey: purchaseKeys.all });
         return;
       }
 
@@ -159,6 +167,9 @@ export function useChatRoomSocket(
         if (apiError.code === 403 || apiError.code === 404) {
           showToast.error(apiError.message);
         }
+        // sale, purchase unreadCount 갱신용
+        queryClient.invalidateQueries({ queryKey: userSaleKeys.all });
+        queryClient.invalidateQueries({ queryKey: purchaseKeys.all });
         return;
       }
 
@@ -169,7 +180,7 @@ export function useChatRoomSocket(
       // 실시간 읽음 처리
       isReadProcessingRef.current = false;
     }
-  }, [chatRoomId, accessToken, loadMessages]);
+  }, [chatRoomId, accessToken, loadMessages, queryClient]);
 
   const loadMore = useCallback(() => {
     if (!isLoading && hasNextPage && nextCursor) {

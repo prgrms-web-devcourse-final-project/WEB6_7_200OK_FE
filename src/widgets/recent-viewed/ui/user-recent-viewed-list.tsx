@@ -13,7 +13,6 @@ import {
 import {
   filterItemsByStatus,
   generateFilterOptions,
-  sortItemsByDateAndName,
 } from "@/shared/lib/utils/filter/user-page-item-filter";
 import { DashboardContentLayout, ConfirmDeleteModal, EmptyState } from "@/shared/ui";
 import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
@@ -30,7 +29,7 @@ export function UserRecentViewedList({ label }: { label?: React.ReactNode }) {
   const [deleteItem, setDeleteItem] = useState<RecentItemWithId | null>(null);
 
   const filteredRecent = useMemo(
-    () => sortItemsByDateAndName(filterItemsByStatus(recentItems, filterStatus)),
+    () => filterItemsByStatus(recentItems, filterStatus),
     [recentItems, filterStatus]
   );
 
