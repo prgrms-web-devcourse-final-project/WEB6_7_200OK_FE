@@ -7,6 +7,7 @@ import { Bell } from "lucide-react";
 
 import {
   useNotifications,
+  useReadAllNotifications,
   useReadNotification,
 } from "@/features/notification/api/use-notifications";
 import {
@@ -20,6 +21,7 @@ import Button from "@/shared/ui/button/button";
 export default function HeaderNotificationPopover() {
   const { data } = useNotifications({ page: 0, size: 15 });
   const { mutate: readNotification } = useReadNotification();
+  const { mutate: readAllNotifications } = useReadAllNotifications();
   const notifications = data?.slice ?? [];
   const hasUnread = notifications.some((notification) => !notification.readStatus);
 
@@ -37,7 +39,15 @@ export default function HeaderNotificationPopover() {
         <div className="flex items-center justify-between px-4 py-3">
           <h2 className="text-base font-semibold">알림</h2>
           <PopoverPrimitive.Close asChild>
-            <button type="button" className="text-brand-text text-sm font-semibold hover:underline">
+            <button
+              type="button"
+              className="text-brand-text text-sm font-semibold hover:underline"
+              onClick={() => {
+                if (hasUnread) {
+                  readAllNotifications();
+                }
+              }}
+            >
               모두 읽음
             </button>
           </PopoverPrimitive.Close>
