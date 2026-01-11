@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from "react";
 
 import Image from "next/image";
@@ -44,50 +45,21 @@ export function UserItemCard({
   footerNode,
   onClick,
 }: UserItemCardProps) {
-  const isInteractive = !!onClick;
+  const isInteractive = !!onClick || !!imageHref;
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key !== "Enter" && e.key !== " ") return;
-    e.preventDefault();
-    onClick?.();
-  };
-
-  const interactiveProps = isInteractive
-    ? {
-        role: "button" as const,
-        tabIndex: 0,
-        onKeyDown: handleKeyDown,
-        onClick,
-      }
-    : {};
-
-  const priceClassName = cn(
-    "font-bold tracking-tight",
-    isPriceGray ? "text-muted-foreground" : "text-brand-text"
-  );
-
-  const renderImage = () => {
-    const content = imageUrl ? (
-      <Image src={imageUrl} alt={name} fill className="object-cover" />
-    ) : (
-      <NoImage />
-    );
-
-    if (!imageHref) return content;
-
-    return (
-      <Link
-        href={imageHref}
-        className="block h-full w-full"
-        onClick={(e) => e.stopPropagation()}
-        aria-label={`${name} 상세로 이동`}
-      >
-        {content}
-      </Link>
-    );
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (onClick && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      onClick();
+    }
   };
 
   const renderPrice = () => {
+    const priceClassName = cn(
+      "font-bold tracking-tight",
+      isPriceGray ? "text-muted-foreground" : "text-brand-text"
+    );
+
     if (price != null && discountRate != null && discountRate > 0) {
       return (
         <div className="flex flex-col gap-0.5">
@@ -110,40 +82,55 @@ export function UserItemCard({
   };
 
   return (
-    <article
-      {...interactiveProps}
+    <div
       className={cn(
-        "bg-card border-border flex w-full flex-col gap-3 rounded-lg border p-4 transition-colors",
-        isInteractive &&
-          "hover:bg-secondary/20 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        "bg-card border-border relative flex w-full flex-col gap-3 rounded-lg border p-4 transition-colors",
+        isInteractive && "hover:bg-secondary/20 cursor-pointer"
       )}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
     >
-      <div className="flex w-full items-start gap-3">
-        <div className="bg-secondary relative size-28 shrink-0 overflow-hidden rounded-lg">
-          {renderImage()}
-          {overlayNode}
-        </div>
+      {imageHref && (
+        <Link
+          href={imageHref}
+          className="absolute inset-0 z-0"
+          aria-label={`${name} 상세로 이동`}
+        />
+      )}
 
-        <div className="flex h-28 flex-1 flex-col justify-between py-0.5">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              {badgeNode}
-              {actionNode}
-            </div>
-
-            <div className="flex flex-col px-1">
-              <h3 className="text-foreground line-clamp-1 text-base leading-4 tracking-tight">
-                {name}
-              </h3>
-              <div className="mt-1.5">{renderPrice()}</div>
-            </div>
+      <div className="pointer-events-none relative z-10 flex w-full flex-col gap-3">
+        <div className="flex w-full items-start gap-3">
+          <div className="bg-secondary relative size-28 shrink-0 overflow-hidden rounded-lg">
+            {imageUrl ? (
+              <Image src={imageUrl} alt={name} fill className="object-cover" />
+            ) : (
+              <NoImage />
+            )}
+            {overlayNode && <div className="pointer-events-auto">{overlayNode}</div>}
           </div>
 
-          <p className="text-muted-foreground px-1 text-xs leading-4">{date}</p>
-        </div>
-      </div>
+          <div className="flex h-28 flex-1 flex-col justify-between py-0.5">
+            <div className="flex flex-col gap-2">
+              <div className="pointer-events-auto flex items-center justify-between">
+                {badgeNode}
+                {actionNode}
+              </div>
 
-      {footerNode}
-    </article>
+              <div className="flex flex-col px-1">
+                <h3 className="text-foreground line-clamp-1 text-base leading-4 tracking-tight">
+                  {name}
+                </h3>
+                <div className="mt-1.5">{renderPrice()}</div>
+              </div>
+            </div>
+            <p className="text-muted-foreground px-1 text-xs leading-4">{date}</p>
+          </div>
+        </div>
+
+        {footerNode && <div className="pointer-events-auto">{footerNode}</div>}
+      </div>
+    </div>
   );
 }
