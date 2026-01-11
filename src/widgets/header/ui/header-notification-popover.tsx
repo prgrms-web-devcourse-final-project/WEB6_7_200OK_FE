@@ -5,7 +5,10 @@ import Link from "next/link";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { Bell } from "lucide-react";
 
-import { useNotifications } from "@/features/notification/api/use-notifications";
+import {
+  useNotifications,
+  useReadNotification,
+} from "@/features/notification/api/use-notifications";
 import {
   getNotificationIcon,
   getNotificationTargetHref,
@@ -16,9 +19,8 @@ import Button from "@/shared/ui/button/button";
 
 export default function HeaderNotificationPopover() {
   const { data } = useNotifications({ page: 0, size: 15 });
+  const { mutate: readNotification } = useReadNotification();
   const notifications = data?.slice ?? [];
-
-  console.log(notifications);
   const hasUnread = notifications.some((notification) => !notification.readStatus);
 
   return (
@@ -55,6 +57,11 @@ export default function HeaderNotificationPopover() {
                   <PopoverPrimitive.Close asChild>
                     <Link
                       href={targetHref}
+                      onClick={() => {
+                        if (!notification.readStatus) {
+                          readNotification(notification.notificationId);
+                        }
+                      }}
                       className="hover:bg-brand-surface focus-visible:ring-brand-text/30 flex w-full items-start gap-3 px-4 py-4 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     >
                       <span className="bg-brand-surface text-brand-text flex size-11 items-center justify-center rounded-full">
