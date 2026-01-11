@@ -4,6 +4,7 @@ import { fetch as apiFetch } from "@/shared/api/server";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
 
 interface UserApiResponse {
+  userId: number;
   username: string;
   email: string;
   profileImage: string | null;
@@ -30,9 +31,10 @@ export const getUserProfileServer = async (targetUserId: number) => {
 
     const { data } = response;
 
-    if (!data) return null;
+    if (!data) return undefined;
 
     return {
+      userId: data.userId,
       name: data.username,
       email: data.email,
       avatarUrl: data.profileImage || undefined,
@@ -41,6 +43,6 @@ export const getUserProfileServer = async (targetUserId: number) => {
       isOwner: data.isOwner,
     };
   } catch {
-    return null;
+    return undefined;
   }
 };

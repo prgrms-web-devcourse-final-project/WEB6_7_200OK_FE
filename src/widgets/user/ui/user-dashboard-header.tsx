@@ -2,15 +2,21 @@
 
 import { useParams } from "next/navigation";
 
-import { DASHBOARD_TABS } from "@/entities/user";
+import { DASHBOARD_TABS, UserProfileType } from "@/entities/user";
 import { ActivityTabs, UserProfileCard } from "@/features/user";
 import { useUserProfile } from "@/features/user/api/use-my-profile";
 
-export function UserDashboardHeader({ targetUserId }: { targetUserId: number }) {
+interface UserDashboardHeaderProps {
+  targetUserId: number;
+  initialData: UserProfileType; // 추가
+}
+
+export function UserDashboardHeader({ targetUserId, initialData }: UserDashboardHeaderProps) {
   const params = useParams();
   const activeTab = (params.tab as string) || "calendar";
 
-  const { data: profile, isLoading } = useUserProfile(targetUserId);
+  const { data: profile, isLoading } = useUserProfile(targetUserId, initialData);
+
   if (isLoading) {
     return (
       <div className="flex flex-col gap-4" data-testid="user-dashboard-header-skeleton">

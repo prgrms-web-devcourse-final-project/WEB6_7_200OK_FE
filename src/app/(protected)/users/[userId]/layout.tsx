@@ -31,7 +31,7 @@ export default async function UserLayout({ children, params }: LayoutProps) {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="bg-background mx-auto flex min-h-screen w-full max-w-7xl flex-col items-center gap-4 px-4 py-6 2xl:px-0">
-        <UserDashboardHeader targetUserId={targetUserId} />
+        <UserDashboardHeader targetUserId={targetUserId} initialData={profile} />
         <div className="w-full">{children}</div>
       </main>
     </HydrationBoundary>

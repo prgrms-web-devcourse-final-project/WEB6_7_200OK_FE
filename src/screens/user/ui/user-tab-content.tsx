@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
 import { DASHBOARD_TABS, type TabIdType } from "@/entities/user";
+import { UserProfileType } from "@/entities/user";
 import { TabLabelHeader } from "@/features/user";
 import { useUserProfile } from "@/features/user/api/use-my-profile";
 import { CommonItemTabSkeleton, ReviewTabSkeleton, CalendarTabSkeleton } from "@/widgets/user";
@@ -68,9 +69,10 @@ function isValidTabId(id: string): id is TabIdType {
 interface UserTabContentProps {
   tabId: string;
   targetUserId: number;
+  initialData: UserProfileType | undefined;
 }
 
-export function UserTabContent({ tabId, targetUserId }: UserTabContentProps) {
+export function UserTabContent({ tabId, targetUserId, initialData }: UserTabContentProps) {
   if (!isValidTabId(tabId)) notFound();
 
   const currentTabId = tabId;
@@ -79,7 +81,12 @@ export function UserTabContent({ tabId, targetUserId }: UserTabContentProps) {
   const currentTabConfig = DASHBOARD_TABS.find((t) => t.id === currentTabId);
   if (!currentTabConfig) notFound();
 
-  const { data: profile, isLoading, isFetching, isPending } = useUserProfile(targetUserId);
+  const {
+    data: profile,
+    isLoading,
+    isFetching,
+    isPending,
+  } = useUserProfile(targetUserId, initialData);
 
   // 핵심: 프로필/권한이 "확정"되기 전에는 비공개 판정을 하지 말고
   // 서버/클라 동일하게 스켈레톤을 렌더해서 트리를 고정한다.
