@@ -2,6 +2,7 @@ export { NotificationPreferenceItemCard } from "./ui/notification-preference-ite
 export { NotificationPreferenceSettingsModal } from "./ui/notification-preference-settings-modal";
 export type { NotificationPreferenceItemType } from "./model/types";
 export {
+  notificationKeys,
   useNotificationList,
   useNotificationSettings,
   useUpdateNotificationSettings,

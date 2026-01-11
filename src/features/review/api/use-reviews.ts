@@ -1,6 +1,12 @@
 "use client";
 
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type InfiniteData,
+} from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 import type { ReviewType } from "@/entities/review";
@@ -77,7 +83,7 @@ const fetchUserReviews = async (
       slice: [],
       hasNext: false,
       page: pageParam,
-      size: 10,
+      size: 5,
       timeStamp: "",
     };
   }
@@ -149,11 +155,38 @@ export function useCreateReview() {
 
 export function useUpdateReview() {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({ reviewId, data }: { reviewId: number; data: UpdateReviewRequest }) =>
       httpClient(API_ENDPOINTS.reviewDetail(reviewId), { method: "PATCH", body: data }),
+
     onSuccess: (_, vars) => {
-      queryClient.invalidateQueries({ queryKey: reviewKeys.detail(vars.reviewId) });
+      const { reviewId, data: updatedData } = vars;
+
+      queryClient.setQueryData<ReviewType>(reviewKeys.detail(reviewId), (old) =>
+        old ? { ...old, rating: updatedData.rating, content: updatedData.content } : old
+      );
+
+      queryClient.setQueriesData<InfiniteData<SliceResponseType<ReviewType>>>(
+        { queryKey: reviewKeys.all },
+        (oldData) => {
+          if (!oldData?.pages) return oldData;
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              slice: page.slice.map((review) =>
+                review.id === reviewId
+                  ? { ...review, rating: updatedData.rating, content: updatedData.content }
+                  : review
+              ),
+            })),
+          };
+        }
+      );
+
+      queryClient.invalidateQueries({ queryKey: reviewKeys.all });
       queryClient.invalidateQueries({ queryKey: purchaseKeys.all });
     },
   });
@@ -165,6 +198,7 @@ export function useDeleteReview() {
     mutationFn: (reviewId: number) =>
       httpClient(API_ENDPOINTS.reviewDetail(reviewId), { method: "DELETE" }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: reviewKeys.all });
       queryClient.invalidateQueries({ queryKey: purchaseKeys.all });
     },
   });

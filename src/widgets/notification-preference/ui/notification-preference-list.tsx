@@ -2,17 +2,19 @@
 
 import { useMemo, useState, useEffect } from "react";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BellOff } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 
 import { UserItemCardFilter } from "@/entities/auction";
+import { getAuctionNotificationSettings } from "@/entities/notification/api/notification-setting";
 import {
   NotificationPreferenceItemCard,
   NotificationPreferenceItemType,
   NotificationPreferenceSettingsModal,
   useNotificationList,
-  useNotificationSettings,
   useUpdateNotificationSettings,
+  notificationKeys,
 } from "@/features/notification-preference";
 import {
   filterItemsByStatus,
@@ -26,6 +28,8 @@ import { CommonItemListSkeleton } from "@/widgets/user/ui/skeletons";
 const NOTI_STATUSES = ["판매중", "판매 완료", "경매 예정", "경매 종료"];
 
 export function NotificationPreferenceList({ label }: { label?: React.ReactNode }) {
+  const queryClient = useQueryClient();
+
   const {
     data,
     isPending: isListPending,
@@ -37,9 +41,14 @@ export function NotificationPreferenceList({ label }: { label?: React.ReactNode 
 
   const [filterStatus, setFilterStatus] = useState("전체");
   const [selectedNoti, setSelectedNoti] = useState<NotificationPreferenceItemType | null>(null);
+  const [isFetching, setIsFetching] = useState(false);
 
-  const activeAuctionId = selectedNoti ? Number(selectedNoti.id) : 0;
-  const { data: currentSettings } = useNotificationSettings(activeAuctionId);
+  const { data: remoteSettings } = useQuery({
+    queryKey: notificationKeys.settings(Number(selectedNoti?.id)),
+    queryFn: () => getAuctionNotificationSettings(selectedNoti!.id),
+    enabled: !!selectedNoti,
+    staleTime: 1000 * 60,
+  });
 
   const { mutate: updateSettings } = useUpdateNotificationSettings();
 
@@ -54,6 +63,24 @@ export function NotificationPreferenceList({ label }: { label?: React.ReactNode 
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  const handleOpenSettings = async (item: NotificationPreferenceItemType) => {
+    if (isFetching) return;
+
+    setIsFetching(true);
+    try {
+      await queryClient.fetchQuery({
+        queryKey: notificationKeys.settings(Number(item.id)),
+        queryFn: () => getAuctionNotificationSettings(item.id),
+      });
+
+      setSelectedNoti(item);
+    } catch {
+      showToast.error("설정 정보를 불러오는 데 실패했습니다.");
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
   const notifications = useMemo(() => data?.pages.flatMap((page) => page.slice) ?? [], [data]);
 
   const filteredNotis = useMemo(
@@ -62,10 +89,10 @@ export function NotificationPreferenceList({ label }: { label?: React.ReactNode 
   );
 
   const handleSaveSettings = (settingsData: Parameters<typeof updateSettings>[0]["data"]) => {
-    if (!activeAuctionId) return;
+    if (!selectedNoti) return;
 
     updateSettings(
-      { auctionId: activeAuctionId, data: settingsData },
+      { auctionId: Number(selectedNoti.id), data: settingsData },
       {
         onSuccess: () => {
           showToast.success("알림 설정이 저장되었습니다.");
@@ -89,7 +116,7 @@ export function NotificationPreferenceList({ label }: { label?: React.ReactNode 
             <NotificationPreferenceItemCard
               key={item.id}
               item={item}
-              onSettingClick={setSelectedNoti}
+              onSettingClick={handleOpenSettings}
             />
           ))}
 
@@ -136,10 +163,12 @@ export function NotificationPreferenceList({ label }: { label?: React.ReactNode 
       <NotificationPreferenceSettingsModal
         open={!!selectedNoti}
         onOpenChange={(open) => {
-          if (!open) setSelectedNoti(null);
+          if (!open) {
+            setSelectedNoti(null);
+          }
         }}
         item={selectedNoti}
-        initialSettings={currentSettings}
+        initialSettings={remoteSettings ?? undefined}
         onSave={handleSaveSettings}
       />
     </>
