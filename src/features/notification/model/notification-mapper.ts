@@ -4,7 +4,6 @@ import {
   CheckCircle,
   Clock,
   CreditCard,
-  Gavel,
   MessageCircle,
   Star,
   TrendingDown,
@@ -24,15 +23,14 @@ export function getNotificationIcon(type: NotificationType): LucideIcon {
     case "AUCTION_START_WISHLIST":
       return Clock;
     case "AUCTION_FAILED_SELLER":
-    case "AUCTION_FAILED_BUYER":
+    case "AUCTION_FAILED_SUBSCRIBER":
       return XCircle;
-    case "AUCTION_ENDED_OTHER":
-      return Gavel;
     case "STOP_LOSS_TRIGGERED":
       return TriangleAlert;
     case "PRICE_DROP":
       return TrendingDown;
     case "SALE_SUCCESS_SELLER":
+    case "SALE_SUCCESS_SUBSCRIBER":
       return BadgeCheck;
     case "PAYMENT_SUCCESS_BUYER":
       return CreditCard;
