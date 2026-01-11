@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 
 import { ROUTES } from "@/shared/config/routes";
 import { Button } from "@/shared/ui";
+import HeaderNotificationPopover from "@/widgets/header/ui/header-notification-popover";
 import HeaderUserMenu from "@/widgets/header/ui/header-user-menu";
 
 export default function HeaderActions({
@@ -30,11 +31,7 @@ export default function HeaderActions({
         </Link>
       </Button>
 
-      {/* TODO: 알림 기능 복구 시 다시 노출 */}
-      {/* <Button aria-label="알림" size="icon-lg" variant="ghost" className="relative">
-        <Bell className="size-5" />
-        <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
-      </Button> */}
+      <HeaderNotificationPopover />
 
       <HeaderUserMenu avatarUrl={avatarUrl} avatarAlt={avatarAlt} />
     </div>
