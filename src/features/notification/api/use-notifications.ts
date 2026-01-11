@@ -56,11 +56,30 @@ const readNotification = async (notificationId: number) => {
   return response.data;
 };
 
+const readAllNotifications = async () => {
+  const response = await httpClient<null>(API_ENDPOINTS.notificationsReadAll, {
+    method: "PATCH",
+  });
+
+  return response.data;
+};
+
 export function useReadNotification() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: readNotification,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+    },
+  });
+}
+
+export function useReadAllNotifications() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: readAllNotifications,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all });
     },
