@@ -19,7 +19,7 @@ export function SearchScreen() {
   const { data: searchHistory = [], isPending } = useSearchHistory();
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
 
     const handleChange = () => {
       if (mediaQuery.matches) {
