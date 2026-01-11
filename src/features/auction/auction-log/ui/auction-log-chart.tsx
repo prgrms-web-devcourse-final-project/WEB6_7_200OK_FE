@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 import type { RecentPriceHistoryType } from "@/features/auction/auction-log/model/types";
@@ -13,13 +15,14 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function AuctionLogChart({ item }: { item: RecentPriceHistoryType[] }) {
+  const reversedData = useMemo(() => item.toReversed(), [item]);
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-base font-medium">관심도</h3>
       <ChartContainer config={chartConfig}>
         <AreaChart
           accessibilityLayer
-          data={item}
+          data={reversedData}
           margin={{
             left: 0,
             right: 0,
