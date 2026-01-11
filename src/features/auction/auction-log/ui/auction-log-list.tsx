@@ -28,7 +28,7 @@ export default function AuctionLogList({
         </h3>
         {recentPriceHistory.length !== 0 && (
           <span className="text-base text-red-400">
-            ▼ {formatPriceKRW(recentPriceHistory[0].currentPrice)} (-
+            ▼ {formatPriceKRW(startPrice - recentPriceHistory[0].currentPrice)} (-
             {calcDiscountRate(startPrice, recentPriceHistory[0].currentPrice, 1)}%)
           </span>
         )}
