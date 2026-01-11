@@ -32,6 +32,11 @@ export const API_ENDPOINTS = {
   myRecentViews: "/api/v1/me/recentviews",
   deleteRecentView: (recentViewId: number) => `/api/v1/recentview/${recentViewId}`,
 
+  notifications: "/api/v1/notifications",
+  notificationsSubscribe: "/api/v1/notifications/subscribe",
+  notificationsReadAll: "/api/v1/notifications",
+  notificationsRead: (notificationId: number) => `/api/v1/notifications/${notificationId}`,
+
   tagSearch: "/api/v1/tags/search",
   searchHistory: "/api/v1/searches",
 
