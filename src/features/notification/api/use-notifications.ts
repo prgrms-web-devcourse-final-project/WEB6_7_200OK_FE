@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { httpClient } from "@/shared/api/client";
 import type { SliceResponseType } from "@/shared/api/types/response";
@@ -45,5 +45,24 @@ export function useNotifications({ page = DEFAULT_PAGE, size = DEFAULT_SIZE } = 
   return useQuery({
     queryKey: notificationKeys.list(page, size),
     queryFn: () => fetchNotifications(page, size),
+  });
+}
+
+const readNotification = async (notificationId: number) => {
+  const response = await httpClient<null>(API_ENDPOINTS.notificationsRead(notificationId), {
+    method: "PATCH",
+  });
+
+  return response.data;
+};
+
+export function useReadNotification() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: readNotification,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+    },
   });
 }
