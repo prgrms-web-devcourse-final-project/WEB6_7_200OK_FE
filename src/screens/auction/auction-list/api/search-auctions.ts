@@ -6,9 +6,16 @@ export const searchAuctions = async (params: AuctionListParams): Promise<Auction
   const query = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      query.set(key, String(value));
+    if (value === undefined || value === null || value === "") return;
+
+    if (Array.isArray(value)) {
+      value
+        .filter((item) => item !== undefined && item !== null && item !== "")
+        .forEach((item) => query.append(key, String(item)));
+      return;
     }
+
+    query.set(key, String(value));
   });
 
   const response = await fetch<AuctionListData>(

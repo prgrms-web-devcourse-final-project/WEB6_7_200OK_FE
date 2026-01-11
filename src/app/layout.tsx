@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 
 import { ThemeProvider } from "next-themes";
 
+import { NotificationSseProvider } from "@/features/notification/ui/notification-sse-provider";
 import { QueryProvider } from "@/shared/api/query-provider";
 import { ServerTimeStoreProvider } from "@/shared/lib/providers/server-time-store-provider";
 import "@/shared/styles/globals.css";
@@ -39,6 +40,7 @@ export default function RootLayout({
         >
           <ServerTimeStoreProvider>
             <QueryProvider>
+              <NotificationSseProvider />
               <div className="flex min-h-full flex-col">
                 <Header />
                 <main className="flex-1 select-none">{children}</main>
