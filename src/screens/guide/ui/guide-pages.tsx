@@ -112,7 +112,7 @@ export function GuidebookPage2() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <p className="text-lg text-gray-600">5분마다 일정 금액씩 가격이 하락합니다</p>
+        <p className="text-muted-foreground text-lg">5분마다 일정 금액씩 가격이 하락합니다</p>
       </motion.div>
 
       <div className="w-full max-w-2xl">
@@ -271,7 +271,7 @@ export function GuidebookPage3() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h3 className="mb-6 text-lg font-semibold text-gray-700">실시간 가격 변동</h3>
+        <h3 className="text-foreground mb-6 text-lg font-semibold">실시간 가격 변동</h3>
         <div className="space-y-3">
           {priceSteps.map((step, index) => (
             <motion.div
@@ -316,7 +316,7 @@ export function GuidebookPage3() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <h3 className="mb-6 text-lg font-semibold text-gray-700">구매자의 고민</h3>
+        <h3 className="text-foreground mb-6 text-lg font-semibold">구매자의 고민</h3>
         <div className="min-h-60 space-y-3">
           {messages.map((message, idx) => {
             const isVisible = idx < visibleMessages;
@@ -378,7 +378,9 @@ export function GuidebookPage4() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <p className="text-lg text-gray-600">경매 상태를 확인하고 적절한 타이밍에 참여하세요</p>
+        <p className="text-muted-foreground text-lg">
+          경매 상태를 확인하고 적절한 타이밍에 참여하세요
+        </p>
       </motion.div>
 
       <div className="mx-auto grid w-full max-w-xl justify-items-stretch gap-8 md:grid-cols-2">
@@ -386,9 +388,9 @@ export function GuidebookPage4() {
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="overflow-hidden rounded-2xl bg-gray-50 shadow-lg"
+          className="bg-secondary/60 border-border/60 overflow-hidden rounded-2xl border shadow-lg"
         >
-          <div className="relative h-48 overflow-hidden bg-gray-200">
+          <div className="bg-muted relative h-48 overflow-hidden">
             <Image
               src={guideImages.liveAuction}
               alt="Live Auction"
@@ -420,7 +422,7 @@ export function GuidebookPage4() {
             <h3 className="mb-4 text-lg font-semibold">프리미엄 무선 이어폰</h3>
 
             <motion.div
-              className="mb-4 rounded-lg p-4"
+              className="mb-4 min-h-[96px] rounded-lg p-4"
               style={{ backgroundColor: "oklch(0.4758 0.2241 288.5 / 0.1)" }}
               animate={{
                 backgroundColor: [
@@ -432,16 +434,16 @@ export function GuidebookPage4() {
               transition={{ duration: 2, repeat: Infinity }}
             >
               <div className="mb-1 flex items-center gap-2">
-                <span className="text-xs text-gray-600">현재 가격</span>
+                <span className="text-muted-foreground text-xs">현재 가격</span>
                 <TrendingDown className="h-3 w-3" style={{ color: "oklch(0.4758 0.2241 288.5)" }} />
               </div>
               <div className="text-2xl font-bold" style={{ color: "oklch(0.4758 0.2241 288.5)" }}>
                 ₩85,000
               </div>
-              <div className="mt-1 text-xs text-gray-500 line-through">₩120,000</div>
+              <div className="text-muted-foreground mt-1 text-xs line-through">₩120,000</div>
             </motion.div>
 
-            <div className="mb-4 flex items-center gap-2 text-sm text-gray-600">
+            <div className="text-muted-foreground mb-4 flex items-center gap-2 text-sm">
               <Clock className="h-4 w-4" />
               <span>다음 가격 하락: 00:04:30</span>
             </div>
@@ -461,9 +463,9 @@ export function GuidebookPage4() {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="overflow-hidden rounded-2xl bg-gray-50 shadow-lg"
+          className="bg-secondary/60 border-border/60 overflow-hidden rounded-2xl border shadow-lg"
         >
-          <div className="relative h-48 overflow-hidden bg-gray-200">
+          <div className="bg-muted relative h-48 overflow-hidden">
             <Image
               src={guideImages.upcomingAuction}
               alt="Upcoming Auction"
@@ -483,23 +485,20 @@ export function GuidebookPage4() {
           <div className="p-6">
             <h3 className="mb-4 text-lg font-semibold">스마트 워치 프로</h3>
 
-            <div className="mb-4 rounded-lg border-2 border-gray-200 bg-white p-4">
-              <div className="mb-1 text-xs text-gray-600">시작 가격</div>
-              <div className="text-2xl font-bold">₩450,000</div>
+            <div className="bg-card mb-4 min-h-[96px] rounded-lg border border-white/10 p-4">
+              <div className="text-muted-foreground mb-1 text-xs">시작 가격</div>
+              <div className="text-foreground text-2xl font-bold">₩450,000</div>
             </div>
 
-            <div className="mb-4 flex items-center gap-2 text-sm text-gray-600">
+            <div className="text-muted-foreground mb-4 flex items-center gap-2 text-sm">
               <Calendar className="h-4 w-4" />
               <span>시작: 2026-01-15 14:00</span>
             </div>
 
             <motion.button
-              className="w-full rounded-lg border-2 py-3 font-semibold"
-              style={{
-                borderColor: "oklch(0.4758 0.2241 288.5)",
-                color: "oklch(0.4758 0.2241 288.5)",
-              }}
-              whileHover={{ backgroundColor: "oklch(0.4758 0.2241 288.5)", color: "white" }}
+              className="w-full rounded-lg py-3 font-semibold text-white"
+              style={{ backgroundColor: "oklch(0.4758 0.2241 288.5)" }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               알림 받기
@@ -528,7 +527,7 @@ export function GuidebookPage5() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <p className="text-lg text-gray-600">5단계로 간편하게 경매를 등록하세요</p>
+        <p className="text-muted-foreground text-lg">5단계로 간편하게 경매를 등록하세요</p>
       </motion.div>
 
       <div className="mb-12 flex items-center justify-center gap-4">
@@ -611,7 +610,7 @@ export function GuidebookPage5() {
         transition={{ duration: 0.3 }}
         className="mx-auto w-full max-w-xl flex-1"
       >
-        <div className="rounded-2xl bg-gray-50 p-8">
+        <div className="bg-card rounded-2xl p-8">
           <div className="mb-6 flex items-center gap-3">
             <div
               className="flex h-12 w-12 items-center justify-center rounded-full"
@@ -624,7 +623,7 @@ export function GuidebookPage5() {
             </div>
             <div>
               <h3 className="text-xl font-semibold">{steps[currentStep].label}</h3>
-              <p className="text-sm text-gray-600">{steps[currentStep].description}</p>
+              <p className="text-muted-foreground text-sm">{steps[currentStep].description}</p>
             </div>
           </div>
 
