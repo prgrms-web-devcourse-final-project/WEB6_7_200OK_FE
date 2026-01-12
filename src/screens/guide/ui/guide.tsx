@@ -58,7 +58,7 @@ export function Guidebook() {
   }, []);
 
   return (
-    <div ref={containerRef} className="fixed inset-0 overflow-hidden outline-none">
+    <div ref={containerRef} className="bg-background fixed inset-0 overflow-hidden outline-none">
       <div className="flex h-full items-center justify-center px-6">
         <div className="relative w-full max-w-5xl">
           <motion.button
@@ -88,7 +88,7 @@ export function Guidebook() {
             <h2 className="text-2xl font-semibold">{pages[currentPage].title}</h2>
           </motion.div>
 
-          <div className="relative overflow-hidden rounded-3xl bg-white shadow-2xl">
+          <div className="bg-card relative overflow-hidden rounded-3xl shadow-2xl">
             <div className="h-[min(70dvh,820px)] min-h-[600px]">
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
