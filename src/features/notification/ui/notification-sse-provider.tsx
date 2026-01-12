@@ -44,9 +44,9 @@ function getPayloadId(payload: NotificationPayload | null): string | null {
   return null;
 }
 
-function getPayloadTitle(payload: NotificationPayload | null): string | null {
+function getPayloadMessage(payload: NotificationPayload | null): string | null {
   if (!payload) return null;
-  const candidate = payload.title;
+  const candidate = payload.message;
   return typeof candidate === "string" && candidate.length > 0 ? candidate : null;
 }
 
@@ -117,8 +117,8 @@ export function NotificationSseProvider() {
       if (payload) {
         const didPrepend = prependNotification(queryClient, payload);
 
-        const title = getPayloadTitle(payload);
-        showToast.info(title ?? "새 알림이 도착했어요.");
+        const message = getPayloadMessage(payload);
+        showToast.info(message ?? "새 알림이 도착했어요.");
 
         if (!didPrepend) {
           queryClient.invalidateQueries({ queryKey: notificationKeys.all });
