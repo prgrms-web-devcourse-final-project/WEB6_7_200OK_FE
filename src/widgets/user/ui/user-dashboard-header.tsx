@@ -8,7 +8,7 @@ import { useUserProfile } from "@/features/user/api/use-my-profile";
 
 interface UserDashboardHeaderProps {
   targetUserId: number;
-  initialData: UserProfileType; // 추가
+  initialData?: UserProfileType; // initial user profile data used before fetching
 }
 
 export function UserDashboardHeader({ targetUserId, initialData }: UserDashboardHeaderProps) {
