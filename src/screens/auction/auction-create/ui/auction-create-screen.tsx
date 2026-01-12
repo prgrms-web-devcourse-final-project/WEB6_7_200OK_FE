@@ -145,7 +145,7 @@ export function AuctionCreateScreen() {
               <Textarea
                 id="description"
                 placeholder="상품에 대한 상세한 설명을 입력해주세요."
-                className="min-h-34 resize-none rounded-md border text-sm md:text-base"
+                className="h-34 resize-none rounded-md border text-sm md:text-base"
                 value={description}
                 onChange={(e) => form.setDescription(e.target.value)}
               />
