@@ -54,6 +54,9 @@ export const API_ENDPOINTS = {
   wsChatRead: "/app/chat.read",
   wsUserQueueChatRooms: "/user/queue/chat.rooms",
   wsUserQueueErrors: "/user/queue/errors",
+  wsEnterChatRoom: "/app/chat.enter",
+  wsLeaveChatRoom: "/app/chat.leave",
+  wsCheckPing: "/app/chat.ping",
   wsChatRoom: (chatRoomId: number | string) => `/topic/chat.rooms.${chatRoomId}`,
   wsRealTimeRead: (chatRoomId: number | string) => `/topic/chat.read.${chatRoomId}`,
 
