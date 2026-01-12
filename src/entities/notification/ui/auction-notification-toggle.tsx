@@ -62,6 +62,7 @@ export default function AuctionNotificationToggle({ auctionId }: AuctionNotifica
     onSuccess: async () => {
       showToast.success("알림 설정이 저장되었습니다.");
       await qc.invalidateQueries({ queryKey: auctionNotificationSettingsKey(auctionId) });
+      await qc.invalidateQueries({ queryKey: ["user", "notifications"] });
       setOpenChange(false);
     },
     onError: (_err, _vars, ctx) => {

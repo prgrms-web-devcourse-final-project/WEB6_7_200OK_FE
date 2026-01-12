@@ -14,11 +14,18 @@ import {
 
 import type { NotificationPreferenceItemType } from "../model/types";
 
-interface NotificationInfo {
+interface NotificationInfoDTO {
   alertStart: boolean;
   alertEnd: boolean;
   alertPrice: boolean;
   triggerPrice: number;
+}
+
+interface NotificationSettingsType {
+  auctionStart: boolean;
+  auctionEnd: boolean;
+  priceReached: boolean;
+  price: number;
 }
 
 interface NotificationSliceItem {
@@ -28,7 +35,7 @@ interface NotificationSliceItem {
   auctionImageUrl: string;
   startPrice: number;
   startedAt: string;
-  notificationInfo: NotificationInfo;
+  notificationInfo: NotificationInfoDTO;
   currentPrice?: number;
   endPrice?: number;
   discountPercent?: number;
@@ -43,13 +50,6 @@ interface NotificationData {
 }
 
 interface NotificationSettingResponse {
-  auctionStart: boolean;
-  auctionEnd: boolean;
-  priceReached: boolean;
-  price: number;
-}
-
-interface UpdateNotificationRequest {
   auctionStart: boolean;
   auctionEnd: boolean;
   priceReached: boolean;
@@ -77,12 +77,11 @@ const mapStatusToTradeStatus = (status: string): UserTradeStatusType => {
   }
 };
 
-const generateKeywords = (info: NotificationInfo): string[] => {
+const generateKeywords = (info: NotificationSettingsType): string[] => {
   const keywords: string[] = [];
-  if (info.alertStart) keywords.push("경매 시작");
-  if (info.alertPrice && info.triggerPrice > 0)
-    keywords.push(`${info.triggerPrice.toLocaleString()}원 도달`);
-  if (info.alertEnd) keywords.push("경매 종료");
+  if (info.auctionStart) keywords.push("경매 시작");
+  if (info.priceReached && info.price > 0) keywords.push(`${info.price.toLocaleString()}원 도달`);
+  if (info.auctionEnd) keywords.push("경매 종료");
   return keywords;
 };
 
@@ -111,6 +110,13 @@ const fetchNotifications = async (
     .map((item) => {
       const finalPrice = item.endPrice || item.currentPrice || item.startPrice;
 
+      const settings: NotificationSettingsType = {
+        auctionStart: item.notificationInfo.alertStart,
+        auctionEnd: item.notificationInfo.alertEnd,
+        priceReached: item.notificationInfo.alertPrice,
+        price: item.notificationInfo.triggerPrice,
+      };
+
       return {
         id: String(item.auctionId),
         status: mapStatusToTradeStatus(item.status),
@@ -120,7 +126,7 @@ const fetchNotifications = async (
         discountRate: item.discountPercent,
         date: item.startedAt,
         imageUrl: item.auctionImageUrl,
-        keywords: generateKeywords(item.notificationInfo),
+        keywords: generateKeywords(settings),
       };
     });
 
@@ -160,7 +166,7 @@ export function useNotificationSettings(auctionId: number) {
 export function useUpdateNotificationSettings() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ auctionId, data }: { auctionId: number; data: UpdateNotificationRequest }) =>
+    mutationFn: ({ auctionId, data }: { auctionId: number; data: NotificationSettingsType }) =>
       httpClient(API_ENDPOINTS.auctionNotificationSetting(auctionId), {
         method: "PUT",
         body: data,
@@ -177,6 +183,7 @@ export function useUpdateNotificationSettings() {
     onSuccess: (_, vars) => {
       queryClient.invalidateQueries({ queryKey: notificationKeys.settings(vars.auctionId) });
       queryClient.invalidateQueries({ queryKey: notificationKeys.list() });
+      queryClient.invalidateQueries({ queryKey: ["auctionNotificationSettings", vars.auctionId] });
     },
   });
 }
