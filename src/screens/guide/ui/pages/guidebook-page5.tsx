@@ -74,7 +74,7 @@ export function GuidebookPage5() {
                   {isCompleted ? (
                     <CheckCircle className="h-8 w-8 text-white" />
                   ) : (
-                    React.createElement(steps[currentStep].icon, {
+                    React.createElement(step.icon, {
                       className: "w-7 h-7",
                       style: {
                         color: iconColor,
