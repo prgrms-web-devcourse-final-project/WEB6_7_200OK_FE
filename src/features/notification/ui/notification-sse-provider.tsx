@@ -165,7 +165,7 @@ export function NotificationSseProvider() {
           sourceRef.current = null;
         }
         if (!hasNotifiedErrorRef.current) {
-          showToast.warning("실시간 알림 연결이 불안정합니다.");
+          console.warn("실시간 알림 연결이 불안정합니다.");
           hasNotifiedErrorRef.current = true;
         }
         scheduleReconnect();
