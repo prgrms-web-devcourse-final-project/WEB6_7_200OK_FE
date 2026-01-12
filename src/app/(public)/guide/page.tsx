@@ -1,5 +1,5 @@
-import GuideScreen from "@/screens/guide/ui/guide-screen";
+import { Guidebook } from "@/screens/guide/ui/guide";
 
-export default function page() {
-  return <GuideScreen />;
+export default function Page() {
+  return <Guidebook />;
 }
