@@ -19,6 +19,8 @@ const SSE_EVENT_TYPES = [
   "auctionFailedSubscriber",
   "auctionSuccessSeller",
   "auctionSuccessSubscriber",
+  "reviewRegistered",
+  "chatMessage",
 ] as const;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 const RECONNECT_BASE_DELAY_MS = 1_000;
