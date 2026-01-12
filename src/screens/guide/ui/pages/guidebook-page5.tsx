@@ -17,19 +17,17 @@ export function GuidebookPage5() {
   };
 
   return (
-    <section className="flex h-full min-h-full w-full flex-col items-center justify-center">
+    <section className="flex h-full min-h-full w-full flex-col items-center justify-start gap-2 overflow-y-auto px-4 py-4 sm:justify-center sm:gap-3 sm:overflow-visible sm:px-0 sm:py-0 lg:gap-4 xl:gap-6">
       <motion.div
-        className="mb-6 text-center max-[1024px]:mb-4"
+        className="mb-3 text-center sm:mb-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <p className="text-muted-foreground text-base max-[1024px]:text-sm">
-          5단계로 간편하게 경매를 등록하세요
-        </p>
+        <h2 className="text-muted-foreground text-sm sm:text-base">간편하게 경매를 등록하세요</h2>
       </motion.div>
 
-      <div className="mb-8 flex flex-wrap items-center justify-center gap-3 max-[1024px]:mb-6 max-[1024px]:gap-2.5">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
         {steps.map((step, index) => {
           const isCompleted = completedSteps.includes(index);
           const isCurrent = index === currentStep;
@@ -49,14 +47,14 @@ export function GuidebookPage5() {
             <React.Fragment key={step.id}>
               <motion.button
                 onClick={() => setCurrentStep(index)}
-                className="flex flex-col items-center gap-2 transition-all"
+                className="flex flex-col items-center gap-1.5 transition-all sm:gap-2"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
               >
                 <motion.div
-                  className="flex h-12 w-12 items-center justify-center rounded-full border-2 transition-all max-[1024px]:h-10 max-[1024px]:w-10"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border-2 transition-all sm:h-12 sm:w-12"
                   style={{
                     borderColor,
                     backgroundColor,
@@ -74,27 +72,24 @@ export function GuidebookPage5() {
                   transition={{ duration: 1.5, repeat: Infinity }}
                 >
                   {isCompleted ? (
-                    <CheckCircle className="h-6 w-6 text-white max-[1024px]:h-5 max-[1024px]:w-5" />
+                    <CheckCircle className="size-5 text-white sm:size-6" />
                   ) : (
                     React.createElement(step.icon, {
-                      className: "h-5 w-5 max-[1024px]:h-4 max-[1024px]:w-4",
+                      className: "size-4 sm:size-5",
                       style: {
                         color: iconColor,
                       },
                     })
                   )}
                 </motion.div>
-                <span
-                  className="text-xs font-medium max-[1024px]:text-[11px]"
-                  style={{ color: labelColor }}
-                >
+                <span className="text-xs font-medium sm:text-xs" style={{ color: labelColor }}>
                   Step {index + 1}
                 </span>
               </motion.button>
 
               {index < steps.length - 1 && (
                 <div
-                  className="-mt-4 h-0.5 w-8 max-[1024px]:w-6"
+                  className="-mt-3 h-0.5 w-3 sm:-mt-4 sm:w-4"
                   style={{
                     backgroundColor: isCompleted ? "oklch(0.4758 0.2241 288.5)" : "#E5E7EB",
                   }}
@@ -112,22 +107,20 @@ export function GuidebookPage5() {
         transition={{ duration: 0.3 }}
         className="mx-auto w-full max-w-xl"
       >
-        <div className="bg-card rounded-2xl p-6 max-[1024px]:p-5">
-          <div className="mb-6 flex items-center gap-3">
+        <div className="bg-card rounded-2xl p-4 sm:p-6">
+          <div className="mb-4 flex items-center gap-2 sm:mb-6 sm:gap-3">
             <div
-              className="flex h-10 w-10 items-center justify-center rounded-full max-[1024px]:h-9 max-[1024px]:w-9"
+              className="flex h-9 w-9 items-center justify-center rounded-full sm:h-10 sm:w-10"
               style={{ backgroundColor: "oklch(0.4758 0.2241 288.5 / 0.1)" }}
             >
               {React.createElement(steps[currentStep].icon, {
-                className: "h-5 w-5 max-[1024px]:h-4 max-[1024px]:w-4",
+                className: "size-5",
                 style: { color: "oklch(0.4758 0.2241 288.5)" },
               })}
             </div>
             <div>
-              <h3 className="text-lg font-semibold max-[1024px]:text-base">
-                {steps[currentStep].label}
-              </h3>
-              <p className="text-muted-foreground text-xs max-[1024px]:text-[11px]">
+              <h3 className="font-semibold">{steps[currentStep].label}</h3>
+              <p className="text-muted-foreground text-[11px] sm:text-xs">
                 {steps[currentStep].description}
               </p>
             </div>
@@ -136,7 +129,7 @@ export function GuidebookPage5() {
           <motion.input
             type="text"
             placeholder={steps[currentStep].placeholder}
-            className="w-full rounded-lg border-2 px-4 py-3 text-sm transition-all outline-none max-[1024px]:px-3 max-[1024px]:py-2.5 max-[1024px]:text-xs"
+            className="w-full rounded-lg border-2 px-3 py-2 text-xs transition-all outline-none sm:px-4 sm:py-3 sm:text-sm"
             style={{
               borderColor: "oklch(0.4758 0.2241 288.5)",
               boxShadow: "0 0 0 4px oklch(0.4758 0.2241 288.5 / 0.1)",
@@ -148,32 +141,37 @@ export function GuidebookPage5() {
 
           <motion.button
             onClick={handleComplete}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold text-white max-[1024px]:py-2.5 max-[1024px]:text-xs"
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-semibold text-white sm:mt-4 sm:py-3 sm:text-sm"
             style={{ backgroundColor: "oklch(0.4758 0.2241 288.5)" }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             {currentStep < steps.length - 1 ? "다음 단계" : "경매 등록하기"}
-            <ChevronRight className="h-4 w-4 max-[1024px]:h-3.5 max-[1024px]:w-3.5" />
+            <ChevronRight className="size-4" />
           </motion.button>
         </div>
       </motion.div>
 
-      {completedSteps.length === steps.length && (
+      <div className="h-11 text-center sm:h-11">
         <motion.div
-          className="mt-6 text-center max-[1024px]:mt-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={false}
+          animate={
+            completedSteps.length === steps.length ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
+          transition={{ duration: 0.25 }}
+          className="flex justify-center"
+          style={{ pointerEvents: completedSteps.length === steps.length ? "auto" : "none" }}
         >
           <div
-            className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white max-[1024px]:px-4 max-[1024px]:py-2 max-[1024px]:text-xs"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white sm:px-5 sm:py-2.5 sm:text-sm"
             style={{ backgroundColor: "oklch(0.4758 0.2241 288.5)" }}
+            aria-hidden={completedSteps.length !== steps.length}
           >
-            <CheckCircle className="h-4 w-4 max-[1024px]:h-3.5 max-[1024px]:w-3.5" />
+            <CheckCircle className="size-3.5 sm:size-4" />
             모든 단계 완료!
           </div>
         </motion.div>
-      )}
+      </div>
     </section>
   );
 }

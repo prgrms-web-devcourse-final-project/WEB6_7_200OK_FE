@@ -19,14 +19,14 @@ export function GuidebookPage2() {
   }, []);
 
   return (
-    <section className="flex h-full flex-col items-center justify-center gap-6 lg:gap-8 xl:gap-12">
+    <section className="flex h-full min-h-full w-full flex-col items-center justify-center gap-5 overflow-y-auto px-4 py-8 sm:gap-6 sm:overflow-visible sm:px-0 sm:py-0 lg:gap-8 xl:gap-12">
       <motion.div
         className="text-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="text-muted-foreground text-base">
+        <h2 className="text-muted-foreground text-sm leading-relaxed sm:text-base sm:leading-normal">
           판매자가 정한 <strong>Stop Loss</strong>까지
           <br />
           <span className="font-semibold text-red-500">5분</span>
@@ -34,18 +34,18 @@ export function GuidebookPage2() {
         </h2>
       </motion.div>
 
-      <div className="flex w-full max-w-lg flex-col gap-3">
+      <div className="flex w-full max-w-lg flex-col gap-3 sm:gap-3">
         {priceData.map((point, index) => (
           <motion.div
             key={point.time}
-            className="flex flex-col gap-2 px-1"
+            className="flex flex-col gap-2 px-0.5 sm:gap-2 sm:px-1"
             initial={{ opacity: 0 }}
             animate={{ opacity: index < visibleBars ? 1 : 0 }}
             transition={{ duration: 0.4 }}
           >
             <div className="flex items-center gap-4">
               <motion.span
-                className="w-16 text-xs text-gray-500 sm:text-sm"
+                className="w-14 text-[11px] text-gray-500 sm:w-16 sm:text-sm"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: index < visibleBars ? 1 : 0, x: index < visibleBars ? 0 : -10 }}
                 transition={{ delay: 0.08, duration: 0.25 }}
@@ -55,7 +55,7 @@ export function GuidebookPage2() {
 
               {point.label && (
                 <motion.span
-                  className="rounded-full px-2.5 py-0.5 text-xs font-medium"
+                  className="rounded-full px-2 py-0.5 text-[11px] font-medium sm:px-2.5 sm:text-xs"
                   style={{
                     backgroundColor:
                       index === priceData.length - 1
@@ -81,7 +81,7 @@ export function GuidebookPage2() {
             </div>
 
             <motion.div
-              className="h-fit rounded-lg py-2"
+              className="h-fit rounded-lg py-1.5 sm:py-2"
               style={{
                 backgroundColor:
                   index === priceData.length - 1
@@ -100,9 +100,9 @@ export function GuidebookPage2() {
               }}
               transition={{ duration: 0.65, ease: [0.34, 1.56, 0.64, 1] }}
             >
-              <div className="flex items-center justify-between px-3">
+              <div className="flex items-center justify-between px-2 sm:px-3">
                 <motion.span
-                  className="text-md font-bold"
+                  className="sm:text-md text-sm font-bold"
                   style={{
                     color: index === priceData.length - 1 ? "white" : "oklch(0.4758 0.2241 288.5)",
                   }}
@@ -118,7 +118,7 @@ export function GuidebookPage2() {
 
                 {index > 0 && (
                   <motion.div
-                    className="rounded-full px-2 py-0.5 text-xs font-semibold"
+                    className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold sm:px-2 sm:text-xs"
                     style={{
                       backgroundColor:
                         index === priceData.length - 1
@@ -144,13 +144,13 @@ export function GuidebookPage2() {
       </div>
 
       <motion.div
-        className="rounded-xl px-3 py-2.5 text-center"
+        className="mt-3 rounded-xl px-3 py-3 text-center sm:py-2.5"
         style={{ backgroundColor: "oklch(0.4758 0.2241 288.5 / 0.15)" }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 0.6 }}
       >
-        <p className="text-brand-text text-xs font-semibold">
+        <p className="text-brand-text text-[11px] font-semibold sm:text-xs">
           💡 원하는 가격이 되면 즉시 구매할 수 있습니다
         </p>
       </motion.div>
