@@ -29,6 +29,9 @@ const MESSAGE_PAGE_SIZE = 20;
 // 읽음 처리 딜레이
 const READ_PROCESSING_DELAY_MS = 500;
 
+//  ping 간격 (45초)
+const PRESENCE_PING_INTERVAL_MS = 45000;
+
 interface ChatSendRequest {
   chatRoomId: number;
   messageType: "TEXT" | "IMAGE";
@@ -371,6 +374,8 @@ export function useChatRoomSocket(
   useEffect(() => {
     if (!chatRoomId || !accessToken) return;
 
+    let pingInterval: NodeJS.Timeout | null = null;
+
     const client = new Client({
       webSocketFactory: () => new SockJS(`${API_URL}${API_ENDPOINTS.wsStomp}`),
       connectHeaders: { Authorization: `Bearer ${accessToken}` },
@@ -379,6 +384,21 @@ export function useChatRoomSocket(
         client.subscribe(API_ENDPOINTS.wsChatRoom(chatRoomId), handleMessageReceived);
         client.subscribe(API_ENDPOINTS.wsRealTimeRead(chatRoomId), handleReadEventReceived);
         client.subscribe(API_ENDPOINTS.wsUserQueueErrors, handleQueueError);
+
+        // 채팅방 진입 ws
+        client.publish({
+          destination: API_ENDPOINTS.wsEnterChatRoom,
+          body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
+        });
+
+        // ping 체크 (45초)
+        pingInterval = setInterval(() => {
+          if (client.connected) {
+            client.publish({
+              destination: API_ENDPOINTS.wsCheckPing,
+            });
+          }
+        }, PRESENCE_PING_INTERVAL_MS);
       },
       onStompError: handleStompError,
     });
@@ -387,6 +407,19 @@ export function useChatRoomSocket(
     clientRef.current = client;
 
     return () => {
+      // ping 제거
+      if (pingInterval) {
+        clearInterval(pingInterval);
+      }
+
+      // 이탈 ws
+      if (client.connected) {
+        client.publish({
+          destination: API_ENDPOINTS.wsLeaveChatRoom,
+          body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
+        });
+      }
+
       client.deactivate();
       clientRef.current = null;
     };
