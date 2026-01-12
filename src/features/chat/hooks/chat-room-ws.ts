@@ -418,9 +418,14 @@ export function useChatRoomSocket(
           destination: API_ENDPOINTS.wsLeaveChatRoom,
           body: JSON.stringify({ chatRoomId: Number(chatRoomId) }),
         });
-      }
 
-      client.deactivate();
+        // 메시지가 실제로 전송될 시간을 확보하기 위해 약간의 지연 후 연결 해제
+        setTimeout(() => {
+          client.deactivate();
+        }, 200);
+      } else {
+        client.deactivate();
+      }
       clientRef.current = null;
     };
   }, [
