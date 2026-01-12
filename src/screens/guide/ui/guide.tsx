@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { useRouter } from "next/navigation";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -13,8 +15,10 @@ import {
   GuidebookPage5,
 } from "./guide-pages";
 import { useSectionPager } from "../hooks/use-section-pager";
+import { GUIDE_STORAGE_KEY } from "../model/guide-constants";
 
 export function Guidebook() {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
 
@@ -48,10 +52,29 @@ export function Guidebook() {
     exit: (dir: number) => ({ x: dir > 0 ? -1000 : 1000, opacity: 0, scale: 0.95 }),
   };
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(GUIDE_STORAGE_KEY, "true");
+  }, []);
+
   return (
     <div ref={containerRef} className="fixed inset-0 overflow-hidden outline-none">
       <div className="flex h-full items-center justify-center px-6">
-        <div className="w-full max-w-5xl">
+        <div className="relative w-full max-w-5xl">
+          <motion.button
+            type="button"
+            className="absolute top-0 right-0 z-50 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.localStorage.setItem(GUIDE_STORAGE_KEY, "true");
+              }
+              router.replace("/");
+            }}
+          >
+            Skip
+          </motion.button>
           <motion.div
             className="mb-8 text-center"
             key={`title-${currentPage}`}

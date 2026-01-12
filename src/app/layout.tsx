@@ -12,6 +12,7 @@ import { ServerTimeStoreProvider } from "@/shared/lib/providers/server-time-stor
 import "@/shared/styles/globals.css";
 import { ToastRegistry } from "@/shared/ui/toast/toast-registry";
 import { BottomNav } from "@/widgets/bottom-nav";
+import { GuideFirstVisitGate } from "@/widgets/guide/guide-first-visit-gate";
 import { Header } from "@/widgets/header/header";
 
 const inter = Inter({
@@ -41,6 +42,7 @@ export default function RootLayout({
           <ServerTimeStoreProvider>
             <QueryProvider>
               <NotificationSseProvider />
+              <GuideFirstVisitGate />
               <div className="flex min-h-full flex-col">
                 <Header />
                 <main className="flex-1 select-none">{children}</main>
