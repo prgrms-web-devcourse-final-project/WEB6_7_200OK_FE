@@ -30,9 +30,7 @@ export interface PricePoint {
 export const priceData: PricePoint[] = [
   { time: "00:00", price: 100000, label: "시작" },
   { time: "00:05", price: 95000 },
-  { time: "00:10", price: 90000 },
-  { time: "00:15", price: 85000 },
-  { time: "00:20", price: 80000, label: "구매 완료" },
+  { time: "00:10", price: 90000, label: "구매 완료" },
 ];
 
 export interface ChatMessage {
