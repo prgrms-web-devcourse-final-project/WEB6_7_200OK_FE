@@ -84,6 +84,7 @@ export function NotificationSseProvider() {
   const isConnectingRef = useRef(false);
   const reconnectAttemptRef = useRef(0);
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasNotifiedErrorRef = useRef(false);
   const isAuthenticated = Boolean(user);
 
   useEffect(() => {
@@ -142,12 +143,13 @@ export function NotificationSseProvider() {
       if (sourceRef.current || isConnectingRef.current) return;
 
       isConnectingRef.current = true;
-      const source = new EventSource(url);
+      const source = new EventSource(url, { withCredentials: true });
       sourceRef.current = source;
 
       source.onopen = () => {
         isConnectingRef.current = false;
         reconnectAttemptRef.current = 0;
+        hasNotifiedErrorRef.current = false;
       };
 
       source.onmessage = (event) => {
@@ -159,6 +161,10 @@ export function NotificationSseProvider() {
         if (sourceRef.current) {
           sourceRef.current.close();
           sourceRef.current = null;
+        }
+        if (!hasNotifiedErrorRef.current) {
+          showToast.warning("실시간 알림 연결이 불안정합니다.");
+          hasNotifiedErrorRef.current = true;
         }
         scheduleReconnect();
       };

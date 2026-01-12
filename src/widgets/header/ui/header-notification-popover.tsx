@@ -50,6 +50,7 @@ export default function HeaderNotificationPopover() {
         <button
           type="button"
           className="text-brand-text text-sm font-semibold hover:underline"
+          aria-label="알림 모두 읽음 처리"
           onClick={() => {
             readAllNotifications();
           }}

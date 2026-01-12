@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/shared/api/client";
 import type { SliceResponseType } from "@/shared/api/types/response";
 import { API_ENDPOINTS } from "@/shared/config/endpoints";
+import { showToast } from "@/shared/lib/utils/toast/show-toast";
 
 import type { NotificationItem } from "../model/types";
 
@@ -72,6 +73,9 @@ export function useReadNotification() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all });
     },
+    onError: () => {
+      showToast.error("알림 읽음 처리에 실패했습니다. 다시 시도해주세요.");
+    },
   });
 }
 
@@ -82,6 +86,9 @@ export function useReadAllNotifications() {
     mutationFn: readAllNotifications,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+    },
+    onError: () => {
+      showToast.error("알림 전체 읽음 처리에 실패했습니다. 다시 시도해주세요.");
     },
   });
 }
