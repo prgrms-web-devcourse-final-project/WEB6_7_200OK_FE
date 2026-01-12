@@ -51,7 +51,7 @@ export default function useAuctionSocket(auctionId: string) {
       },
 
       onDisconnect: () => {
-        console.log("[STOMP] disconnected");
+        console.warn("[STOMP] disconnected");
       },
 
       onStompError: (frame) => {

@@ -4,20 +4,30 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   images: {
     remotePatterns: [
-      { protocol: "http", hostname: "k.kakaocdn.net" },
+      // Kakao
       { protocol: "http", hostname: "img1.kakaocdn.net" },
+      { protocol: "http", hostname: "k.kakaocdn.net" },
+
+      // Naver
+      { protocol: "http", hostname: "phinf.pstatic.net" },
+      { protocol: "https", hostname: "phinf.pstatic.net" },
+      { protocol: "http", hostname: "ssl.pstatic.net" },
+      { protocol: "https", hostname: "ssl.pstatic.net" },
+
+      // Google
+      { protocol: "http", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+
+      // Placeholder / Stock
       { protocol: "https", hostname: "picsum.photos" },
       { protocol: "https", hostname: "images.unsplash.com" },
+
+      // Toss
       { protocol: "https", hostname: "static.toss.im" },
-      { protocol: "https", hostname: "windfall-bucket.s3.ap-northeast-2.amazonaws.com" },
+
+      // Windfall
       { protocol: "https", hostname: "wind-fall.store" },
-      { protocol: "http", hostname: "img1.kakaocdn.net" },
-      { protocol: "http", hostname: "phinf.pstatic.net" },
-      { protocol: "http", hostname: "ssl.pstatic.net" },
-      { protocol: "http", hostname: "lh3.googleusercontent.com" },
-      { protocol: "https", hostname: "phinf.pstatic.net" },
-      { protocol: "https", hostname: "ssl.pstatic.net" },
-      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "windfall-bucket.s3.ap-northeast-2.amazonaws.com" },
     ],
   },
   async rewrites() {
